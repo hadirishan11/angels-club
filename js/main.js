@@ -1,10 +1,8 @@
 (() => {
   "use strict";
 
-  document.documentElement.classList.add("js");
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------- i18n (FR default, EN toggle) ---------------- */
   const EN = {
@@ -14,30 +12,28 @@
     "cta.reserve": "Reserve", "cta.reserveTable": "Book a table", "cta.menu": "View the menu",
     "hero.eyebrow": "Laval · Resto & Lounge", "hero.title1": "Dine beneath", "hero.title2": "the moon",
     "hero.lead": "Refined cuisine, signature cocktails and a low-lit atmosphere — from dinner into the small hours.",
-    "hl.1.t": "Seasonal cuisine", "hl.1.d": "Québec produce, Mediterranean inspiration.",
-    "hl.2.t": "Signature mixology", "hl.2.d": "Crafted cocktails and a private wine selection.",
-    "hl.3.t": "Lounge nights", "hl.3.d": "Live jazz, resident DJs and late-night energy.",
     "about.eyebrow": "Our story", "about.title": "Where the evening takes its time", "about.badge": "nights a week",
     "about.p1": "Moonlight was born from a simple idea: give Laval a place where you come for a great meal and stay for the atmosphere. Dimmed lights, velvet banquettes and a kitchen that celebrates the seasons.",
     "about.p2": "As night falls, the dining room slowly becomes a lounge: the music rises, the cocktails flow, and the moon keeps watch over the rest.",
-    "about.s1": "Seats", "about.s2": "Signature cocktails", "about.s3": "Private salon",
+    "about.s1": "Seats", "about.s2": "Signature cocktails", "about.s3": "Hours of music / wk",
+    "sig.eyebrow": "Signatures", "sig.title": "The house must-haves",
     "menu.eyebrow": "The menu", "menu.title": "A menu for every phase of the moon",
     "menu.tab1": "Starters", "menu.tab2": "Mains", "menu.tab3": "Desserts", "menu.tab4": "Cocktails",
     "m.share": "To share", "m.veg": "Veggie", "m.sig": "Signature", "m.zero": "Alcohol-free",
     "m.s1": "Crescent tuna tartare", "m.s1d": "Albacore tuna, avocado, yuzu, black rice crisps",
     "m.s2": "Burrata & local tomatoes", "m.s2d": "Basil pesto, smoked oil, house focaccia",
     "m.s3": "Crispy calamari", "m.s3d": "Preserved lemon aioli, Espelette pepper",
-    "m.s4": "Starry Night board", "m.s4d": "Charcuterie, Québec cheeses, olives, preserves and grilled bread",
+    "m.s4": "Starry Night board", "m.s4d": "Charcuterie, Québec cheeses, olives, nuts, grapes and crackers",
     "m.p1": "Midnight filet mignon", "m.p1d": "8 oz AAA beef, truffled purée, port jus",
     "m.p2": "Maple-glazed salmon", "m.p2d": "Wild rice, asparagus, citrus beurre blanc",
-    "m.p3": "Wild mushroom risotto", "m.p3d": "24-month Parmigiano, truffle oil, chives",
+    "m.p3": "Parmesan & herb risotto", "m.p3d": "24-month Parmigiano, brown butter, fresh herbs",
     "m.p4": "Grilled octopus", "m.p4d": "Fondant potatoes, chorizo, romesco",
-    "m.p5": "Clair de lune pasta", "m.p5d": "Linguine, tiger shrimp, garlic, white wine, chili",
-    "m.d1": "Chocolate eclipse", "m.d1d": "70% dark fondant, molten centre, vanilla ice cream",
+    "m.p5": "Clair de lune pasta", "m.p5d": "Tiger shrimp, garlic, white wine, chili, parmesan",
+    "m.d1": "Chocolate eclipse", "m.d1d": "70% dark chocolate cake, silky ganache, vanilla ice cream",
     "m.d2": "Lavender crème brûlée", "m.d2d": "Caramelized sugar, Breton shortbread",
     "m.d3": "Full moon", "m.d3d": "White chocolate sphere, red berries, warm sauce poured tableside",
-    "m.c1d": "Butterfly-pea gin, elderflower, lemon, egg white",
-    "m.c2d": "Bourbon, smoked maple syrup, orange bitters",
+    "m.c1d": "Gin, Lillet blanc, apricot liqueur, orange zest — golden as the full moon",
+    "m.c2d": "Bourbon, smoked maple syrup, orange bitters, cherry",
     "m.c3d": "Spiced rum, espresso, cacao liqueur",
     "m.c4d": "Vodka, lychee, rose, sparkling wine",
     "m.c5d": "Honey, ginger, lime, sparkling water",
@@ -48,7 +44,7 @@
     "nights.3.day": "Friday & Saturday", "nights.3.t": "Full moon — DJ Lounge", "nights.3.d": "Dinner turns into lounge at 10 pm. Resident DJs, bottle service, smart dress code.",
     "nights.4.day": "Sunday", "nights.4.t": "Honeymoon brunch", "nights.4.d": "Gourmet brunch from 10 am to 3 pm, mimosas and acoustic music.",
     "gallery.eyebrow": "Gallery", "gallery.title": "The Moonlight atmosphere",
-    "g.1": "The dining room", "g.2": "The bar", "g.3": "Moonlight cocktail", "g.4": "Full moon night", "g.5": "Midnight filet mignon", "g.6": "The private salon",
+    "g.1": "The bar", "g.2": "Wine cellar", "g.3": "Mixology", "g.4": "At the table", "g.5": "Velvet banquettes", "g.6": "Events",
     "private.eyebrow": "Private events", "private.title": "Your night, our moon",
     "private.p": "Birthdays, business dinners, engagements or launches: our private salon welcomes up to 40 guests, and the full room up to 150 for cocktails.",
     "private.l1": "Custom menus and bottle packages", "private.l2": "DJ, lighting and bespoke décor", "private.l3": "A dedicated coordinator for your event",
@@ -63,7 +59,13 @@
     "visit.parking": "Parking", "visit.parkingD": "Free on-site parking. Valet service on Friday and Saturday nights.",
     "d.mon": "Monday – Tuesday", "d.wed": "Wednesday – Thursday", "d.fri": "Friday – Saturday", "d.sun": "Sunday",
     "footer.tag": "Dine beneath the moon, in Laval.", "footer.rights": "All rights reserved.",
-    "footer.age": "Alcohol served to guests 18+. Please drink responsibly."
+    "footer.age": "Alcohol served to guests 18+. Please drink responsibly.", "footer.photos": "Photos: Unsplash",
+    "alt.about1": "Table lit by a lamp in a dimly lit dining room", "alt.about2": "Golden cocktail served in a coupe at the bar",
+    "alt.sig1": "Sliced beef filet on a black plate", "alt.sig2": "Crispy fried calamari", "alt.sig3": "Shrimp pasta with parmesan",
+    "alt.sig4": "Creamy risotto topped with herbs and parmesan", "alt.sig5": "Old fashioned with orange slice and cherry",
+    "alt.n1": "Red wine poured into a glass", "alt.n2": "Musician playing the saxophone", "alt.n3": "DJ at the decks at night", "alt.n4": "Brunch table",
+    "alt.g1": "Dimly lit bar with stools", "alt.g2": "Red wine poured into a glass", "alt.g3": "Bartender pouring into a cocktail shaker",
+    "alt.g4": "Table set with dishes and glasses", "alt.g5": "Dining room with velvet banquettes", "alt.g6": "Table set for an elegant event"
   };
 
   const UI = {
@@ -90,8 +92,10 @@
   };
 
   const i18nNodes = $$("[data-i18n]");
+  const altNodes = $$("[data-i18n-alt]");
   const FR = {};
   i18nNodes.forEach((el) => { FR[el.dataset.i18n] = el.innerHTML; });
+  altNodes.forEach((el) => { FR[el.dataset.i18nAlt] = el.alt; });
 
   let lang = "fr";
   try { lang = localStorage.getItem("moonlight-lang") === "en" ? "en" : "fr"; } catch (_) { /* storage unavailable */ }
@@ -102,12 +106,11 @@
     const dict = lang === "en" ? EN : FR;
     i18nNodes.forEach((el) => {
       const val = dict[el.dataset.i18n];
-      if (val !== undefined) el.innerHTML = val;
+      if (val !== undefined && el.innerHTML !== val) el.innerHTML = val;
     });
-    $$("[data-i18n-aria]").forEach((el) => {
-      const key = el.dataset.i18nAria;
-      const val = lang === "en" ? EN[key] : FR[key];
-      if (val) el.setAttribute("aria-label", val);
+    altNodes.forEach((el) => {
+      const val = dict[el.dataset.i18nAlt];
+      if (val) el.alt = val;
     });
     const btn = $("#lang-toggle");
     btn.textContent = UI[lang].langBtn;
@@ -117,6 +120,7 @@
     buildTimeOptions();
     updateOpenNow();
     try { localStorage.setItem("moonlight-lang", lang); } catch (_) { /* ignore */ }
+    document.dispatchEvent(new CustomEvent("moonlight:lang", { detail: lang }));
   }
 
   $("#lang-toggle").addEventListener("click", () => applyLang(lang === "fr" ? "en" : "fr"));
@@ -126,9 +130,18 @@
   const menuBtn = $("#menu-toggle");
   const navLinks = $("#nav-links");
 
-  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 24);
+  let lastY = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    header.classList.toggle("scrolled", y > 24);
+    // Hide on scroll down, reveal on scroll up (never while the mobile menu is open)
+    const menuOpen = menuBtn.getAttribute("aria-expanded") === "true";
+    header.classList.toggle("hidden", !menuOpen && y > 400 && y > lastY);
+    lastY = y;
+  };
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
+  header.addEventListener("focusin", () => header.classList.remove("hidden"));
 
   function setMenuLabel() {
     const open = menuBtn.getAttribute("aria-expanded") === "true";
@@ -163,34 +176,20 @@
     spyTargets.forEach((t) => spy.observe(t));
   }
 
-  /* ---------------- reveal on scroll ---------------- */
-  const reveals = $$(".reveal");
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    reveals.forEach((el) => el.classList.add("in"));
-  } else {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const siblings = Array.from(el.parentElement.children).filter((c) => c.classList.contains("reveal"));
-        el.style.transitionDelay = `${Math.min(siblings.indexOf(el), 5) * 70}ms`;
-        el.classList.add("in");
-        io.unobserve(el);
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-    reveals.forEach((el) => io.observe(el));
-  }
-
   /* ---------------- menu tabs (WAI-ARIA tabs pattern) ---------------- */
   const tabs = $$('[role="tab"]');
+  const menuPhotos = $$(".menu-photo img");
   function selectTab(tab, focus) {
+    const panelId = tab.getAttribute("aria-controls");
     tabs.forEach((t) => {
       const selected = t === tab;
       t.setAttribute("aria-selected", String(selected));
       t.tabIndex = selected ? 0 : -1;
       $(`#${t.getAttribute("aria-controls")}`).hidden = !selected;
     });
+    menuPhotos.forEach((img) => img.classList.toggle("active", img.dataset.panel === panelId));
     if (focus) tab.focus();
+    document.dispatchEvent(new CustomEvent("moonlight:tab", { detail: $(`#${panelId}`) }));
   }
   tabs.forEach((tab, i) => {
     tab.addEventListener("click", () => selectTab(tab, false));
@@ -203,6 +202,8 @@
       if (next) { e.preventDefault(); selectTab(next, true); }
     });
   });
+  // Warm the inactive tab photos once the page is idle so switching is instant
+  window.addEventListener("load", () => menuPhotos.forEach((img) => { img.loading = "eager"; }));
 
   /* ---------------- hours + open now ---------------- */
   // [open, close] in hours; close > 24 spills into the next day.
@@ -322,12 +323,12 @@
       return;
     }
 
-    submitBtn.classList.add("is-loading");
+    submitBtn.classList.add("is-busy");
     submitBtn.setAttribute("aria-busy", "true");
 
     // TODO: wire to the real booking backend (e.g. OpenTable, Libro, or a form endpoint).
     setTimeout(() => {
-      submitBtn.classList.remove("is-loading");
+      submitBtn.classList.remove("is-busy");
       submitBtn.removeAttribute("aria-busy");
       const d = new Date(`${dateInput.value}T00:00`).toLocaleDateString(UI[lang].locale, { weekday: "long", day: "numeric", month: "long" });
       const t = timeSelect.options[timeSelect.selectedIndex].text;

@@ -8,14 +8,26 @@
   <meta name="theme-color" content="#070A1F">
   <meta property="og:title" content="Moonlight Resto Lounge · Laval">
   <meta property="og:description" content="Cuisine raffinée, mixologie signature et soirées lounge à Laval.">
+  <meta property="og:image" content="https://unsplash.com/photos/ORAV7_PAXAE/download?w=1200">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Aller au contenu</a>
+
+  <!-- ============ PRELOADER ============ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="pre-moon"><div class="pre-shadow"></div></div>
+    <p class="pre-word">Moonlight</p>
+  </div>
+
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="cursor" aria-hidden="true"></div>
 
   <!-- ============ HEADER ============ -->
   <header class="site-header" id="top">
@@ -36,7 +48,7 @@
 
       <div class="nav-actions">
         <button class="lang-toggle" type="button" id="lang-toggle" aria-label="Switch to English">EN</button>
-        <a class="btn btn-gold btn-sm nav-cta" href="#reserve" data-i18n="cta.reserve">Réserver</a>
+        <a class="btn btn-gold btn-sm nav-cta magnetic" href="#reserve" data-i18n="cta.reserve">Réserver</a>
         <button class="menu-toggle" type="button" id="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Ouvrir le menu">
           <span></span><span></span><span></span>
         </button>
@@ -47,77 +59,96 @@
   <main id="main">
     <!-- ============ HERO ============ -->
     <section class="hero" aria-labelledby="hero-title">
-      <div class="sky" aria-hidden="true">
-        <div class="stars stars-1"></div>
-        <div class="stars stars-2"></div>
-        <div class="moon"><div class="moon-glow"></div></div>
-        <svg class="skyline" viewBox="0 0 1440 220" preserveAspectRatio="none">
-          <path d="M0 220V150h40v-30h30v40h50v-70h20v-20h20v20h20v90h60v-50h40v-40h30v40h20v60h70V80h15V60h30v20h15v100h50v-40h40v30h60v-80h25v-30h10v30h25v100h60v-60h50v-30h40v30h20v50h70v-90h30v90h50v-40h40v-20h20v20h30v60h60v-110h20v-25h20v25h20v130h50v-60h40v40h50v-20h40v40H1440v40z" fill="currentColor"/>
-        </svg>
+      <div class="hero-media media" aria-hidden="true">
+        <img src="https://unsplash.com/photos/ORAV7_PAXAE/download?w=2000" alt="" fetchpriority="high" decoding="async" onerror="this.classList.add('failed')">
       </div>
+      <div class="hero-veil" aria-hidden="true"></div>
+      <canvas class="hero-particles" id="particles" aria-hidden="true"></canvas>
+      <div class="hero-moon" aria-hidden="true"></div>
 
       <div class="hero-content container">
-        <p class="eyebrow reveal" data-i18n="hero.eyebrow">Laval · Resto &amp; Lounge</p>
-        <h1 id="hero-title" class="hero-title reveal">
-          <span data-i18n="hero.title1">Dînez sous</span>
-          <em data-i18n="hero.title2">la lune</em>
+        <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">Laval · Resto &amp; Lounge</p>
+        <h1 id="hero-title" class="hero-title">
+          <span class="ht-line" data-i18n="hero.title1">Dînez sous</span>
+          <em class="ht-line" data-i18n="hero.title2">la lune</em>
         </h1>
-        <p class="hero-lead reveal" data-i18n="hero.lead">Cuisine raffinée, cocktails signature et ambiance feutrée — du souper aux petites heures.</p>
-        <div class="hero-ctas reveal">
-          <a class="btn btn-gold" href="#reserve" data-i18n="cta.reserveTable">Réserver une table</a>
-          <a class="btn btn-ghost" href="#menu" data-i18n="cta.menu">Voir le menu</a>
+        <p class="hero-lead" data-i18n="hero.lead">Cuisine raffinée, cocktails signature et ambiance feutrée — du souper aux petites heures.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-gold magnetic" href="#reserve" data-i18n="cta.reserveTable">Réserver une table</a>
+          <a class="btn btn-ghost magnetic" href="#menu" data-i18n="cta.menu">Voir le menu</a>
         </div>
       </div>
 
-      <a class="scroll-cue" href="#highlights" aria-label="Défiler vers le contenu">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      <a class="scroll-cue" href="#marquee" aria-label="Défiler vers le contenu">
+        <span class="scroll-line"></span>
       </a>
     </section>
 
-    <!-- ============ HIGHLIGHTS STRIP ============ -->
-    <section class="highlights" id="highlights" aria-label="Points forts">
-      <div class="container highlights-grid">
-        <div class="highlight reveal">
-          <svg class="icon" aria-hidden="true"><use href="#icon-plate"/></svg>
-          <h2 data-i18n="hl.1.t">Cuisine de saison</h2>
-          <p data-i18n="hl.1.d">Produits du Québec, inspirations méditerranéennes.</p>
-        </div>
-        <div class="highlight reveal">
-          <svg class="icon" aria-hidden="true"><use href="#icon-glass"/></svg>
-          <h2 data-i18n="hl.2.t">Mixologie signature</h2>
-          <p data-i18n="hl.2.d">Cocktails d'auteur et sélection de vins privés.</p>
-        </div>
-        <div class="highlight reveal">
-          <svg class="icon" aria-hidden="true"><use href="#icon-music"/></svg>
-          <h2 data-i18n="hl.3.t">Soirées lounge</h2>
-          <p data-i18n="hl.3.d">Jazz live, DJ résidents et ambiance nocturne.</p>
-        </div>
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" id="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Cuisine de saison</span><i></i><span>Mixologie signature</span><i></i><span>Jazz live</span><i></i><span>DJ lounge</span><i></i><span>Laval</span><i></i>
+        <span>Cuisine de saison</span><i></i><span>Mixologie signature</span><i></i><span>Jazz live</span><i></i><span>DJ lounge</span><i></i><span>Laval</span><i></i>
       </div>
-    </section>
+    </div>
 
     <!-- ============ ABOUT ============ -->
     <section class="section about" id="about" aria-labelledby="about-title">
       <div class="container about-grid">
-        <div class="about-art reveal" aria-hidden="true">
-          <div class="arch">
-            <div class="arch-moon"></div>
-            <div class="arch-lines"></div>
-          </div>
+        <div class="about-art">
+          <figure class="about-main media img-reveal">
+            <img src="https://unsplash.com/photos/mLPNw6L5t5o/download?w=1200" alt="Table éclairée par une lampe dans une salle tamisée" data-i18n-alt="alt.about1" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+          </figure>
+          <figure class="about-float media img-reveal" data-speed="-0.15">
+            <img src="https://unsplash.com/photos/Pq6omXyUpWA/download?w=800" alt="Cocktail doré servi dans une coupe au bar" data-i18n-alt="alt.about2" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+          </figure>
           <div class="about-badge">
             <span class="badge-num">7/7</span>
             <span class="badge-label" data-i18n="about.badge">soirs par semaine</span>
           </div>
         </div>
         <div class="about-copy">
-          <p class="eyebrow reveal" data-i18n="about.eyebrow">Notre histoire</p>
-          <h2 id="about-title" class="section-title reveal" data-i18n="about.title">Là où la soirée prend son temps</h2>
-          <p class="reveal" data-i18n="about.p1">Moonlight est né d'une idée simple : offrir à Laval un lieu où l'on vient pour un bon repas et où l'on reste pour l'atmosphère. Lumières tamisées, banquettes de velours et une cuisine qui célèbre les saisons.</p>
-          <p class="reveal" data-i18n="about.p2">Le soir venu, la salle à manger se transforme doucement en lounge : la musique monte, les cocktails s'enchaînent et la lune veille sur le reste.</p>
-          <dl class="stats reveal">
-            <div><dt data-i18n="about.s1">Places assises</dt><dd>120</dd></div>
-            <div><dt data-i18n="about.s2">Cocktails signature</dt><dd>18</dd></div>
-            <div><dt data-i18n="about.s3">Salon privé</dt><dd>1</dd></div>
+          <p class="eyebrow fade-up" data-i18n="about.eyebrow">Notre histoire</p>
+          <h2 id="about-title" class="section-title split" data-i18n="about.title">Là où la soirée prend son temps</h2>
+          <p class="fade-up" data-i18n="about.p1">Moonlight est né d'une idée simple : offrir à Laval un lieu où l'on vient pour un bon repas et où l'on reste pour l'atmosphère. Lumières tamisées, banquettes de velours et une cuisine qui célèbre les saisons.</p>
+          <p class="fade-up" data-i18n="about.p2">Le soir venu, la salle à manger se transforme doucement en lounge : la musique monte, les cocktails s'enchaînent et la lune veille sur le reste.</p>
+          <dl class="stats fade-up">
+            <div><dt data-i18n="about.s1">Places assises</dt><dd data-count="120">120</dd></div>
+            <div><dt data-i18n="about.s2">Cocktails signature</dt><dd data-count="18">18</dd></div>
+            <div><dt data-i18n="about.s3">Heures de musique / sem.</dt><dd data-count="36">36</dd></div>
           </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SIGNATURES (pinned horizontal scroll) ============ -->
+    <section class="signatures" id="signatures" aria-labelledby="sig-title">
+      <div class="sig-pin">
+        <div class="container sig-head">
+          <p class="eyebrow" data-i18n="sig.eyebrow">Signatures</p>
+          <h2 id="sig-title" class="section-title split" data-i18n="sig.title">Les incontournables de la maison</h2>
+        </div>
+        <div class="sig-track" id="sig-track">
+          <article class="sig-card">
+            <div class="media"><img src="https://unsplash.com/photos/WmTK_QfDxlE/download?w=1000" alt="Filet de bœuf tranché sur assiette noire" data-i18n-alt="alt.sig1" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="sig-info"><span class="sig-num">01</span><h3 data-i18n="m.p1">Filet mignon Minuit</h3><p class="sig-price">58 $</p></div>
+          </article>
+          <article class="sig-card">
+            <div class="media"><img src="https://unsplash.com/photos/x_25LBUY-EI/download?w=1000" alt="Calmars frits croustillants" data-i18n-alt="alt.sig2" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="sig-info"><span class="sig-num">02</span><h3 data-i18n="m.s3">Calmars croustillants</h3><p class="sig-price">19 $</p></div>
+          </article>
+          <article class="sig-card">
+            <div class="media"><img src="https://unsplash.com/photos/atTu7WJ_Vqk/download?w=1000" alt="Pâtes aux crevettes et parmesan" data-i18n-alt="alt.sig3" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="sig-info"><span class="sig-num">03</span><h3 data-i18n="m.p5">Pâtes Clair de lune</h3><p class="sig-price">34 $</p></div>
+          </article>
+          <article class="sig-card">
+            <div class="media"><img src="https://unsplash.com/photos/qIPRTMulc-g/download?w=1000" alt="Risotto crémeux garni d'herbes et de parmesan" data-i18n-alt="alt.sig4" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="sig-info"><span class="sig-num">04</span><h3 data-i18n="m.p3">Risotto parmesan &amp; herbes</h3><p class="sig-price">32 $</p></div>
+          </article>
+          <article class="sig-card">
+            <div class="media"><img src="https://unsplash.com/photos/xk4upGT5SVY/download?w=1000" alt="Old fashioned avec tranche d'orange et cerise" data-i18n-alt="alt.sig5" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="sig-info"><span class="sig-num">05</span><h3>Laval Old Fashioned</h3><p class="sig-price">18 $</p></div>
+          </article>
         </div>
       </div>
     </section>
@@ -126,55 +157,66 @@
     <section class="section menu" id="menu" aria-labelledby="menu-title">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal" data-i18n="menu.eyebrow">La carte</p>
-          <h2 id="menu-title" class="section-title reveal" data-i18n="menu.title">Un menu pour chaque phase de la lune</h2>
+          <p class="eyebrow fade-up" data-i18n="menu.eyebrow">La carte</p>
+          <h2 id="menu-title" class="section-title split" data-i18n="menu.title">Un menu pour chaque phase de la lune</h2>
         </header>
 
-        <div class="tabs reveal" role="tablist" aria-label="Catégories du menu">
+        <div class="tabs fade-up" role="tablist" aria-label="Catégories du menu">
           <button role="tab" id="tab-starters" aria-controls="panel-starters" aria-selected="true" data-i18n="menu.tab1">Entrées</button>
           <button role="tab" id="tab-mains" aria-controls="panel-mains" aria-selected="false" tabindex="-1" data-i18n="menu.tab2">Plats</button>
           <button role="tab" id="tab-desserts" aria-controls="panel-desserts" aria-selected="false" tabindex="-1" data-i18n="menu.tab3">Desserts</button>
           <button role="tab" id="tab-cocktails" aria-controls="panel-cocktails" aria-selected="false" tabindex="-1" data-i18n="menu.tab4">Cocktails</button>
         </div>
 
-        <div class="tab-panel" role="tabpanel" id="panel-starters" aria-labelledby="tab-starters">
-          <ul class="menu-list">
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s1">Tartare de thon Crescent</h3><span class="dots" aria-hidden="true"></span><span class="price">24</span></div><p data-i18n="m.s1d">Thon albacore, avocat, yuzu, croustilles de riz noir</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s2">Burrata &amp; tomates d'ici</h3><span class="dots" aria-hidden="true"></span><span class="price">21</span></div><p data-i18n="m.s2d">Pesto de basilic, huile fumée, focaccia maison</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s3">Calmars croustillants</h3><span class="dots" aria-hidden="true"></span><span class="price">19</span></div><p data-i18n="m.s3d">Aïoli au citron confit, piment d'Espelette</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s4">Plateau Nuit Étoilée</h3><span class="tag" data-i18n="m.share">À partager</span><span class="dots" aria-hidden="true"></span><span class="price">48</span></div><p data-i18n="m.s4d">Charcuteries, fromages québécois, olives, confits et pain grillé</p></li>
-          </ul>
+        <div class="menu-layout">
+          <div class="menu-photo media fade-up" aria-hidden="true">
+            <img data-panel="panel-starters" class="active" src="https://unsplash.com/photos/irpHVBQ8xfE/download?w=1100" alt="" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+            <img data-panel="panel-mains" src="https://unsplash.com/photos/M0lUxgLnlfk/download?w=1100" alt="" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+            <img data-panel="panel-desserts" src="https://unsplash.com/photos/ZToCBpyv3aA/download?w=1100" alt="" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+            <img data-panel="panel-cocktails" src="https://unsplash.com/photos/Pq6omXyUpWA/download?w=1100" alt="" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+          </div>
+
+          <div class="menu-panels">
+            <div class="tab-panel" role="tabpanel" id="panel-starters" aria-labelledby="tab-starters">
+              <ul class="menu-list">
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s4">Plateau Nuit Étoilée</h3><span class="tag" data-i18n="m.share">À partager</span><span class="dots" aria-hidden="true"></span><span class="price">48</span></div><p data-i18n="m.s4d">Charcuteries, fromages québécois, olives, noix, raisins et craquelins</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s1">Tartare de thon Crescent</h3><span class="dots" aria-hidden="true"></span><span class="price">24</span></div><p data-i18n="m.s1d">Thon albacore, avocat, yuzu, croustilles de riz noir</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s2">Burrata &amp; tomates d'ici</h3><span class="dots" aria-hidden="true"></span><span class="price">21</span></div><p data-i18n="m.s2d">Pesto de basilic, huile fumée, focaccia maison</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.s3">Calmars croustillants</h3><span class="dots" aria-hidden="true"></span><span class="price">19</span></div><p data-i18n="m.s3d">Aïoli au citron confit, piment d'Espelette</p></li>
+              </ul>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="panel-mains" aria-labelledby="tab-mains" hidden>
+              <ul class="menu-list">
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p1">Filet mignon Minuit</h3><span class="dots" aria-hidden="true"></span><span class="price">58</span></div><p data-i18n="m.p1d">Bœuf AAA 8 oz, purée truffée, jus au porto</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p2">Saumon glacé à l'érable</h3><span class="dots" aria-hidden="true"></span><span class="price">36</span></div><p data-i18n="m.p2d">Riz sauvage, asperges, beurre blanc aux agrumes</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p3">Risotto parmesan &amp; herbes</h3><span class="tag" data-i18n="m.veg">Végé</span><span class="dots" aria-hidden="true"></span><span class="price">32</span></div><p data-i18n="m.p3d">Parmigiano 24 mois, beurre noisette, herbes fraîches</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p5">Pâtes Clair de lune</h3><span class="dots" aria-hidden="true"></span><span class="price">34</span></div><p data-i18n="m.p5d">Crevettes tigrées, ail, vin blanc, piment, parmesan</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p4">Pieuvre grillée</h3><span class="dots" aria-hidden="true"></span><span class="price">39</span></div><p data-i18n="m.p4d">Pommes de terre fondantes, chorizo, romesco</p></li>
+              </ul>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="panel-desserts" aria-labelledby="tab-desserts" hidden>
+              <ul class="menu-list">
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.d1">Éclipse au chocolat</h3><span class="dots" aria-hidden="true"></span><span class="price">16</span></div><p data-i18n="m.d1d">Gâteau au chocolat noir 70 %, ganache onctueuse, glace vanille</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.d2">Crème brûlée à la lavande</h3><span class="dots" aria-hidden="true"></span><span class="price">14</span></div><p data-i18n="m.d2d">Sucre caramélisé, sablé breton</p></li>
+                <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.d3">Pleine lune</h3><span class="tag" data-i18n="m.share">À partager</span><span class="dots" aria-hidden="true"></span><span class="price">22</span></div><p data-i18n="m.d3d">Sphère de chocolat blanc, fruits rouges, sauce chaude versée à table</p></li>
+              </ul>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="panel-cocktails" aria-labelledby="tab-cocktails" hidden>
+              <ul class="menu-list">
+                <li class="menu-item"><div class="mi-head"><h3>Moonlight</h3><span class="tag" data-i18n="m.sig">Signature</span><span class="dots" aria-hidden="true"></span><span class="price">17</span></div><p data-i18n="m.c1d">Gin, Lillet blanc, liqueur d'abricot, zeste d'orange — doré comme la pleine lune</p></li>
+                <li class="menu-item"><div class="mi-head"><h3>Laval Old Fashioned</h3><span class="dots" aria-hidden="true"></span><span class="price">18</span></div><p data-i18n="m.c2d">Bourbon, sirop d'érable fumé, amers à l'orange, cerise</p></li>
+                <li class="menu-item"><div class="mi-head"><h3>Éclipse</h3><span class="dots" aria-hidden="true"></span><span class="price">16</span></div><p data-i18n="m.c3d">Rhum épicé, café espresso, liqueur de cacao</p></li>
+                <li class="menu-item"><div class="mi-head"><h3>Nuit Blanche</h3><span class="dots" aria-hidden="true"></span><span class="price">16</span></div><p data-i18n="m.c4d">Vodka, litchi, rose, mousseux</p></li>
+                <li class="menu-item"><div class="mi-head"><h3>Lune de miel</h3><span class="tag" data-i18n="m.zero">Sans alcool</span><span class="dots" aria-hidden="true"></span><span class="price">11</span></div><p data-i18n="m.c5d">Miel, gingembre, citron vert, eau pétillante</p></li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <div class="tab-panel" role="tabpanel" id="panel-mains" aria-labelledby="tab-mains" hidden>
-          <ul class="menu-list">
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p1">Filet mignon Minuit</h3><span class="dots" aria-hidden="true"></span><span class="price">58</span></div><p data-i18n="m.p1d">Bœuf AAA 8 oz, purée truffée, jus au porto</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p2">Saumon glacé à l'érable</h3><span class="dots" aria-hidden="true"></span><span class="price">36</span></div><p data-i18n="m.p2d">Riz sauvage, asperges, beurre blanc aux agrumes</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p3">Risotto aux champignons sauvages</h3><span class="tag" data-i18n="m.veg">Végé</span><span class="dots" aria-hidden="true"></span><span class="price">32</span></div><p data-i18n="m.p3d">Parmigiano 24 mois, huile de truffe, ciboulette</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p4">Pieuvre grillée</h3><span class="dots" aria-hidden="true"></span><span class="price">39</span></div><p data-i18n="m.p4d">Pommes de terre fondantes, chorizo, romesco</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.p5">Pâtes Clair de lune</h3><span class="dots" aria-hidden="true"></span><span class="price">34</span></div><p data-i18n="m.p5d">Linguine, crevettes tigrées, ail, vin blanc, piment</p></li>
-          </ul>
-        </div>
-
-        <div class="tab-panel" role="tabpanel" id="panel-desserts" aria-labelledby="tab-desserts" hidden>
-          <ul class="menu-list">
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.d1">Éclipse au chocolat</h3><span class="dots" aria-hidden="true"></span><span class="price">16</span></div><p data-i18n="m.d1d">Fondant noir 70 %, cœur coulant, glace vanille</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.d2">Crème brûlée à la lavande</h3><span class="dots" aria-hidden="true"></span><span class="price">14</span></div><p data-i18n="m.d2d">Sucre caramélisé, sablé breton</p></li>
-            <li class="menu-item"><div class="mi-head"><h3 data-i18n="m.d3">Pleine lune</h3><span class="tag" data-i18n="m.share">À partager</span><span class="dots" aria-hidden="true"></span><span class="price">22</span></div><p data-i18n="m.d3d">Sphère de chocolat blanc, fruits rouges, sauce chaude versée à table</p></li>
-          </ul>
-        </div>
-
-        <div class="tab-panel" role="tabpanel" id="panel-cocktails" aria-labelledby="tab-cocktails" hidden>
-          <ul class="menu-list">
-            <li class="menu-item"><div class="mi-head"><h3>Moonlight</h3><span class="tag" data-i18n="m.sig">Signature</span><span class="dots" aria-hidden="true"></span><span class="price">17</span></div><p data-i18n="m.c1d">Gin infusé au pois papillon, sureau, citron, blanc d'œuf</p></li>
-            <li class="menu-item"><div class="mi-head"><h3>Laval Old Fashioned</h3><span class="dots" aria-hidden="true"></span><span class="price">18</span></div><p data-i18n="m.c2d">Bourbon, sirop d'érable fumé, amers à l'orange</p></li>
-            <li class="menu-item"><div class="mi-head"><h3>Éclipse</h3><span class="dots" aria-hidden="true"></span><span class="price">16</span></div><p data-i18n="m.c3d">Rhum épicé, café espresso, liqueur de cacao</p></li>
-            <li class="menu-item"><div class="mi-head"><h3>Nuit Blanche</h3><span class="dots" aria-hidden="true"></span><span class="price">16</span></div><p data-i18n="m.c4d">Vodka, litchi, rose, mousseux</p></li>
-            <li class="menu-item"><div class="mi-head"><h3>Lune de miel</h3><span class="tag" data-i18n="m.zero">Sans alcool</span><span class="dots" aria-hidden="true"></span><span class="price">11</span></div><p data-i18n="m.c5d">Miel, gingembre, citron vert, eau pétillante</p></li>
-          </ul>
-        </div>
-
-        <p class="menu-note reveal" data-i18n="menu.note">Prix en dollars canadiens, taxes en sus. Informez-nous de toute allergie — notre équipe adaptera votre expérience.</p>
+        <p class="menu-note fade-up" data-i18n="menu.note">Prix en dollars canadiens, taxes en sus. Informez-nous de toute allergie — notre équipe adaptera votre expérience.</p>
       </div>
     </section>
 
@@ -182,33 +224,45 @@
     <section class="section nights" id="nights" aria-labelledby="nights-title">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal" data-i18n="nights.eyebrow">Les soirées</p>
-          <h2 id="nights-title" class="section-title reveal" data-i18n="nights.title">Chaque nuit a sa phase</h2>
+          <p class="eyebrow fade-up" data-i18n="nights.eyebrow">Les soirées</p>
+          <h2 id="nights-title" class="section-title split" data-i18n="nights.title">Chaque nuit a sa phase</h2>
         </header>
         <div class="nights-grid">
-          <article class="night-card reveal">
-            <div class="phase phase-crescent" aria-hidden="true"></div>
-            <p class="night-day" data-i18n="nights.1.day">Mercredi</p>
-            <h3 data-i18n="nights.1.t">Vins &amp; Croissant de lune</h3>
-            <p data-i18n="nights.1.d">Bouteilles sélectionnées à moitié prix avec tout plat principal.</p>
+          <article class="night-card">
+            <div class="media"><img src="https://unsplash.com/photos/5ka611SHxQo/download?w=900" alt="Vin rouge versé dans un verre" data-i18n-alt="alt.n1" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="night-body">
+              <div class="phase phase-crescent" aria-hidden="true"></div>
+              <p class="night-day" data-i18n="nights.1.day">Mercredi</p>
+              <h3 data-i18n="nights.1.t">Vins &amp; Croissant de lune</h3>
+              <p data-i18n="nights.1.d">Bouteilles sélectionnées à moitié prix avec tout plat principal.</p>
+            </div>
           </article>
-          <article class="night-card reveal">
-            <div class="phase phase-half" aria-hidden="true"></div>
-            <p class="night-day" data-i18n="nights.2.day">Jeudi</p>
-            <h3 data-i18n="nights.2.t">Jazz au clair de lune</h3>
-            <p data-i18n="nights.2.d">Trio jazz live dès 20 h. Menu dégustation 3 services.</p>
+          <article class="night-card">
+            <div class="media"><img src="https://unsplash.com/photos/1FlHdAg6Mzs/download?w=900" alt="Musicien jouant du saxophone" data-i18n-alt="alt.n2" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="night-body">
+              <div class="phase phase-half" aria-hidden="true"></div>
+              <p class="night-day" data-i18n="nights.2.day">Jeudi</p>
+              <h3 data-i18n="nights.2.t">Jazz au clair de lune</h3>
+              <p data-i18n="nights.2.d">Trio jazz live dès 20 h. Menu dégustation 3 services.</p>
+            </div>
           </article>
-          <article class="night-card featured reveal">
-            <div class="phase phase-full" aria-hidden="true"></div>
-            <p class="night-day" data-i18n="nights.3.day">Vendredi &amp; Samedi</p>
-            <h3 data-i18n="nights.3.t">Pleine lune — DJ Lounge</h3>
-            <p data-i18n="nights.3.d">Le souper se transforme en lounge à 22 h. DJ résidents, service bouteille, tenue soignée.</p>
+          <article class="night-card featured">
+            <div class="media"><img src="https://unsplash.com/photos/gyDoWOAFXCE/download?w=900" alt="DJ aux platines en soirée" data-i18n-alt="alt.n3" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="night-body">
+              <div class="phase phase-full" aria-hidden="true"></div>
+              <p class="night-day" data-i18n="nights.3.day">Vendredi &amp; Samedi</p>
+              <h3 data-i18n="nights.3.t">Pleine lune — DJ Lounge</h3>
+              <p data-i18n="nights.3.d">Le souper se transforme en lounge à 22 h. DJ résidents, service bouteille, tenue soignée.</p>
+            </div>
           </article>
-          <article class="night-card reveal">
-            <div class="phase phase-gibbous" aria-hidden="true"></div>
-            <p class="night-day" data-i18n="nights.4.day">Dimanche</p>
-            <h3 data-i18n="nights.4.t">Brunch Lune de miel</h3>
-            <p data-i18n="nights.4.d">Brunch gourmand de 10 h à 15 h, mimosas et musique acoustique.</p>
+          <article class="night-card">
+            <div class="media"><img src="https://unsplash.com/photos/F-dK7nJWbgo/download?w=900" alt="Table de brunch garnie" data-i18n-alt="alt.n4" loading="lazy" decoding="async" onerror="this.classList.add('failed')"></div>
+            <div class="night-body">
+              <div class="phase phase-gibbous" aria-hidden="true"></div>
+              <p class="night-day" data-i18n="nights.4.day">Dimanche</p>
+              <h3 data-i18n="nights.4.t">Brunch Lune de miel</h3>
+              <p data-i18n="nights.4.d">Brunch gourmand de 10 h à 15 h, mimosas et musique acoustique.</p>
+            </div>
           </article>
         </div>
       </div>
@@ -218,36 +272,42 @@
     <section class="section gallery" id="gallery" aria-labelledby="gallery-title">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal" data-i18n="gallery.eyebrow">Galerie</p>
-          <h2 id="gallery-title" class="section-title reveal" data-i18n="gallery.title">L'ambiance Moonlight</h2>
+          <p class="eyebrow fade-up" data-i18n="gallery.eyebrow">Galerie</p>
+          <h2 id="gallery-title" class="section-title split" data-i18n="gallery.title">L'ambiance Moonlight</h2>
         </header>
-        <!-- Replace each .g-art with an <img> of the real space (WebP, ~1600px wide, loading="lazy"). -->
-        <div class="gallery-grid">
-          <figure class="g-item g-tall reveal"><div class="g-art g-art-1" role="img" aria-label="Salle à manger tamisée" data-i18n-aria="g.1"></div><figcaption data-i18n="g.1">La salle à manger</figcaption></figure>
-          <figure class="g-item reveal"><div class="g-art g-art-2" role="img" aria-label="Bar aux reflets dorés" data-i18n-aria="g.2"></div><figcaption data-i18n="g.2">Le bar</figcaption></figure>
-          <figure class="g-item reveal"><div class="g-art g-art-3" role="img" aria-label="Cocktail signature" data-i18n-aria="g.3"></div><figcaption data-i18n="g.3">Cocktail Moonlight</figcaption></figure>
-          <figure class="g-item g-wide reveal"><div class="g-art g-art-4" role="img" aria-label="Soirée DJ lounge" data-i18n-aria="g.4"></div><figcaption data-i18n="g.4">Soirée Pleine lune</figcaption></figure>
-          <figure class="g-item reveal"><div class="g-art g-art-5" role="img" aria-label="Plat signature" data-i18n-aria="g.5"></div><figcaption data-i18n="g.5">Filet mignon Minuit</figcaption></figure>
-          <figure class="g-item g-wide reveal"><div class="g-art g-art-6" role="img" aria-label="Le salon privé" data-i18n-aria="g.6"></div><figcaption data-i18n="g.6">Le salon privé</figcaption></figure>
+        <div class="gallery-cols">
+          <div class="g-col" data-speed="0.08">
+            <figure class="g-item tall media img-reveal"><img src="https://unsplash.com/photos/x337TitjvNE/download?w=900" alt="Bar tamisé avec tabourets" data-i18n-alt="alt.g1" loading="lazy" decoding="async" onerror="this.classList.add('failed')"><figcaption data-i18n="g.1">Le bar</figcaption></figure>
+            <figure class="g-item media img-reveal"><img src="https://unsplash.com/photos/ttq049c3V2w/download?w=900" alt="Vin rouge versé dans un verre" data-i18n-alt="alt.g2" loading="lazy" decoding="async" onerror="this.classList.add('failed')"><figcaption data-i18n="g.2">Cave à vin</figcaption></figure>
+          </div>
+          <div class="g-col" data-speed="-0.1">
+            <figure class="g-item media img-reveal"><img src="https://unsplash.com/photos/b5pmyraaAtw/download?w=900" alt="Barman versant un cocktail dans un shaker" data-i18n-alt="alt.g3" loading="lazy" decoding="async" onerror="this.classList.add('failed')"><figcaption data-i18n="g.3">Mixologie</figcaption></figure>
+            <figure class="g-item tall media img-reveal"><img src="https://unsplash.com/photos/8K7mplvphAo/download?w=900" alt="Table garnie de plats et de verres" data-i18n-alt="alt.g4" loading="lazy" decoding="async" onerror="this.classList.add('failed')"><figcaption data-i18n="g.4">À table</figcaption></figure>
+          </div>
+          <div class="g-col" data-speed="0.14">
+            <figure class="g-item tall media img-reveal"><img src="https://unsplash.com/photos/pceCMLJ1djQ/download?w=900" alt="Salle à manger aux banquettes de velours" data-i18n-alt="alt.g5" loading="lazy" decoding="async" onerror="this.classList.add('failed')"><figcaption data-i18n="g.5">Banquettes de velours</figcaption></figure>
+            <figure class="g-item media img-reveal"><img src="https://unsplash.com/photos/JaUzpKC2Gjc/download?w=900" alt="Table dressée pour un événement élégant" data-i18n-alt="alt.g6" loading="lazy" decoding="async" onerror="this.classList.add('failed')"><figcaption data-i18n="g.6">Événements</figcaption></figure>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ============ PRIVATE EVENTS ============ -->
-    <section class="section private" id="private" aria-labelledby="private-title">
-      <div class="container private-inner reveal">
-        <div>
+    <section class="private" id="private" aria-labelledby="private-title">
+      <div class="private-media media" aria-hidden="true">
+        <img src="https://unsplash.com/photos/NDNh2Vx2c_w/download?w=2000" alt="" loading="lazy" decoding="async" onerror="this.classList.add('failed')">
+      </div>
+      <div class="container private-inner">
+        <div class="private-card">
           <p class="eyebrow" data-i18n="private.eyebrow">Événements privés</p>
-          <h2 id="private-title" class="section-title" data-i18n="private.title">Votre soirée, notre lune</h2>
+          <h2 id="private-title" class="section-title split" data-i18n="private.title">Votre soirée, notre lune</h2>
           <p data-i18n="private.p">Anniversaires, soupers d'affaires, fiançailles ou lancements : notre salon privé accueille jusqu'à 40 invités, et la salle complète jusqu'à 150 en cocktail.</p>
           <ul class="checks">
             <li data-i18n="private.l1">Menus personnalisés et forfaits bouteilles</li>
             <li data-i18n="private.l2">DJ, éclairage et décor sur mesure</li>
             <li data-i18n="private.l3">Coordonnateur dédié à votre événement</li>
           </ul>
-        </div>
-        <div class="private-cta">
-          <a class="btn btn-gold" href="#reserve" data-event="private" id="private-cta" data-i18n="private.cta">Planifier un événement</a>
+          <a class="btn btn-gold magnetic" href="#reserve" id="private-cta" data-i18n="private.cta">Planifier un événement</a>
           <p class="small" data-i18n="private.small">Réponse sous 24 h.</p>
         </div>
       </div>
@@ -257,16 +317,16 @@
     <section class="section reserve" id="reserve" aria-labelledby="reserve-title">
       <div class="container reserve-grid">
         <div class="reserve-copy">
-          <p class="eyebrow reveal" data-i18n="reserve.eyebrow">Réservations</p>
-          <h2 id="reserve-title" class="section-title reveal" data-i18n="reserve.title">Gardez-nous une place sous la lune</h2>
-          <p class="reveal" data-i18n="reserve.p">Réservez en ligne ou appelez-nous. Pour les groupes de plus de 10 personnes, sélectionnez « Événement privé ».</p>
-          <a class="phone-link reveal" href="tel:+14500000000">
+          <p class="eyebrow fade-up" data-i18n="reserve.eyebrow">Réservations</p>
+          <h2 id="reserve-title" class="section-title split" data-i18n="reserve.title">Gardez-nous une place sous la lune</h2>
+          <p class="fade-up" data-i18n="reserve.p">Réservez en ligne ou appelez-nous. Pour les groupes de plus de 10 personnes, sélectionnez « Événement privé ».</p>
+          <a class="phone-link fade-up" href="tel:+14500000000">
             <svg class="icon" aria-hidden="true"><use href="#icon-phone"/></svg>
             <span>(450) 000-0000</span>
           </a>
         </div>
 
-        <form class="reserve-form reveal" id="reserve-form" novalidate>
+        <form class="reserve-form fade-up" id="reserve-form" novalidate>
           <div class="field">
             <label for="r-name" data-i18n="f.name">Nom complet</label>
             <input id="r-name" name="name" type="text" autocomplete="name" required aria-describedby="r-name-err">
@@ -327,10 +387,10 @@
     <section class="section visit" id="visit" aria-labelledby="visit-title">
       <div class="container visit-grid">
         <div class="visit-info">
-          <p class="eyebrow reveal" data-i18n="visit.eyebrow">Nous trouver</p>
-          <h2 id="visit-title" class="section-title reveal" data-i18n="visit.title">Laval, sous le même ciel</h2>
+          <p class="eyebrow fade-up" data-i18n="visit.eyebrow">Nous trouver</p>
+          <h2 id="visit-title" class="section-title split" data-i18n="visit.title">Laval, sous le même ciel</h2>
 
-          <div class="info-block reveal">
+          <div class="info-block fade-up">
             <svg class="icon" aria-hidden="true"><use href="#icon-pin"/></svg>
             <div>
               <h3 data-i18n="visit.addr">Adresse</h3>
@@ -339,7 +399,7 @@
             </div>
           </div>
 
-          <div class="info-block reveal">
+          <div class="info-block fade-up">
             <svg class="icon" aria-hidden="true"><use href="#icon-clock"/></svg>
             <div>
               <h3 data-i18n="visit.hours">Heures d'ouverture</h3>
@@ -356,7 +416,7 @@
             </div>
           </div>
 
-          <div class="info-block reveal">
+          <div class="info-block fade-up">
             <svg class="icon" aria-hidden="true"><use href="#icon-car"/></svg>
             <div>
               <h3 data-i18n="visit.parking">Stationnement</h3>
@@ -365,7 +425,7 @@
           </div>
         </div>
 
-        <div class="map-wrap reveal">
+        <div class="map-wrap fade-up">
           <iframe title="Carte — Moonlight Resto Lounge, Laval" src="https://www.google.com/maps?q=Laval,+QC&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
@@ -374,6 +434,7 @@
 
   <!-- ============ FOOTER ============ -->
   <footer class="site-footer">
+    <div class="footer-big" aria-hidden="true">Moonlight</div>
     <div class="container footer-grid">
       <div>
         <a class="brand" href="#top">
@@ -399,16 +460,13 @@
     </div>
     <div class="container footer-bottom">
       <p>© <span id="year">2026</span> Moonlight Resto Lounge. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
-      <p data-i18n="footer.age">Service d'alcool aux 18 ans et plus. Buvez de façon responsable.</p>
+      <p><span data-i18n="footer.age">Service d'alcool aux 18 ans et plus. Buvez de façon responsable.</span> · <span data-i18n="footer.photos">Photos : Unsplash</span></p>
     </div>
   </footer>
 
   <!-- ============ ICON SPRITE (Lucide-style, stroke icons) ============ -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="icon-moon" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"/><path d="M26 8a13 13 0 1 0 6 22A11 11 0 0 1 26 8z" fill="currentColor"/></symbol>
-    <symbol id="icon-plate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></symbol>
-    <symbol id="icon-glass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M3 3h18l-9 8z"/><path d="M7.5 7h9"/></symbol>
-    <symbol id="icon-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
     <symbol id="icon-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
     <symbol id="icon-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
     <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
@@ -418,6 +476,10 @@
     <symbol id="icon-tiktok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3a5 5 0 0 0 5 5M16 3v12.5A4.5 4.5 0 1 1 11.5 11"/></symbol>
   </svg>
 
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/SplitText.min.js" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/motion.js" defer></script>
 </body>
 </html>
