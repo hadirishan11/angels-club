@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Prestige Vault Brand Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=block" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --gold: #c9a961; --black: #0a0a0a; --cream: #f4efe6; --ink: #1a1814; --muted: #6f685b; --line: #ddd5c6;
+          --serif: "Cormorant Garamond", Georgia, serif; --caps: "Cinzel", Georgia, serif; --sans: "Inter", Arial, sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--sans); color: var(--ink); font-size: 10.5pt; line-height: 1.55; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; padding: 20mm 18mm 18mm; position: relative; page-break-after: always; overflow: hidden; background: #fff; }
+  .page:last-child { page-break-after: auto; }
+  .dark { background: var(--black); color: var(--cream); }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; line-height: 1.1; }
+  h2 { font-size: 30pt; margin-bottom: 4mm; }
+  h3 { font-size: 15pt; margin: 6mm 0 2mm; }
+  p { margin: 0 0 3mm; }
+  .eyebrow { font-family: var(--caps); font-size: 8pt; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-bottom: 3mm; }
+  .lead { font-size: 11.5pt; color: #3d382f; max-width: 150mm; }
+  .muted { color: var(--muted); }
+  .foot { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; font-family: var(--caps); font-size: 7pt; letter-spacing: .25em; color: var(--muted); border-top: 1px solid var(--line); padding-top: 3mm; }
+  .dark .foot { border-color: #2a2620; }
+  table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 9.5pt; }
+  th { text-align: left; font-family: var(--caps); font-weight: 400; font-size: 7.5pt; letter-spacing: .2em; color: var(--muted); border-bottom: 1px solid var(--ink); padding: 2mm 3mm 2mm 0; }
+  td { border-bottom: 1px solid var(--line); padding: 2.4mm 3mm 2.4mm 0; vertical-align: top; }
+  td:first-child { font-weight: 500; white-space: nowrap; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; }
+  .box { border: 1px solid var(--line); padding: 5mm; }
+  .alert { border: 1.5px solid #9b2c2c; background: #fbf3f2; padding: 5mm 6mm; margin: 5mm 0; }
+  .alert h3 { color: #9b2c2c; margin-top: 0; }
+  .alert ul, .list { margin: 0; padding-left: 5mm; }
+  .alert li, .list li { margin-bottom: 1.4mm; }
+  .tag { display: inline-block; font-family: var(--caps); font-size: 7pt; letter-spacing: .2em; padding: 1mm 2.5mm; border: 1px solid currentColor; }
+  .ok { color: #2f6b3a; } .no { color: #9b2c2c; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* cover */
+  .cover { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .cover img { width: 150mm; }
+  .cover .doc { font-family: var(--caps); letter-spacing: .35em; font-size: 9pt; color: var(--gold); margin-top: 10mm; }
+  .cover .meta { margin-top: 4mm; font-size: 9pt; color: #8f897d; }
+
+  /* logo tiles */
+  .tile { display: flex; align-items: center; justify-content: center; height: 50mm; border: 1px solid var(--line); }
+  .tile { overflow: hidden; }
+  .tile img { max-height: 92%; max-width: 92%; }
+  .tile img.sq { height: 155%; max-height: none; max-width: none; }
+  .tile.k { background: var(--black); border-color: var(--black); }
+  .tile.c { background: var(--cream); }
+  .cap { font-size: 8.5pt; color: var(--muted); margin-top: 2mm; }
+
+  /* swatches */
+  .sw { border: 1px solid var(--line); }
+  .sw .chip { height: 34mm; }
+  .sw .info { padding: 3.5mm 4mm; font-size: 8.5pt; line-height: 1.6; }
+  .sw .info b { font-family: var(--serif); font-size: 15pt; font-weight: 500; display: block; margin-bottom: 1mm; }
+
+  /* type */
+  .spec { display: grid; grid-template-columns: 40mm 1fr; gap: 5mm; padding: 5mm 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+
+  .frame img { width: 66%; margin: 0 auto; display: block; }
+  .frame p { margin: 0; }
+  .frame { text-align: center; }
+  .frame h3 { margin-top: 3mm; }
+</style>
+</head>
+<body>
+
+<!-- 1. Cover -->
+<section class="page dark cover">
+  <img src="../keyhole-crest/prestige-vault-logo-black.png" alt="Prestige Vault">
+  <div class="doc">Brand Guidelines &amp; Production Specification</div>
+  <div class="meta">Version 1.0 · October 2026 · For manufacturing partners</div>
+</section>
+
+<!-- 2. Overview -->
+<section class="page">
+  <div class="eyebrow">01 · Overview</div>
+  <h2>About this document</h2>
+  <p class="lead">Prestige Vault sells luxury shadow-box frames: a black velvet display holding a prop cash stack, Prestige Vault packs and sports-car style key fobs. This document sets out how our brand must appear on every product and package, and the exact specification for each item we order.</p>
+
+  <h3>Contents</h3>
+  <table>
+    <tr><td>01</td><td>Overview and mandatory requirements</td></tr>
+    <tr><td>02</td><td>Logo and logo usage</td></tr>
+    <tr><td>03</td><td>Colors</td></tr>
+    <tr><td>04</td><td>Typography</td></tr>
+    <tr><td>05</td><td>Products: the three compositions</td></tr>
+    <tr><td>06</td><td>Custom inserts: packs, money band, key fobs, plaque</td></tr>
+    <tr><td>07</td><td>Branding, packaging and labels</td></tr>
+    <tr><td>08</td><td>Personalised orders, samples and quality control</td></tr>
+  </table>
+
+  <div class="alert">
+    <h3>Mandatory requirements</h3>
+    <ul>
+      <li><b>No third-party brands or logos anywhere.</b> Do not use Marlboro, Ferrari, Porsche, Mercedes-Benz, Lamborghini, BMW or any other company's name, logo, emblem or packaging design on any item, including key fobs, packs and stickers.</li>
+      <li>All cigarette-style packs must use the <b>Prestige Vault pack design</b> in section 06 only.</li>
+      <li>All key fobs must be <b>unbranded</b>: no car emblems, shields or badges.</li>
+      <li><b>Prop money must be printed on one side only</b> and be <b>smaller than 75% of a real banknote</b> (US $100 note: 156 × 66 mm, so maximum 117 × 49 mm).</li>
+      <li>A physical or photographed <b>sample must be approved</b> by Prestige Vault before mass production.</li>
+    </ul>
+  </div>
+  <p class="muted">If any requirement cannot be met, please tell us before production starts.</p>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>2</span></div>
+</section>
+
+<!-- 3. Logo -->
+<section class="page">
+  <div class="eyebrow">02 · Logo</div>
+  <h2>The Keyhole Crest</h2>
+  <p class="lead">Our logo is a gold keyhole inside a double diamond, with the name PRESTIGE VAULT. Vector files (SVG) and high-resolution PNGs are supplied with this document.</p>
+
+  <div class="grid2" style="margin-top:6mm">
+    <div><div class="tile k"><img class="sq" src="../keyhole-crest/prestige-vault-logo-black.png" alt=""></div><div class="cap"><b>Primary logo.</b> Gold on black. Use on gift boxes, cards, stickers.</div></div>
+    <div><div class="tile c"><img class="sq" src="../keyhole-crest/prestige-vault-logo-cream.png" alt=""></div><div class="cap"><b>Light version.</b> Black on cream or white backgrounds.</div></div>
+    <div><div class="tile k"><img src="../keyhole-crest/prestige-vault-horizontal.png" alt="" style="max-width:none;width:125%"></div><div class="cap"><b>Horizontal logo.</b> For long, narrow areas (box sides, labels).</div></div>
+    <div><div class="tile k"><img src="../keyhole-crest/crest-icon.svg" alt="" style="height:44mm"></div><div class="cap"><b>Crest only.</b> For small items: frame stickers, pack fronts, foil stamps.</div></div>
+  </div>
+
+  <h3>Usage rules</h3>
+  <table>
+    <tr><th>Rule</th><th>Requirement</th></tr>
+    <tr><td>Clear space</td><td>Keep empty space around the logo equal to the height of the keyhole on all sides.</td></tr>
+    <tr><td>Minimum size</td><td>Full logo: 30 mm wide. Crest only: 10 mm wide (foil: 12 mm).</td></tr>
+    <tr><td>Colors</td><td>Gold on black, or black on cream/white only. Gold foil is preferred over printed gold.</td></tr>
+    <tr><td><span class="no">Do not</span></td><td>Stretch, rotate, outline, add shadows or gradients, change the font, or place on busy photos.</td></tr>
+  </table>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>3</span></div>
+</section>
+
+<!-- 4. Colors + type -->
+<section class="page">
+  <div class="eyebrow">03 · Colors</div>
+  <h2>Brand colors</h2>
+  <p class="lead">Pantone references are the closest matches. Please confirm against a physical Pantone swatch and send a color proof before printing.</p>
+
+  <div class="grid3" style="margin-top:5mm">
+    <div class="sw"><div class="chip" style="background:#c9a961"></div><div class="info"><b>Vault Gold</b>HEX #C9A961<br>RGB 201 169 97<br>CMYK 0 16 52 21<br>Pantone 7562 C (print)<br>Pantone 871 C / gold foil (stamp)</div></div>
+    <div class="sw"><div class="chip" style="background:#0a0a0a"></div><div class="info"><b>Vault Black</b>HEX #0A0A0A<br>RGB 10 10 10<br>CMYK 60 40 40 100 (rich black)<br>Pantone Black 6 C<br>Matte finish preferred</div></div>
+    <div class="sw"><div class="chip" style="background:#f4efe6"></div><div class="info"><b>Ivory</b>HEX #F4EFE6<br>RGB 244 239 230<br>CMYK 0 2 6 4<br>Pantone 9224 C<br>Cards and inner tissue</div></div>
+  </div>
+  <p class="muted" style="margin-top:3mm">Gold is the accent only. Black should cover most surfaces; Ivory is used for cards and light versions.</p>
+
+  <div class="eyebrow" style="margin-top:9mm">04 · Typography</div>
+  <h2>Typefaces</h2>
+  <p>All three fonts are free to download from fonts.google.com. Please convert text to outlines in final print files.</p>
+  <div class="spec"><div class="muted">Logo &amp; headings</div><div style="font-family:var(--serif);font-size:24pt">Cormorant Garamond</div></div>
+  <div class="spec"><div class="muted">Labels, engraving, packs</div><div style="font-family:var(--caps);font-size:18pt;letter-spacing:.2em">CINZEL</div></div>
+  <div class="spec"><div class="muted">Body text, instructions</div><div style="font-family:var(--sans);font-size:15pt">Inter</div></div>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>4</span></div>
+</section>
+
+<!-- 5. Products -->
+<section class="page">
+  <div class="eyebrow">05 · Products</div>
+  <h2>The three compositions</h2>
+  <p class="lead">Each frame is your existing deep shadow box with a black velvet back and glass front. Item layout is shown below; please keep items centered with even spacing.</p>
+
+  <div class="grid3" style="margin-top:6mm">
+    <div class="frame"><img src="frame-starter.png" alt=""><h3>The Starter</h3><p class="muted">SKU PV-STARTER</p></div>
+    <div class="frame"><img src="frame-boss.png" alt=""><h3>The Boss</h3><p class="muted">SKU PV-BOSS</p></div>
+    <div class="frame"><img src="frame-legacy.png" alt=""><h3>The Legacy</h3><p class="muted">SKU PV-LEGACY</p></div>
+  </div>
+
+  <table class="num">
+    <tr><th>Item</th><th>Starter</th><th>Boss</th><th>Legacy</th></tr>
+    <tr><td>Prop cash stack with gold band</td><td>1</td><td>1</td><td>1 (custom name on band)</td></tr>
+    <tr><td>Prestige Vault pack, open</td><td>–</td><td>1</td><td>1</td></tr>
+    <tr><td>Prestige Vault pack, closed</td><td>–</td><td>1</td><td>1</td></tr>
+    <tr><td>Unbranded key fobs</td><td>2 (styles A, B)</td><td>4 (A, B, C, D)</td><td>4 (A, B, C, D)</td></tr>
+    <tr><td>Engraved gold plaque</td><td>–</td><td>–</td><td>1</td></tr>
+    <tr><td>Gift box</td><td>Standard</td><td>Standard</td><td>Premium</td></tr>
+  </table>
+
+  <table>
+    <tr><th>Frame</th><th>Specification (please confirm)</th></tr>
+    <tr><td>Size</td><td>Approx. 30 × 40 cm outer, deep shadow-box profile</td></tr>
+    <tr><td>Finishes</td><td>Black, Gold, White (wood or wood-effect)</td></tr>
+    <tr><td>Backing</td><td>Black velvet, smooth, no lint or marks</td></tr>
+    <tr><td>Front</td><td>Clear glass or acrylic, clean, no scratches or fingerprints</td></tr>
+    <tr><td>Hanging</td><td>Wall hook on back plus desk stand</td></tr>
+  </table>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>5</span></div>
+</section>
+
+<!-- 6. Inserts -->
+<section class="page">
+  <div class="eyebrow">06 · Custom inserts</div>
+  <h2>Packs, band, fobs and plaque</h2>
+
+  <div class="grid2" style="margin-top:4mm; align-items:start">
+    <div>
+      <svg viewBox="0 0 200 150" width="100%" style="background:#f6f3ee">
+        <g transform="translate(30 20)">
+          <rect width="60" height="90" fill="#0a0a0a" stroke="#c9a961" stroke-width="1"/>
+          <rect width="60" height="18" fill="#c9a961"/>
+          <rect x="23" y="34" width="14" height="14" transform="rotate(45 30 41)" fill="none" stroke="#c9a961" stroke-width="1"/>
+          <circle cx="30" cy="39" r="2.2" fill="#c9a961"/><path d="M29 40.3 L28.2 45 H31.8 L31 40.3Z" fill="#c9a961"/>
+          <text x="30" y="66" text-anchor="middle" font-family="Cinzel" font-size="6.5" fill="#c9a961" letter-spacing="1.2">PRESTIGE</text>
+          <text x="30" y="74" text-anchor="middle" font-family="Cinzel" font-size="4.6" fill="#c9a961" letter-spacing="2">VAULT</text>
+        </g>
+        <g font-family="Inter" font-size="5" fill="#6f685b">
+          <line x1="100" y1="29" x2="120" y2="29" stroke="#6f685b" stroke-width=".4"/><text x="123" y="31">Gold top band (18%)</text>
+          <line x1="72" y1="61" x2="120" y2="55" stroke="#6f685b" stroke-width=".4"/><text x="123" y="57">Keyhole crest, centered</text>
+          <line x1="90" y1="86" x2="120" y2="81" stroke="#6f685b" stroke-width=".4"/><text x="123" y="83">PRESTIGE / VAULT, Cinzel</text>
+          <line x1="90" y1="108" x2="120" y2="107" stroke="#6f685b" stroke-width=".4"/><text x="123" y="109">Matte black box, gold edge</text>
+        </g>
+      </svg>
+      <h3>Prestige Vault pack</h3>
+      <ul class="list">
+        <li>Replaces all branded cigarette packs. Same size as your current mini pack.</li>
+        <li>Matte black body, Vault Gold top band and thin gold edge line.</li>
+        <li>Front: crest and PRESTIGE / VAULT. Back: crest only. No health warnings, no barcodes, no other text.</li>
+        <li><b>Open pack:</b> lid open, showing prop cigarettes or rolled prop notes. <b>Closed pack:</b> lid shut.</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 200 150" width="100%" style="background:#f6f3ee">
+        <g transform="translate(25 22)">
+          <rect width="150" height="44" fill="#dfe3d3" stroke="#b9c0a8"/>
+          <rect x="53" width="44" height="44" fill="#c9a961"/>
+          <text x="75" y="25" text-anchor="middle" font-family="Cinzel" font-size="7" fill="#1a1814">$10,000</text>
+        </g>
+        <g transform="translate(60 92)">
+          <rect width="80" height="18" fill="#c9a961"/>
+          <text x="40" y="12" text-anchor="middle" font-family="Cinzel" font-size="6.5" fill="#1a1814" letter-spacing="1">J. CARTER</text>
+        </g>
+        <g font-family="Inter" font-size="5" fill="#6f685b" text-anchor="middle">
+          <text x="100" y="80">Cash stack with Vault Gold band</text>
+          <text x="100" y="124">Legacy plaque: brushed gold, engraved</text>
+        </g>
+      </svg>
+      <h3>Money band</h3>
+      <ul class="list">
+        <li>Vault Gold paper band, centered on the stack, text in Cinzel.</li>
+        <li>Standard text: <b>$10,000</b>. Legacy: customer's name, uppercase, max 18 characters.</li>
+      </ul>
+      <h3>Legacy plaque</h3>
+      <ul class="list">
+        <li>Brushed gold metal, approx. 80 × 16 mm, adhesive back, centered below the key fobs.</li>
+        <li>Laser engraved in Cinzel, uppercase, max 18 characters.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Key fobs: unbranded only</h3>
+  <table>
+    <tr><th>Style</th><th>Body</th><th>Trim</th><th>Emblem</th></tr>
+    <tr><td>A</td><td>Black</td><td>Gold</td><td rowspan="4">None. Plain, or the Prestige Vault crest in gold.<br><span class="no">No car brand emblems or shields.</span></td></tr>
+    <tr><td>B</td><td>Silver</td><td>Grey</td></tr>
+    <tr><td>C</td><td>Black</td><td>Silver</td></tr>
+    <tr><td>D</td><td>Red</td><td>Silver</td></tr>
+  </table>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>6</span></div>
+</section>
+
+<!-- 7. Packaging -->
+<section class="page">
+  <div class="eyebrow">07 · Branding &amp; packaging</div>
+  <h2>How every order leaves you</h2>
+
+  <table>
+    <tr><th>Item</th><th>Specification</th></tr>
+    <tr><td>Frame sticker</td><td>Crest-only sticker, gold foil on black, 30 mm diamond. Placed on the back of the frame, top center.</td></tr>
+    <tr><td>Front mark (optional)</td><td>Small gold crest, 12 mm, bottom-right corner of the velvet. Please send a sample photo first.</td></tr>
+    <tr><td>Gift box</td><td>Matte black rigid box, primary logo in gold foil centered on the lid. Ivory tissue paper inside.</td></tr>
+    <tr><td>Premium box (Legacy)</td><td>As gift box, plus gold ribbon or magnetic closure.</td></tr>
+    <tr><td>Thank-you card</td><td>Ivory card, A6 (105 × 148 mm). Front: crest. Back text: <i>“Welcome to the Vault.”</i> and our Instagram handle.</td></tr>
+    <tr><td>Shipping carton</td><td>Plain brown double-wall carton, <b>no logo on the outside</b>. Foam corner protectors and bubble wrap around the gift box.</td></tr>
+    <tr><td>Labels</td><td>SKU and frame finish on a small label on the carton (e.g. PV-BOSS / BLACK).</td></tr>
+  </table>
+
+  <div class="grid2" style="margin-top:6mm">
+    <div class="box">
+      <div class="eyebrow">Gift box lid</div>
+      <div style="background:#0a0a0a;height:46mm;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="../keyhole-crest/prestige-vault-logo-black.png" style="height:80mm;max-width:none" alt=""></div>
+    </div>
+    <div class="box">
+      <div class="eyebrow">Thank-you card</div>
+      <div style="background:#f4efe6;height:46mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden">
+        <img src="../keyhole-crest/prestige-vault-logo-cream.png" style="height:52mm;max-width:none;margin:-8mm 0 -10mm" alt="">
+        <div style="font-family:var(--serif);font-style:italic;font-size:13pt">Welcome to the Vault.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>7</span></div>
+</section>
+
+<!-- 8. QC -->
+<section class="page">
+  <div class="eyebrow">08 · Orders &amp; quality</div>
+  <h2>Personalised orders, samples and QC</h2>
+
+  <h3>Personalised (Legacy) orders</h3>
+  <ul class="list">
+    <li>We send the name for each order in writing. Copy it exactly: spelling, spacing and punctuation.</li>
+    <li>Engraving and band text are always UPPERCASE in Cinzel.</li>
+    <li>Send one photo of the finished frame before shipping each personalised order.</li>
+  </ul>
+
+  <h3>Sample approval</h3>
+  <ul class="list">
+    <li>Before the first production run, send one sample of each composition (Starter, Boss, Legacy) or clear photos and a video.</li>
+    <li>Mass production starts only after written approval from Prestige Vault.</li>
+    <li>Any change to materials, colors or suppliers needs new approval.</li>
+  </ul>
+
+  <h3>Quality checklist (every unit)</h3>
+  <table>
+    <tr><th>Check</th><th>Pass standard</th></tr>
+    <tr><td>Brand</td><td>No third-party logos or names on any item</td></tr>
+    <tr><td>Layout</td><td>Items straight, centered, evenly spaced, matching section 05</td></tr>
+    <tr><td>Fixing</td><td>All items firmly attached; nothing moves when the frame is shaken</td></tr>
+    <tr><td>Velvet</td><td>No dust, glue marks, lint or hairs</td></tr>
+    <tr><td>Glass</td><td>No scratches, cracks, fingerprints or bubbles</td></tr>
+    <tr><td>Frame</td><td>Corners tight, finish even, no chips</td></tr>
+    <tr><td>Gold color</td><td>Matches approved sample</td></tr>
+    <tr><td>Packing</td><td>Corner protectors, wrap, gift box, card included</td></tr>
+  </table>
+
+  <h3>Files supplied</h3>
+  <p class="muted">crest-icon.svg (vector) · prestige-vault-logo-black.png · prestige-vault-logo-cream.png · prestige-vault-logo-gold-transparent.png · prestige-vault-horizontal.png · prestige-vault-profile-icon.png</p>
+
+  <div class="box" style="margin-top:6mm">
+    <div class="eyebrow">Prestige Vault contact</div>
+    <p style="margin:0">Name: ______________________ &nbsp;&nbsp; Email / WhatsApp: ______________________</p>
+  </div>
+  <div class="foot"><span>Prestige Vault</span><span>Brand Book v1.0</span><span>8</span></div>
+</section>
+
+</body>
+</html>
