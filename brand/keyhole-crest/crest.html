@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Cinzel:wght@400&display=block" rel="stylesheet">
+<style>
+  body { margin: 0; background: transparent; }
+  .card { width: 1200px; height: 1200px; background: #0a0a0a; color: #c9a961;
+          display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .cream { background: #f4efe6; color: #0a0a0a; }
+  .clear { background: transparent; }
+  .wide { width: 1800px; height: 600px; flex-direction: row; gap: 70px; }
+  .wm { font-family: 'Cormorant Garamond', serif; font-size: 72px; letter-spacing: 26px; margin-right: -26px; line-height: 1; }
+  .sub { font-family: 'Cinzel', serif; font-size: 17px; letter-spacing: 12px; margin-right: -12px;
+         margin-top: 34px; opacity: .85; display: flex; align-items: center; justify-content: center; gap: 26px; }
+  .sub::before, .sub::after { content: ""; width: 60px; height: 1px; background: currentColor; opacity: .7; }
+  .wide .sub { justify-content: flex-start; }
+  .wide .sub::before, .wide .sub::after { display: none; }
+  .gap { height: 70px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="crest" viewBox="0 0 260 260">
+    <g fill="none" stroke="currentColor">
+      <rect x="45" y="45" width="170" height="170" transform="rotate(45 130 130)" stroke-width="1.2"/>
+      <rect x="57" y="57" width="146" height="146" transform="rotate(45 130 130)" stroke-width="0.6"/>
+    </g>
+    <circle cx="130" cy="114" r="17" fill="currentColor"/>
+    <path d="M123 122 L116 164 H144 L137 122 Z" fill="currentColor"/>
+  </symbol>
+</defs></svg>
+
+<div class="card" id="logo-black"><svg width="260" height="260"><use href="#crest"/></svg><div class="gap"></div><div class="wm">PRESTIGE VAULT</div><div class="sub">EST. 2026</div></div>
+<div class="card cream" id="logo-cream"><svg width="260" height="260"><use href="#crest"/></svg><div class="gap"></div><div class="wm">PRESTIGE VAULT</div><div class="sub">EST. 2026</div></div>
+<div class="card clear" id="logo-gold-transparent"><svg width="260" height="260"><use href="#crest"/></svg><div class="gap"></div><div class="wm">PRESTIGE VAULT</div><div class="sub">EST. 2026</div></div>
+<div class="card wide" id="horizontal"><svg width="260" height="260"><use href="#crest"/></svg><div><div class="wm">PRESTIGE VAULT</div><div class="sub">EST. 2026</div></div></div>
+<div class="card" id="profile-icon"><svg width="820" height="820"><use href="#crest"/></svg></div>
+</body>
+</html>
