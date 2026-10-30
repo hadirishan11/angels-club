@@ -157,6 +157,18 @@
       <button class="close" id="closeCart" aria-label="Close cart">×</button>
     </div>
     <div class="drawer-items" id="cartItems"></div>
+    <div class="order-panel" id="orderPanel" hidden>
+      <p class="eyebrow">Place your order</p>
+      <p>Send this order to <strong class="gold" id="orderEmail"></strong> or DM it to us on Instagram. We'll confirm availability and send your payment link.</p>
+      <label class="field"><span>Your order</span>
+        <textarea id="orderText" rows="10" readonly></textarea>
+      </label>
+      <div class="cta-row tight">
+        <button class="btn btn-gold sm" id="orderCopy">Copy order</button>
+        <a class="btn btn-ghost sm" id="orderMail">Open email app</a>
+      </div>
+      <button class="link" id="orderBack">Back to cart</button>
+    </div>
     <div class="drawer-foot">
       <p class="ship-progress" id="shipProgress"></p>
       <div class="subtotal"><span>Subtotal</span><span id="cartTotal">$0</span></div>

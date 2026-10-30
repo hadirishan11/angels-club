@@ -64,6 +64,7 @@
     $("#shipProgress").textContent = !cart.length ? "" :
       left > 0 ? `You're ${money(left)} away from complimentary shipping.` : "Complimentary shipping unlocked.";
     $("#checkout").disabled = !cart.length;
+    if (!cart.length) { $("#orderPanel").hidden = true; $("#cartItems").hidden = false; }
     $("#checkoutNote").textContent = cart.length ? S.shippingNote : "";
     save();
   }
@@ -144,7 +145,19 @@
       return `• ${i.qty} × ${p.name} — ${i.frame} frame${i.personal ? ` — Personalisation: "${i.personal}"` : ""} — ${money(p.price * i.qty)}`;
     });
     const body = `Hello Prestige Vault,\n\nI'd like to order:\n\n${lines.join("\n")}\n\nSubtotal: ${money(total())}\n\nName:\nShipping address:\nPhone:\n`;
-    window.location.href = `mailto:${S.email}?subject=${encodeURIComponent("New order — Prestige Vault")}&body=${encodeURIComponent(body)}`;
+    const mailto = `mailto:${S.email}?subject=${encodeURIComponent("New order — Prestige Vault")}&body=${encodeURIComponent(body)}`;
+    $("#orderText").value = body;
+    $("#orderEmail").textContent = S.email;
+    $("#orderMail").href = mailto;
+    $("#orderPanel").hidden = false;
+    $("#cartItems").hidden = true;
+  };
+
+  $("#orderBack").onclick = () => { $("#orderPanel").hidden = true; $("#cartItems").hidden = false; };
+  $("#orderCopy").onclick = async () => {
+    const ta = $("#orderText");
+    try { await navigator.clipboard.writeText(ta.value); toast("Order copied"); }
+    catch (e) { ta.select(); toast("Select all and copy your order"); }
   };
 
   // ── Misc ──────────────────────────────────────────────────

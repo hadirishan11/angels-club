@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   --black: #0a0a0a;
   --surface: #121212;
   --line: #2a2620;
@@ -37,7 +38,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 400; margin: 0; line-he
 
 /* Announcement + nav */
 .announce { text-align: center; font-family: var(--caps); font-size: 11px; letter-spacing: .25em; padding: 10px 16px; background: var(--gold); color: var(--black); text-transform: uppercase; }
-.nav { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 18px clamp(16px, 4vw, 56px); background: rgba(10,10,10,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 18px clamp(16px, 4vw, 56px); background: rgba(10,10,10,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; font-family: var(--serif); font-size: 21px; letter-spacing: .3em; color: var(--gold); }
 .links { display: flex; gap: 40px; }
 .links a { font-family: var(--caps); font-size: 12px; letter-spacing: .25em; text-transform: uppercase; text-decoration: none; color: var(--text); opacity: .8; }
@@ -188,3 +189,14 @@ legend, .field span { font-family: var(--caps); font-size: 11px; letter-spacing:
   .announce { font-size: 10px; letter-spacing: .15em; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Order request panel */
+.order-panel { flex: 1; overflow: auto; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; }
+.order-panel p { margin: 0; color: #b3ad9f; font-size: 14px; }
+.order-panel .eyebrow { margin: 0; color: var(--gold); }
+.gold { color: var(--gold); font-weight: 400; word-break: break-all; }
+.order-panel textarea { width: 100%; background: var(--black); border: 1px solid var(--line); color: var(--text); padding: 14px; font: 13px/1.5 var(--sans); resize: vertical; }
+.order-panel .field { margin: 0; }
+.cta-row.tight { margin-top: 0; gap: 10px; }
+.order-panel .link { align-self: flex-start; }
+.btn:focus-visible, .cart-btn:focus-visible, .card-art:focus-visible, .link:focus-visible, .qty button:focus-visible, .close:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
