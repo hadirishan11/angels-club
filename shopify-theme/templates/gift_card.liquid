@@ -1,0 +1,22 @@
+{%- layout none -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your {{ gift_card.initial_value | money }} gift card for {{ shop.name }}</title>
+    {{ 'torq.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+  </head>
+  <body>
+    <main class="wrap page-wrap" style="text-align:center">
+      <span class="eyebrow">{{ shop.name | escape }}</span>
+      <h1 style="margin-top:12px">Your gift card</h1>
+      <p class="cart-total">{{ gift_card.balance | money }}</p>
+      {%- if gift_card.expired or gift_card.enabled != true -%}<p class="lede" style="margin:0 auto">This gift card is no longer valid.</p>{%- endif -%}
+      <p class="mono" style="font-size:1.4rem;margin:24px 0">{{ gift_card.code | format_code }}</p>
+      {%- if gift_card.expires_on -%}<p class="lede" style="margin:0 auto 24px">Expires {{ gift_card.expires_on | date: '%B %d, %Y' }}</p>{%- endif -%}
+      <a class="btn btn-orange" href="{{ shop.url }}">Start shopping</a>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "TORQ",
+    "theme_version": "1.0.0",
+    "theme_author": "TORQ Beverage Co.",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com"
+  },
+  {
+    "name": "TORQ product",
+    "settings": [
+      {
+        "type": "product",
+        "id": "torq_product",
+        "label": "Main TORQ product",
+        "info": "The product with a Flavor option and a Pack option. Used by the home page hero, flavor lineup and shop buttons."
+      },
+      {
+        "type": "range",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "info": "In your store currency. Shown as a progress bar in the cart. Set to 0 to hide.",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "default": 40
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "32 x 32px .png recommended"
+      }
+    ]
+  }
+]

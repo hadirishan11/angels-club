@@ -1,0 +1,20 @@
+<section class="sec" aria-labelledby="calcTitle-{{ section.id }}">
+  <div class="wrap">
+    <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+    <h2 id="calcTitle-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | newline_to_br }}</h2>
+    {%- if section.settings.text != blank -%}<p class="lede" style="margin-top:18px">{{ section.settings.text | escape }}</p>{%- endif -%}
+    {% render 'torq-calc' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ caffeine calculator",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Caffeine calculator" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "How much\nis too much?" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "The FDA cites 400mg a day as generally safe for healthy adults. Add up your day and see where a TORQ fits." }
+  ],
+  "presets": [{ "name": "TORQ caffeine calculator" }]
+}
+{% endschema %}

@@ -1,0 +1,57 @@
+{
+  "sections": {
+    "main_product": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "taste": {
+      "type": "torq-taste",
+      "settings": {}
+    },
+    "faq": {
+      "type": "torq-faq",
+      "settings": {},
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "How many can I drink a day?",
+            "answer": "<p>The FDA cites 400mg of caffeine a day as an amount not generally associated with negative effects for healthy adults. One can is 160mg, so two cans is 320mg. Count your coffee and tea too.</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "Who shouldn't drink it?",
+            "answer": "<p>TORQ isn't for children, anyone pregnant or nursing, or people sensitive to caffeine. If you take medication or have a heart condition, check with your doctor first.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Why allulose and monk fruit?",
+            "answer": "<p>Allulose is a rare sugar that tastes like sugar but isn't counted as added sugar and barely affects blood glucose. A touch of monk fruit rounds it out.</p>"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "How does the subscription work?",
+            "answer": "<p>You save on every order, delivered on your schedule. Skip a delivery or cancel any time from your account.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4"
+      ]
+    }
+  },
+  "order": [
+    "main_product",
+    "taste",
+    "faq"
+  ]
+}

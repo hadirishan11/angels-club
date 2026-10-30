@@ -1,0 +1,133 @@
+{
+  "sections": {
+    "page_hero": {
+      "type": "torq-page-hero",
+      "settings": {}
+    },
+    "origins": {
+      "type": "torq-origins",
+      "settings": {},
+      "blocks": {
+        "origin_1": {
+          "type": "origin",
+          "settings": {
+            "fruit": "leaf",
+            "color": "#A9D67A",
+            "coord": "0.99° S, 77.81° W",
+            "place": "NAPO, ECUADOR",
+            "title": "Guayusa",
+            "text": "Grown in the shade of the rainforest canopy by a Kichwa farming cooperative."
+          }
+        },
+        "origin_2": {
+          "type": "origin",
+          "settings": {
+            "fruit": "slice-yuzu",
+            "color": "#F7DC1E",
+            "coord": "33.56° N, 133.53° E",
+            "place": "KŌCHI, JAPAN",
+            "title": "Yuzu",
+            "text": "Pressed whole, peel included, which is where the floral bitterness comes from."
+          }
+        },
+        "origin_3": {
+          "type": "origin",
+          "settings": {
+            "fruit": "slice-blood",
+            "color": "#FF4A14",
+            "coord": "37.50° N, 15.09° E",
+            "place": "CATANIA, SICILY",
+            "title": "Blood orange",
+            "text": "Tarocco oranges from the slopes of Mount Etna."
+          }
+        }
+      },
+      "block_order": [
+        "origin_1",
+        "origin_2",
+        "origin_3"
+      ]
+    },
+    "quote": {
+      "type": "torq-quote",
+      "settings": {}
+    },
+    "timeline": {
+      "type": "torq-timeline",
+      "settings": {},
+      "blocks": {
+        "milestone_1": {
+          "type": "milestone",
+          "settings": {
+            "year": "2021",
+            "title": "Kitchen batches",
+            "text": "Forty test recipes in a shared kitchen. Recipe 31 is the one."
+          }
+        },
+        "milestone_2": {
+          "type": "milestone",
+          "settings": {
+            "year": "2023",
+            "title": "Direct sourcing",
+            "text": "Multi-year contracts with growers so the flavor stays the same every season."
+          }
+        },
+        "milestone_3": {
+          "type": "milestone",
+          "settings": {
+            "year": "2026",
+            "title": "Five flavors",
+            "text": "Four new flavors join the original. Same formula, same 160mg."
+          }
+        }
+      },
+      "block_order": [
+        "milestone_1",
+        "milestone_2",
+        "milestone_3"
+      ]
+    },
+    "values": {
+      "type": "torq-values",
+      "settings": {},
+      "blocks": {
+        "value_1": {
+          "type": "value",
+          "settings": {
+            "big": "0g",
+            "title": "Added sugar",
+            "text": "Ever. If we can't make it taste good without sugar, we don't ship it."
+          }
+        },
+        "value_2": {
+          "type": "value",
+          "settings": {
+            "big": "100%",
+            "title": "Dose disclosure",
+            "text": "Every active ingredient and its amount is printed on the can."
+          }
+        },
+        "value_3": {
+          "type": "value",
+          "settings": {
+            "big": "5",
+            "title": "Flavors",
+            "text": "One formula, five fruits, and no proprietary blends."
+          }
+        }
+      },
+      "block_order": [
+        "value_1",
+        "value_2",
+        "value_3"
+      ]
+    }
+  },
+  "order": [
+    "page_hero",
+    "origins",
+    "quote",
+    "timeline",
+    "values"
+  ]
+}

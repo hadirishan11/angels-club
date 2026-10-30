@@ -1,0 +1,35 @@
+<section class="sec curve" aria-labelledby="val-{{ section.id }}">
+  <div class="wrap">
+    <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+    <h2 id="val-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | escape }}</h2>
+    <div class="values">
+      {%- for block in section.blocks -%}
+        <div class="value" {{ block.shopify_attributes }}><b>{{ block.settings.big | escape }}</b><h3>{{ block.settings.title | escape }}</h3><p>{{ block.settings.text | escape }}</p></div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ values",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "What we won't compromise" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "House rules." }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    { "type": "value", "name": "Value", "settings": [
+      { "type": "text", "id": "big", "label": "Big figure", "default": "0g" },
+      { "type": "text", "id": "title", "label": "Title", "default": "Added sugar" },
+      { "type": "textarea", "id": "text", "label": "Text" } ] }
+  ],
+  "presets": [
+    { "name": "TORQ values", "blocks": [
+      { "type": "value", "settings": { "big": "0g", "title": "Added sugar", "text": "Ever. If we can't make it taste good without sugar, we don't ship it." } },
+      { "type": "value", "settings": { "big": "100%", "title": "Dose disclosure", "text": "Every active ingredient and its amount is printed on the can." } },
+      { "type": "value", "settings": { "big": "5", "title": "Flavors", "text": "One formula, five fruits, and no proprietary blends." } }
+    ] }
+  ]
+}
+{% endschema %}

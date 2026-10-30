@@ -1,0 +1,25 @@
+<div class="wrap page-wrap">
+  <p class="link-row"><a href="{{ routes.account_url }}">&larr; Back to account</a></p>
+  <h1>Order {{ order.name }}</h1>
+  <p class="lede" style="margin-bottom:24px">Placed {{ order.created_at | date: '%B %d, %Y' }}{% if order.cancelled %} · Cancelled{% endif %}</p>
+  <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr><th scope="col">Product</th><th scope="col">Price</th><th scope="col">Quantity</th><th scope="col">Total</th></tr></thead>
+      <tbody>
+        {%- for line_item in order.line_items -%}
+          <tr><td>{{ line_item.title | escape }}{% if line_item.selling_plan_allocation %}<br><small>{{ line_item.selling_plan_allocation.selling_plan.name | escape }}</small>{% endif %}</td><td>{{ line_item.final_price | money }}</td><td>{{ line_item.quantity }}</td><td>{{ line_item.final_line_price | money }}</td></tr>
+        {%- endfor -%}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="3">Subtotal</td><td>{{ order.line_items_subtotal_price | money }}</td></tr>
+        {%- for shipping_method in order.shipping_methods -%}<tr><td colspan="3">Shipping ({{ shipping_method.title | escape }})</td><td>{{ shipping_method.price | money }}</td></tr>{%- endfor -%}
+        {%- for tax_line in order.tax_lines -%}<tr><td colspan="3">{{ tax_line.title | escape }}</td><td>{{ tax_line.price | money }}</td></tr>{%- endfor -%}
+        <tr><td colspan="3"><b>Total</b></td><td><b>{{ order.total_price | money }}</b></td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="two-col" style="margin-top:40px">
+    {%- if order.billing_address -%}<div><h2 style="font-size:1.8rem">Billing address</h2><p>{{ order.billing_address | format_address }}</p></div>{%- endif -%}
+    {%- if order.shipping_address -%}<div><h2 style="font-size:1.8rem">Shipping address</h2><p>{{ order.shipping_address | format_address }}</p></div>{%- endif -%}
+  </div>
+</div>

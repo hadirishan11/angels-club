@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#240703">
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64, height: 64 }}">
+    {%- endif -%}
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+    {% render 'torq-meta' %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+    {{ 'torq.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      window.TORQ = {
+        routes: {
+          root: {{ routes.root_url | json }},
+          cart: {{ routes.cart_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          allProducts: {{ routes.all_products_collection_url | json }}
+        },
+        currency: {{ cart.currency.iso_code | json }},
+        locale: {{ request.locale.iso_code | json }},
+        freeShip: {{ settings.free_shipping_threshold | times: 100 | json }},
+        template: {{ template.name | json }},
+        designMode: {{ request.design_mode | json }}
+      };
+    </script>
+    {%- if settings.torq_product != blank -%}
+      <script type="application/json" id="TorqMainProduct">{{ settings.torq_product | json }}</script>
+    {%- endif -%}
+    <script src="{{ 'three.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'gsap.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'torq.js' | asset_url }}" defer></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ template.name }}">
+    {% render 'torq-sprite' %}
+    <a class="sr-only skip" href="#main">Skip to content</a>
+    {% section 'torq-header' %}
+    <main id="main" role="main">
+      {{ content_for_layout }}
+    </main>
+    {% section 'torq-footer' %}
+    {% render 'torq-cart-drawer' %}
+    <div class="toast" id="toast" role="status" hidden></div>
+  </body>
+</html>

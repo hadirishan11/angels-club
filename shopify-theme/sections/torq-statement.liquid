@@ -1,0 +1,18 @@
+<section class="sec statement" aria-label="{{ section.settings.label | escape }}">
+  <div class="wrap statement-row">
+    <div class="big-say reveal">{{ section.settings.statement }}</div>
+    {%- if section.settings.text != blank -%}<p class="lede reveal">{{ section.settings.text | escape }}</p>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ statement",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Accessible label", "default": "About TORQ" },
+    { "type": "richtext", "id": "statement", "label": "Statement", "info": "Bold text gets a highlight. Italic text turns the flavor colour.", "default": "<p>We made the energy drink we wanted at <strong>2pm</strong>: <em>sharp fruit</em>, real caffeine, and nothing that bites back at 5.</p>" },
+    { "type": "textarea", "id": "text", "label": "Side text", "default": "Most energy drinks are candy with a jolt. TORQ is built like a good cup of coffee that happens to taste like fruit. Six ingredients that do something, each dosed on the can." }
+  ],
+  "presets": [{ "name": "TORQ statement" }]
+}
+{% endschema %}

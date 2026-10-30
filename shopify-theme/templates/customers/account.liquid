@@ -1,0 +1,22 @@
+<div class="wrap page-wrap">
+  <h1>Your account</h1>
+  <p class="link-row" style="margin-bottom:32px"><a href="{{ routes.account_addresses_url }}">Addresses ({{ customer.addresses_count }})</a><a href="{{ routes.account_logout_url }}">Log out</a></p>
+  <h2 style="font-size:2.4rem;margin-bottom:16px">Order history</h2>
+  {%- paginate customer.orders by 20 -%}
+    {%- if customer.orders.size > 0 -%}
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr><th scope="col">Order</th><th scope="col">Date</th><th scope="col">Payment</th><th scope="col">Fulfillment</th><th scope="col">Total</th></tr></thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr><td><a href="{{ order.customer_url }}">{{ order.name }}</a></td><td>{{ order.created_at | date: '%b %d, %Y' }}</td><td>{{ order.financial_status_label }}</td><td>{{ order.fulfillment_status_label }}</td><td>{{ order.total_price | money }}</td></tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    {%- else -%}
+      <p class="lede">You haven't placed any orders yet.</p>
+    {%- endif -%}
+    {% render 'torq-pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>

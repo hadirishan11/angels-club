@@ -1,0 +1,17 @@
+<div class="wrap page-wrap">
+  <h1>{{ blog.title | escape }}</h1>
+  {%- paginate blog.articles by 9 -%}
+    <div class="grid-products">
+      {%- for article in blog.articles -%}
+        <a class="card" href="{{ article.url }}">
+          {%- if article.image -%}<div class="media">{{ article.image | image_url: width: 700 | image_tag: loading: 'lazy', alt: article.image.alt | default: article.title }}</div>{%- endif -%}
+          <div class="body"><b>{{ article.title | escape }}</b><span>{{ article.published_at | date: '%b %d, %Y' }}</span></div>
+        </a>
+      {%- endfor -%}
+    </div>
+    {% render 'torq-pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+{% schema %}
+{ "name": "Blog", "settings": [] }
+{% endschema %}

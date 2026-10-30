@@ -1,0 +1,62 @@
+{%- assign half = section.blocks.size | plus: 1 | divided_by: 2 -%}
+<section class="anatomy" id="anatomy" aria-labelledby="anatTitle-{{ section.id }}">
+  <div class="wrap">
+    <div class="anat-head">
+      <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      <h2 id="anatTitle-{{ section.id }}">{{ section.settings.heading | newline_to_br }}</h2>
+    </div>
+    <div class="anat-grid">
+      <div class="anat-col left">
+        {%- for block in section.blocks limit: half -%}
+          {% render 'torq-callout', block: block, index: forloop.index0 %}
+        {%- endfor -%}
+      </div>
+      <div class="anat-stage" data-can-stage="anatomy" role="img" aria-label="TORQ can rotating as you scroll"></div>
+      <div class="anat-col right">
+        {%- for block in section.blocks offset: half -%}
+          {%- assign idx = forloop.index0 | plus: half -%}
+          {% render 'torq-callout', block: block, index: idx %}
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="anat-progress" aria-hidden="true">
+      {%- for block in section.blocks -%}<i{% if forloop.first %} class="on"{% endif %}></i>{%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ anatomy",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Anatomy of a can" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Six things.\nNothing to hide." }
+  ],
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "callout",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "text", "id": "dose", "label": "Dose", "default": "100 MG" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Ingredient" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "What it does." },
+        { "type": "checkbox", "id": "use_flavor", "label": "Show the selected flavor's fruit instead", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TORQ anatomy",
+      "blocks": [
+        { "type": "callout", "settings": { "dose": "120 MG CAFFEINE", "title": "Guayusa leaf", "text": "Amazonian holly brewed by Kichwa growers in Napo, Ecuador. Coffee-level lift, no bitterness." } },
+        { "type": "callout", "settings": { "dose": "40 MG CAFFEINE", "title": "Green tea", "text": "Rounds the total to 160mg, about one 12 oz drip coffee." } },
+        { "type": "callout", "settings": { "dose": "100 MG", "title": "L-theanine", "text": "The tea amino acid that takes the edge off caffeine. Fewer jitters, steadier focus." } },
+        { "type": "callout", "settings": { "dose": "180 MG NA · 200 MG K", "title": "Electrolytes", "text": "Sea salt and potassium citrate. Works after a run as well as before a deadline." } },
+        { "type": "callout", "settings": { "dose": "100% DV EACH", "title": "B6 + B12", "text": "Methylcobalamin and P-5-P, the forms your body uses. No megadoses." } },
+        { "type": "callout", "settings": { "dose": "5% REAL JUICE", "title": "Real fruit", "text": "The fruit that gives each flavor its character.", "use_flavor": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

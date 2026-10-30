@@ -1,0 +1,10 @@
+<article class="callout{% if index == 0 %} on{% endif %}" data-i="{{ index }}" {{ block.shopify_attributes }}>
+  <span class="dose">{{ block.settings.dose | escape }}</span>
+  {%- if block.settings.use_flavor -%}
+    <h3 data-fl="juiceTitle">{{ block.settings.title | escape }}</h3>
+    <p data-fl="juice">{{ block.settings.text | escape }}</p>
+  {%- else -%}
+    <h3>{{ block.settings.title | escape }}</h3>
+    <p>{{ block.settings.text | escape }}</p>
+  {%- endif -%}
+</article>

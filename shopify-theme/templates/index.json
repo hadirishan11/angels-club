@@ -1,0 +1,148 @@
+{
+  "sections": {
+    "hero": {
+      "type": "torq-hero",
+      "settings": {},
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "160",
+            "label": "mg natural\ncaffeine"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "0",
+            "label": "grams\nsugar"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "10",
+            "label": "calories\nper can"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ]
+    },
+    "statement": {
+      "type": "torq-statement",
+      "settings": {}
+    },
+    "lineup": {
+      "type": "torq-lineup",
+      "settings": {}
+    },
+    "anatomy": {
+      "type": "torq-anatomy",
+      "settings": {},
+      "blocks": {
+        "callout_1": {
+          "type": "callout",
+          "settings": {
+            "dose": "120 MG CAFFEINE",
+            "title": "Guayusa leaf",
+            "text": "Amazonian holly brewed by Kichwa growers in Napo, Ecuador. Coffee-level lift, no bitterness."
+          }
+        },
+        "callout_2": {
+          "type": "callout",
+          "settings": {
+            "dose": "40 MG CAFFEINE",
+            "title": "Green tea",
+            "text": "Rounds the total to 160mg, about one 12 oz drip coffee."
+          }
+        },
+        "callout_3": {
+          "type": "callout",
+          "settings": {
+            "dose": "100 MG",
+            "title": "L-theanine",
+            "text": "The tea amino acid that takes the edge off caffeine. Fewer jitters, steadier focus."
+          }
+        },
+        "callout_4": {
+          "type": "callout",
+          "settings": {
+            "dose": "180 MG NA · 200 MG K",
+            "title": "Electrolytes",
+            "text": "Sea salt and potassium citrate. Works after a run as well as before a deadline."
+          }
+        },
+        "callout_5": {
+          "type": "callout",
+          "settings": {
+            "dose": "100% DV EACH",
+            "title": "B6 + B12",
+            "text": "Methylcobalamin and P-5-P, the forms your body uses. No megadoses."
+          }
+        },
+        "callout_6": {
+          "type": "callout",
+          "settings": {
+            "dose": "5% REAL JUICE",
+            "title": "Real fruit",
+            "text": "The fruit that gives each flavor its character.",
+            "use_flavor": true
+          }
+        }
+      },
+      "block_order": [
+        "callout_1",
+        "callout_2",
+        "callout_3",
+        "callout_4",
+        "callout_5",
+        "callout_6"
+      ]
+    },
+    "taste": {
+      "type": "torq-taste",
+      "settings": {}
+    },
+    "curve": {
+      "type": "torq-curve",
+      "settings": {}
+    },
+    "calculator": {
+      "type": "torq-calculator",
+      "settings": {}
+    },
+    "nutrition": {
+      "type": "torq-nutrition",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "torq-reviews",
+      "settings": {}
+    },
+    "shop_band": {
+      "type": "torq-shop-band",
+      "settings": {}
+    },
+    "newsletter": {
+      "type": "torq-newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "statement",
+    "lineup",
+    "anatomy",
+    "taste",
+    "curve",
+    "calculator",
+    "nutrition",
+    "reviews",
+    "shop_band",
+    "newsletter"
+  ]
+}

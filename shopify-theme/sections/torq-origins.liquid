@@ -1,0 +1,60 @@
+<section class="sec" aria-labelledby="origins-{{ section.id }}">
+  <div class="wrap">
+    <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+    <h2 id="origins-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | escape }}</h2>
+    <div class="origins">
+      {%- for block in section.blocks -%}
+        <article class="origin" {{ block.shopify_attributes }}>
+          <div class="art" style="background:{{ block.settings.color }}">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', style: 'width:100%;height:100%;object-fit:cover', alt: block.settings.title }}
+            {%- else -%}
+              <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#{{ block.settings.fruit }}"/></svg>
+            {%- endif -%}
+            {%- if block.settings.coord != blank -%}<span class="coord">{{ block.settings.coord | escape }}</span>{%- endif -%}
+          </div>
+          <div class="body"><span class="mono">{{ block.settings.place | escape }}</span><h3>{{ block.settings.title | escape }}</h3><p>{{ block.settings.text | escape }}</p></div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ origins",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Where it comes from" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Sourced, not synthesized." }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "origin",
+      "name": "Origin",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Replaces the illustration" },
+        { "type": "select", "id": "fruit", "label": "Illustration", "default": "leaf", "options": [
+          { "value": "leaf", "label": "Leaf" }, { "value": "slice-yuzu", "label": "Yuzu" }, { "value": "slice-blood", "label": "Blood orange" },
+          { "value": "fr-lime", "label": "Lime" }, { "value": "fr-hibiscus", "label": "Hibiscus" }, { "value": "fr-raspberry", "label": "Raspberry" },
+          { "value": "fr-currant", "label": "Blackcurrant" }, { "value": "fr-violet", "label": "Violet" }, { "value": "fr-pineapple", "label": "Pineapple" }, { "value": "fr-chili", "label": "Chili" } ] },
+        { "type": "color", "id": "color", "label": "Background", "default": "#A9D67A" },
+        { "type": "text", "id": "coord", "label": "Coordinates" },
+        { "type": "text", "id": "place", "label": "Place" },
+        { "type": "text", "id": "title", "label": "Ingredient" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TORQ origins",
+      "blocks": [
+        { "type": "origin", "settings": { "fruit": "leaf", "color": "#A9D67A", "coord": "0.99° S, 77.81° W", "place": "NAPO, ECUADOR", "title": "Guayusa", "text": "Grown in the shade of the rainforest canopy by a Kichwa farming cooperative." } },
+        { "type": "origin", "settings": { "fruit": "slice-yuzu", "color": "#F7DC1E", "coord": "33.56° N, 133.53° E", "place": "KŌCHI, JAPAN", "title": "Yuzu", "text": "Pressed whole, peel included, which is where the floral bitterness comes from." } },
+        { "type": "origin", "settings": { "fruit": "slice-blood", "color": "#FF4A14", "coord": "37.50° N, 15.09° E", "place": "CATANIA, SICILY", "title": "Blood orange", "text": "Tarocco oranges from the slopes of Mount Etna." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

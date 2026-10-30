@@ -1,0 +1,21 @@
+<section class="sec curve" aria-labelledby="curveTitle-{{ section.id }}">
+  <div class="wrap">
+    <div class="curve-head">
+      <div><span class="eyebrow">{{ section.settings.eyebrow | escape }}</span><h2 id="curveTitle-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | newline_to_br }}</h2></div>
+      {%- if section.settings.text != blank -%}<p class="lede">{{ section.settings.text | escape }}</p>{%- endif -%}
+    </div>
+    {% render 'torq-curve-card' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ energy curve",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The curve" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Up fast.\nDown slow." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Sugar-loaded drinks spike hard and drop you about two hours later. TORQ pairs slow-release guayusa with L-theanine, so the lift builds over 45 minutes and tapers through the afternoon." }
+  ],
+  "presets": [{ "name": "TORQ energy curve" }]
+}
+{% endschema %}

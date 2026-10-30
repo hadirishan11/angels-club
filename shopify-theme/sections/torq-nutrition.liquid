@@ -1,0 +1,84 @@
+{%- assign s = section.settings -%}
+<section class="sec curve" aria-labelledby="factsTitle-{{ section.id }}">
+  <div class="wrap">
+    <span class="eyebrow">{{ s.eyebrow | escape }}</span>
+    <h2 id="factsTitle-{{ section.id }}" style="margin-top:14px">{{ s.heading | escape }}</h2>
+    <div class="facts-grid">
+      <div class="nf" aria-label="Nutrition facts">
+        <h3>Nutrition Facts</h3>
+        <div class="row" style="border-top:0">1 serving per container</div>
+        <div class="row thick" style="font-weight:700"><span>Serving size</span><span>{{ s.serving | escape }}</span></div>
+        <div class="row mid"><span style="font-size:.78rem;font-weight:700">Amount per serving</span></div>
+        <div class="row" style="border-top:0;align-items:baseline"><span class="big">Calories</span><span class="big num">{{ s.calories | escape }}</span></div>
+        <div class="row mid" style="justify-content:flex-end;font-size:.78rem;font-weight:700">% Daily Value*</div>
+        <div class="row"><span><b>Total Fat</b> {{ s.fat | escape }}</span><span class="num">{{ s.fat_dv | escape }}</span></div>
+        <div class="row"><span><b>Sodium</b> {{ s.sodium | escape }}</span><span class="num">{{ s.sodium_dv | escape }}</span></div>
+        <div class="row"><span><b>Total Carbohydrate</b> {{ s.carbs | escape }}</span><span class="num">{{ s.carbs_dv | escape }}</span></div>
+        <div class="row ind"><span>Total Sugars {{ s.sugars | escape }}</span><span></span></div>
+        <div class="row ind"><span>Includes {{ s.added_sugars | escape }} Added Sugars</span><span class="num">{{ s.added_sugars_dv | escape }}</span></div>
+        {%- if s.allulose != blank -%}<div class="row ind"><span>Allulose {{ s.allulose | escape }}</span><span></span></div>{%- endif -%}
+        <div class="row"><span><b>Protein</b> {{ s.protein | escape }}</span><span></span></div>
+        <div class="row thick"><span>Potassium {{ s.potassium | escape }}</span><span class="num">{{ s.potassium_dv | escape }}</span></div>
+        <div class="row"><span>Vitamin B6 {{ s.b6 | escape }}</span><span class="num">{{ s.b6_dv | escape }}</span></div>
+        <div class="row"><span>Vitamin B12 {{ s.b12 | escape }}</span><span class="num">{{ s.b12_dv | escape }}</span></div>
+        <div class="row"><span>Caffeine {{ s.caffeine | escape }}</span><span>&dagger;</span></div>
+        <div class="row"><span>L-Theanine {{ s.theanine | escape }}</span><span>&dagger;</span></div>
+        <p class="foot">*The % Daily Value tells you how much a nutrient in a serving contributes to a daily diet. 2,000 calories a day is used for general nutrition advice. &dagger;Daily Value not established.</p>
+      </div>
+      <div style="min-width:0">
+        {%- if s.show_compare -%}
+          <div class="compare-wrap">
+            <table class="compare">
+              <caption class="sr-only">Comparison per serving</caption>
+              <thead><tr><th scope="col"><span class="sr-only">Per serving</span></th><th scope="col" class="us">TORQ 12 oz</th><th scope="col">Classic energy 16 oz</th><th scope="col">Drip coffee 12 oz</th></tr></thead>
+              <tbody>
+                <tr><td class="rowlabel">Caffeine</td><td class="us">160mg</td><td>160mg</td><td>~140mg</td></tr>
+                <tr><td class="rowlabel">Sugar</td><td class="us">0g</td><td>54g</td><td>0g black</td></tr>
+                <tr><td class="rowlabel">Calories</td><td class="us">10</td><td>220</td><td>5</td></tr>
+                <tr><td class="rowlabel">L-theanine</td><td class="us">100mg</td><td>None</td><td>None</td></tr>
+                <tr><td class="rowlabel">Electrolytes</td><td class="us">Yes</td><td>Sodium only</td><td>No</td></tr>
+                <tr><td class="rowlabel">Artificial colors</td><td class="us">None</td><td>Often</td><td>None</td></tr>
+              </tbody>
+            </table>
+          </div>
+        {%- endif -%}
+        <p class="ing-list"><b>Ingredients</b><br>Carbonated water, <span data-fl="ingr">fruit juice concentrate</span>, {{ s.ingredients_rest | escape }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ nutrition",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Nutrition" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Read the back first." },
+    { "type": "paragraph", "content": "Use the figures from your product's lab-tested label." },
+    { "type": "text", "id": "serving", "label": "Serving size", "default": "1 can (355 mL)" },
+    { "type": "text", "id": "calories", "label": "Calories", "default": "10" },
+    { "type": "text", "id": "fat", "label": "Total fat", "default": "0g" },
+    { "type": "text", "id": "fat_dv", "label": "Total fat %DV", "default": "0%" },
+    { "type": "text", "id": "sodium", "label": "Sodium", "default": "180mg" },
+    { "type": "text", "id": "sodium_dv", "label": "Sodium %DV", "default": "8%" },
+    { "type": "text", "id": "carbs", "label": "Total carbohydrate", "default": "5g" },
+    { "type": "text", "id": "carbs_dv", "label": "Carbohydrate %DV", "default": "2%" },
+    { "type": "text", "id": "sugars", "label": "Total sugars", "default": "0g" },
+    { "type": "text", "id": "added_sugars", "label": "Added sugars", "default": "0g" },
+    { "type": "text", "id": "added_sugars_dv", "label": "Added sugars %DV", "default": "0%" },
+    { "type": "text", "id": "allulose", "label": "Allulose", "default": "4g" },
+    { "type": "text", "id": "protein", "label": "Protein", "default": "0g" },
+    { "type": "text", "id": "potassium", "label": "Potassium", "default": "200mg" },
+    { "type": "text", "id": "potassium_dv", "label": "Potassium %DV", "default": "4%" },
+    { "type": "text", "id": "b6", "label": "Vitamin B6", "default": "1.7mg" },
+    { "type": "text", "id": "b6_dv", "label": "Vitamin B6 %DV", "default": "100%" },
+    { "type": "text", "id": "b12", "label": "Vitamin B12", "default": "2.4mcg" },
+    { "type": "text", "id": "b12_dv", "label": "Vitamin B12 %DV", "default": "100%" },
+    { "type": "text", "id": "caffeine", "label": "Caffeine", "default": "160mg" },
+    { "type": "text", "id": "theanine", "label": "L-theanine", "default": "100mg" },
+    { "type": "checkbox", "id": "show_compare", "label": "Show comparison table", "default": true },
+    { "type": "textarea", "id": "ingredients_rest", "label": "Ingredients after the fruit", "default": "allulose, citric acid, natural caffeine (from guayusa leaf and green tea), L-theanine, sea salt, potassium citrate, natural flavors, monk fruit extract, pyridoxal-5-phosphate (vitamin B6), methylcobalamin (vitamin B12)." }
+  ],
+  "presets": [{ "name": "TORQ nutrition" }]
+}
+{% endschema %}

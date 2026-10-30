@@ -1,0 +1,13 @@
+<a class="card" href="{{ product.url }}">
+  <div class="media">
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.featured_media.alt | default: product.title, width: 600, height: 600 }}
+    {%- else -%}
+      <svg viewBox="0 0 200 400" aria-hidden="true"><use href="#can-flat"/></svg>
+    {%- endif -%}
+  </div>
+  <div class="body">
+    <b>{{ product.title | escape }}</b>
+    <span>{% if product.price_varies %}From {% endif %}{{ product.price_min | money }}{% unless product.available %} · Sold out{% endunless %}</span>
+  </div>
+</a>

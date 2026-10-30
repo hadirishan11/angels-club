@@ -1,0 +1,16 @@
+<div class="wrap page-wrap">
+  <h1>Collections</h1>
+  <div class="grid-products">
+    {%- for collection in collections -%}
+      <a class="card" href="{{ collection.url }}">
+        <div class="media">
+          {%- if collection.featured_image -%}{{ collection.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: collection.title, width: 600, height: 600 }}{%- else -%}<svg viewBox="0 0 200 400" aria-hidden="true"><use href="#can-flat"/></svg>{%- endif -%}
+        </div>
+        <div class="body"><b>{{ collection.title | escape }}</b><span>{{ collection.products_count }} products</span></div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Collections list", "settings": [] }
+{% endschema %}

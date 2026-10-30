@@ -1,0 +1,17 @@
+<section class="quote-band" aria-label="Quote">
+  <div class="wrap" style="padding-block:clamp(70px,9vw,120px)">
+    <blockquote>&ldquo;{{ section.settings.quote | escape }}&rdquo;</blockquote>
+    {%- if section.settings.cite != blank -%}<cite>{{ section.settings.cite | escape }}</cite>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ quote",
+  "settings": [
+    { "type": "textarea", "id": "quote", "label": "Quote", "default": "We wanted something you'd reach for at 2pm and not regret at midnight." },
+    { "type": "text", "id": "cite", "label": "Attribution", "default": "The founders" }
+  ],
+  "presets": [{ "name": "TORQ quote" }]
+}
+{% endschema %}

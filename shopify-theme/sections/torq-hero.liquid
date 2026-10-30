@@ -1,0 +1,81 @@
+{%- liquid
+  assign shop_url = routes.all_products_collection_url
+  if settings.torq_product != blank
+    assign shop_url = settings.torq_product.url
+  endif
+-%}
+<section class="hero" aria-labelledby="heroTitle-{{ section.id }}">
+  <div class="hero-word" aria-hidden="true" id="heroWord"><span>T</span><span>O</span><span>R</span><span>Q</span></div>
+  <div class="slice" data-depth="28" style="--s:clamp(80px,11vw,170px);left:6%;top:12%;transform:rotate(-20deg)"><svg aria-hidden="true"><use data-fruit="0" href="#slice-blood"/></svg></div>
+  <div class="slice" data-depth="-22" style="--s:clamp(60px,8vw,120px);right:9%;top:9%"><svg aria-hidden="true"><use data-fruit="1" href="#slice-yuzu"/></svg></div>
+  <div class="slice slice-low" data-depth="40" style="--s:clamp(70px,9vw,140px);right:6%;top:50%;transform:rotate(30deg)"><svg aria-hidden="true"><use data-fruit="2" href="#leaf"/></svg></div>
+  <div class="slice slice-low" data-depth="-34" style="--s:clamp(50px,6vw,96px);left:3%;top:64%"><svg aria-hidden="true"><use data-fruit="1" href="#slice-yuzu"/></svg></div>
+  <div class="hero-stage" data-can-stage="hero" role="img" aria-label="3D TORQ can. Drag to spin."></div>
+  <div class="hero-top-space" aria-hidden="true"></div>
+  <div class="drag-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 12h8M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg>Drag to spin</div>
+  <div class="wrap hero-bottom">
+    <div class="hero-copy">
+      <h1 id="heroTitle-{{ section.id }}"><span data-fl="name">Blood orange + yuzu</span> {{ section.settings.title_suffix | escape }}</h1>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+      <div class="hero-actions">
+        <a class="btn btn-dark" href="{{ shop_url }}" data-shop-link>{{ section.settings.button_label | escape }} <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+        {%- if section.settings.price_note != blank -%}<span class="mono" style="font-size:.85rem;font-weight:600">{{ section.settings.price_note | escape }}</span>{%- endif -%}
+      </div>
+      <div class="swatch-row">
+        <span class="swatch-label">Flavor: <span data-fl="short">Blood Orange</span></span>
+        <div class="swatches" data-swatches role="group" aria-label="Choose a flavor"></div>
+      </div>
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <div class="hero-stats">
+        {%- for block in section.blocks -%}
+          <div class="chip" {{ block.shopify_attributes }}><b>{{ block.settings.value | escape }}</b><span>{{ block.settings.label | newline_to_br }}</span></div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{%- assign items = section.settings.marquee | split: ',' -%}
+{%- if items.size > 0 -%}
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {%- for n in (1..2) -%}
+        <span>{% for item in items %}{{ item | strip | escape }} <i></i> {% endfor %}</span>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "TORQ hero",
+  "settings": [
+    { "type": "text", "id": "title_suffix", "label": "Heading after flavor name", "default": "sparkling energy" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "160mg of natural caffeine with L-theanine. Lands smooth, fades slow, zero sugar." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop now" },
+    { "type": "text", "id": "price_note", "label": "Price note", "default": "From $2.75 / can" },
+    { "type": "text", "id": "marquee", "label": "Ticker items", "info": "Separate with commas. Leave empty to hide.", "default": "Five flavors, Clean lift, No crash, Real fruit, 100mg L-theanine, Zero sugar, Electrolytes" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "160" },
+        { "type": "textarea", "id": "label", "label": "Label", "default": "mg natural\ncaffeine" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TORQ hero",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "160", "label": "mg natural\ncaffeine" } },
+        { "type": "stat", "settings": { "value": "0", "label": "grams\nsugar" } },
+        { "type": "stat", "settings": { "value": "10", "label": "calories\nper can" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

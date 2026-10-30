@@ -1,0 +1,62 @@
+{%- liquid
+  assign shop_url = routes.all_products_collection_url
+  if settings.torq_product != blank
+    assign shop_url = settings.torq_product.url
+  endif
+-%}
+<header class="site-header{% unless template.name == 'index' %} dark{% endunless %}" id="hdr">
+  <div class="wrap">
+    <a class="logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 300 | image_tag: height: 40, style: 'height:40px;width:auto', alt: shop.name, loading: 'eager' }}
+      {%- else -%}
+        {{ section.settings.wordmark | default: shop.name | escape }}<i></i>
+      {%- endif -%}
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <nav class="nav" id="nav" aria-label="Main">
+      {%- if section.settings.menu != blank -%}
+        {%- for link in section.settings.menu.links -%}
+          <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+        {%- endfor -%}
+      {%- else -%}
+        <a href="{{ routes.root_url }}"{% if template.name == 'index' %} aria-current="page"{% endif %}>Home</a>
+        <a href="{{ shop_url }}"{% if template.name == 'product' %} aria-current="page"{% endif %}>Shop</a>
+        <a href="/pages/our-story"{% if page.handle == 'our-story' %} aria-current="page"{% endif %}>Our story</a>
+        <a href="/pages/find-torq"{% if page.handle == 'find-torq' %} aria-current="page"{% endif %}>Find TORQ</a>
+      {%- endif -%}
+    </nav>
+    <a class="cart-btn" id="openCart" href="{{ routes.cart_url }}" aria-label="Open cart, {{ cart.item_count }} items">
+      <span class="lbl">Cart</span><span class="count" id="cartCount">{{ cart.item_count }}</span>
+    </a>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Wordmark text",
+      "default": "TORQ"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Replaces the wordmark text"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Leave empty to show Home, Shop, Our story and Find TORQ"
+    }
+  ]
+}
+{% endschema %}

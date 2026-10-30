@@ -1,0 +1,24 @@
+<section class="sec curve" aria-labelledby="lineupTitle-{{ section.id }}">
+  <div class="wrap">
+    <div class="lineup-head">
+      <div>
+        <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        <h2 id="lineupTitle-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | newline_to_br }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p class="lede">{{ section.settings.text | escape }}</p>{%- endif -%}
+    </div>
+    <div class="lineup" id="lineup" role="group" aria-label="Flavors"></div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ flavor lineup",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The lineup" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Five flavors.\nOne formula." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Every can has the same 160mg of natural caffeine, 100mg L-theanine and zero sugar. Pick a flavor and the whole site changes to match it." }
+  ],
+  "presets": [{ "name": "TORQ flavor lineup" }]
+}
+{% endschema %}

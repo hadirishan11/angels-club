@@ -1,0 +1,57 @@
+<section class="find-hero" aria-labelledby="findTitle-{{ section.id }}">
+  <div class="wrap">
+    <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+    <h1 id="findTitle-{{ section.id }}">{{ section.settings.heading | default: page.title | escape }}</h1>
+    {%- if section.settings.text != blank -%}<p class="lede">{{ section.settings.text | escape }}</p>{%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="find-tools">
+        <div class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <label for="storeSearch" class="sr-only">Search stores by name, neighborhood or city</label>
+          <input id="storeSearch" type="search" placeholder="Search by store, neighborhood or city" autocomplete="off">
+        </div>
+        <div class="cities" id="cities" role="group" aria-label="Filter by city"></div>
+      </div>
+      <p class="find-count" id="findCount" aria-live="polite"></p>
+    {%- endif -%}
+  </div>
+</section>
+<div class="wrap">
+  {%- if section.blocks.size > 0 -%}
+    <div class="stores" id="stores">
+      {%- for block in section.blocks -%}
+        {%- assign tags = block.settings.tags | split: ',' -%}
+        <article class="store" data-city="{{ block.settings.city | escape }}" data-search="{{ block.settings.city | append: ' ' | append: block.settings.name | append: ' ' | append: block.settings.area | downcase | escape }}" {{ block.shopify_attributes }}>
+          <span class="city">{{ block.settings.city | escape }}</span>
+          <h3>{{ block.settings.name | escape }}</h3>
+          <p>{{ block.settings.area | escape }}</p>
+          {%- if tags.size > 0 -%}<div class="tags">{% for t in tags %}{% assign tt = t | strip %}<span{% if tt == 'Cold case' %} class="cold"{% endif %}>{{ tt | escape }}</span>{% endfor %}</div>{%- endif -%}
+        </article>
+      {%- endfor -%}
+      <div class="no-results" id="noResults" hidden><p>No stockists match that search. Try a city name, or order online.</p><a class="btn btn-orange" href="{{ settings.torq_product.url | default: routes.all_products_collection_url }}">Order online</a></div>
+    </div>
+  {%- elsif request.design_mode -%}
+    <p class="design-hint" style="margin-block:40px 90px">Add a Stockist block for each shop that sells TORQ. This list is empty until you do.</p>
+  {%- else -%}
+    <div class="no-results" style="padding-block:40px 90px"><p>We're signing up our first stockists now. In the meantime, order online.</p><a class="btn btn-orange" href="{{ settings.torq_product.url | default: routes.all_products_collection_url }}">Order online</a></div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "TORQ stockists",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Stockists" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Find TORQ." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Cold cans in shops, cafés and gyms. Can't find one near you? We ship." }
+  ],
+  "blocks": [
+    { "type": "store", "name": "Stockist", "settings": [
+      { "type": "text", "id": "city", "label": "City" },
+      { "type": "text", "id": "name", "label": "Store name" },
+      { "type": "text", "id": "area", "label": "Neighborhood or address" },
+      { "type": "text", "id": "tags", "label": "Tags", "info": "Separate with commas, for example: Cold case, Singles, 12-packs" } ] }
+  ],
+  "presets": [{ "name": "TORQ stockists" }]
+}
+{% endschema %}

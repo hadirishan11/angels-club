@@ -1,0 +1,20 @@
+<section class="story-hero" aria-labelledby="pageHero-{{ section.id }}">
+  <div class="wrap">
+    <h1 id="pageHero-{{ section.id }}">{{ section.settings.heading | default: page.title | escape }}</h1>
+    {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+  </div>
+</section>
+{%- if page.content != blank -%}
+  <section class="sec"><div class="wrap"><div class="rte">{{ page.content }}</div></div></section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "TORQ page hero",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Leave empty to use the page title", "default": "Three origins. One can." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "TORQ started in a small kitchen with one question: why does every energy drink taste like melted candy? We still taste every batch." }
+  ],
+  "presets": [{ "name": "TORQ page hero" }]
+}
+{% endschema %}

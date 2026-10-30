@@ -1,0 +1,30 @@
+{%- liquid
+  assign shop_url = routes.all_products_collection_url
+  if settings.torq_product != blank
+    assign shop_url = settings.torq_product.url
+  endif
+-%}
+<section class="shop-band" aria-labelledby="bandTitle-{{ section.id }}">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      <h2 id="bandTitle-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+      <a class="btn btn-dark" href="{{ shop_url }}" data-shop-link>{{ section.settings.button_label | escape }} <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+    </div>
+    <div class="cans-row" aria-hidden="true"></div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ shop band",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Stock the fridge" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Five flavors.\nOne fridge." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Packs of 4, 12 or 24 in any flavor. Subscribe and save 15% on every delivery. Skip or cancel any time." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop TORQ" }
+  ],
+  "presets": [{ "name": "TORQ shop band" }]
+}
+{% endschema %}

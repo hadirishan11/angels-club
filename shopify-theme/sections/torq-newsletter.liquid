@@ -1,0 +1,32 @@
+<section class="sec join" aria-labelledby="joinTitle-{{ section.id }}">
+  <div class="wrap">
+    <div><span class="eyebrow">{{ section.settings.eyebrow | escape }}</span><h2 id="joinTitle-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | escape }} <span>{{ section.settings.heading_accent | escape }}</span></h2></div>
+    {%- form 'customer', id: 'joinForm' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <label for="email-{{ section.id }}">Email address</label>
+      <div class="field">
+        <input id="email-{{ section.id }}" name="contact[email]" type="email" autocomplete="email" placeholder="you@example.com" required aria-describedby="joinMsg-{{ section.id }}">
+        <button class="btn btn-orange" type="submit">{{ section.settings.button_label | escape }}</button>
+      </div>
+      <p class="msg{% if form.errors %} err{% elsif form.posted_successfully? %} ok{% endif %}" id="joinMsg-{{ section.id }}" role="status">
+        {%- if form.posted_successfully? -%}{{ section.settings.success | escape }}{%- elsif form.errors -%}{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}{%- endif -%}
+      </p>
+      {%- if section.settings.fine != blank -%}<p style="font-size:.85rem;color:var(--peel-soft)">{{ section.settings.fine | escape }}</p>{%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ newsletter",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The TORQ list" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "10% off your" },
+    { "type": "text", "id": "heading_accent", "label": "Heading accent", "default": "first order." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Join" },
+    { "type": "text", "id": "success", "label": "Success message", "default": "Thanks for subscribing. You're on the list." },
+    { "type": "textarea", "id": "fine", "label": "Small print", "default": "One email a month at most: restocks, new flavors and member pricing. Unsubscribe any time." }
+  ],
+  "presets": [{ "name": "TORQ newsletter" }]
+}
+{% endschema %}

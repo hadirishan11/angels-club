@@ -1,0 +1,23 @@
+<div class="wrap page-wrap">
+  <span class="eyebrow">Shop</span>
+  <h1 style="margin-top:12px">{{ collection.title | escape }}</h1>
+  {%- if collection.description != blank -%}<div class="rte" style="margin-bottom:32px">{{ collection.description }}</div>{%- endif -%}
+  {%- paginate collection.products by section.settings.per_page -%}
+    {%- if collection.products.size > 0 -%}
+      <div class="grid-products">
+        {%- for product in collection.products -%}{% render 'torq-card', product: product %}{%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="lede">No products here yet.</p>
+    {%- endif -%}
+    {% render 'torq-pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 4, "max": 48, "step": 4, "default": 12 }
+  ]
+}
+{% endschema %}

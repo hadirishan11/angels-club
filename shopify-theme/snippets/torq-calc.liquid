@@ -1,0 +1,25 @@
+<div class="calc-grid">
+        <div class="calc-in" id="calcIn">
+          <div class="calc-row"><div><b>TORQ</b><small>160 mg / can</small></div><div class="stepper"><button type="button" data-k="torq" data-d="-1" aria-label="Fewer TORQ cans">−</button><output data-o="torq">1</output><button type="button" data-k="torq" data-d="1" aria-label="More TORQ cans">+</button></div></div>
+          <div class="calc-row"><div><b>Drip coffee</b><small>95 mg / 8 oz cup</small></div><div class="stepper"><button type="button" data-k="coffee" data-d="-1" aria-label="Fewer cups of coffee">−</button><output data-o="coffee">1</output><button type="button" data-k="coffee" data-d="1" aria-label="More cups of coffee">+</button></div></div>
+          <div class="calc-row"><div><b>Espresso</b><small>63 mg / shot</small></div><div class="stepper"><button type="button" data-k="espresso" data-d="-1" aria-label="Fewer espresso shots">−</button><output data-o="espresso">0</output><button type="button" data-k="espresso" data-d="1" aria-label="More espresso shots">+</button></div></div>
+          <div class="calc-row"><div><b>Black tea</b><small>47 mg / cup</small></div><div class="stepper"><button type="button" data-k="tea" data-d="-1" aria-label="Fewer cups of tea">−</button><output data-o="tea">0</output><button type="button" data-k="tea" data-d="1" aria-label="More cups of tea">+</button></div></div>
+          <div class="calc-row"><div><b>Cola</b><small>34 mg / 12 oz can</small></div><div class="stepper"><button type="button" data-k="cola" data-d="-1" aria-label="Fewer colas">−</button><output data-o="cola">0</output><button type="button" data-k="cola" data-d="1" aria-label="More colas">+</button></div></div>
+        </div>
+        <div class="calc-out">
+          <span class="mono" style="font-weight:600;letter-spacing:.12em;font-size:.8rem">YOUR DAY</span>
+          <div class="calc-total" aria-live="polite"><span id="calcTotal">255</span><small>MG</small></div>
+          <div>
+            <div class="meter" aria-hidden="true"><i id="calcBar"></i><span class="mark"></span></div>
+            <div class="meter-scale" aria-hidden="true"><span>0</span><span>400 FDA</span><span>500</span></div>
+          </div>
+          <p class="verdict" id="calcVerdict" aria-live="polite"></p>
+          <div class="cutoff">
+            <label for="bed">Going to bed at</label>
+            <select id="bed">
+              <option value="21">9:00 pm</option><option value="22" selected>10:00 pm</option><option value="23">11:00 pm</option><option value="24">Midnight</option><option value="25">1:00 am</option>
+            </select>
+            <span>Last can by</span><output id="cutoff">2:00 pm</output>
+          </div>
+        </div>
+      </div>

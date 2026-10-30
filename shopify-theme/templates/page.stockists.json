@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "stockists": {
+      "type": "torq-stockists",
+      "settings": {}
+    }
+  },
+  "order": [
+    "stockists"
+  ]
+}

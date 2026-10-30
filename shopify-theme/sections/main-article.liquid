@@ -1,0 +1,10 @@
+<article class="wrap page-wrap">
+  <span class="eyebrow">{{ article.published_at | date: '%B %d, %Y' }}</span>
+  <h1 style="margin-top:12px">{{ article.title | escape }}</h1>
+  {%- if article.image -%}<div style="margin-bottom:32px">{{ article.image | image_url: width: 1600 | image_tag: alt: article.image.alt | default: article.title, style: 'border-radius:28px;height:auto' }}</div>{%- endif -%}
+  <div class="rte">{{ article.content }}</div>
+  <p class="link-row" style="margin-top:40px"><a href="{{ blog.url }}">&larr; Back to {{ blog.title | escape }}</a></p>
+</article>
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

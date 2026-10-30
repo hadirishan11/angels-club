@@ -1,0 +1,49 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-big" aria-hidden="true">{{ section.settings.big_word | escape }}</div>
+    <div class="footer-cols">
+      <div>
+        <a class="logo" href="{{ routes.root_url }}">{{ section.settings.big_word | escape }}<i></i></a>
+        {%- if section.settings.about != blank -%}
+          <p style="margin-top:10px;color:var(--peel-soft);max-width:36ch">{{ section.settings.about | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.warning != blank -%}
+          <p class="warning"><b>Caffeine warning:</b> {{ section.settings.warning | escape }}</p>
+        {%- endif -%}
+      </div>
+      {%- assign menus = 'menu_1,menu_2,menu_3' | split: ',' -%}
+      {%- for key in menus -%}
+        {%- assign menu = section.settings[key] -%}
+        {%- if menu != blank -%}
+          <div>
+            <h4>{{ menu.title | upcase | escape }}</h4>
+            <ul>
+              {%- for link in menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="legal">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | escape }}</span>
+      {%- if section.settings.legal != blank -%}<span>{{ section.settings.legal | escape }}</span>{%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "big_word", "label": "Big wordmark", "default": "TORQ" },
+    { "type": "textarea", "id": "about", "label": "About text", "default": "Sparkling energy made in small batches." },
+    { "type": "textarea", "id": "warning", "label": "Caffeine warning", "default": "contains 160mg caffeine per can. Not recommended for children, people who are pregnant or nursing, or persons sensitive to caffeine." },
+    { "type": "link_list", "id": "menu_1", "label": "Menu column 1", "default": "main-menu" },
+    { "type": "link_list", "id": "menu_2", "label": "Menu column 2", "default": "footer" },
+    { "type": "link_list", "id": "menu_3", "label": "Menu column 3" },
+    { "type": "text", "id": "legal", "label": "Legal line", "default": "These statements have not been evaluated by the FDA." }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,41 @@
+<section class="sec curve" aria-labelledby="faqTitle-{{ section.id }}">
+  <div class="wrap faq-grid">
+    <div><span class="eyebrow">{{ section.settings.eyebrow | escape }}</span><h2 id="faqTitle-{{ section.id }}" style="margin-top:14px">{{ section.settings.heading | newline_to_br }}</h2></div>
+    <div class="acc">
+      {%- for block in section.blocks -%}
+        <details {{ block.shopify_attributes }}><summary>{{ block.settings.question | escape }}</summary><div class="rte">{{ block.settings.answer }}</div></details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ FAQ",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Good\nquestions." }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Answer.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TORQ FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "question": "How many can I drink a day?", "answer": "<p>The FDA cites 400mg of caffeine a day as an amount not generally associated with negative effects for healthy adults. One can is 160mg, so two cans is 320mg. Count your coffee and tea too.</p>" } },
+        { "type": "question", "settings": { "question": "Who shouldn't drink it?", "answer": "<p>TORQ isn't for children, anyone pregnant or nursing, or people sensitive to caffeine. If you take medication or have a heart condition, check with your doctor first.</p>" } },
+        { "type": "question", "settings": { "question": "Why allulose and monk fruit?", "answer": "<p>Allulose is a rare sugar that tastes like sugar but isn't counted as added sugar and barely affects blood glucose. A touch of monk fruit rounds it out.</p>" } },
+        { "type": "question", "settings": { "question": "How does the subscription work?", "answer": "<p>You save on every order, delivered on your schedule. Skip a delivery or cancel any time from your account.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

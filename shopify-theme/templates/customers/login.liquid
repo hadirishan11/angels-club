@@ -1,0 +1,23 @@
+<div class="wrap page-wrap two-col">
+  <div>
+    <h1>Log in</h1>
+    {%- form 'customer_login', class: 'form-card' -%}
+      {%- if form.errors -%}<div class="errors">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="field-row"><label for="login-email">Email</label><input id="login-email" type="email" name="customer[email]" autocomplete="email" required></div>
+      {%- if form.password_needed -%}
+        <div class="field-row"><label for="login-pw">Password</label><input id="login-pw" type="password" name="customer[password]" autocomplete="current-password" required></div>
+      {%- endif -%}
+      <button class="btn btn-orange" type="submit" style="align-self:flex-start">Log in</button>
+      <p class="link-row"><a href="{{ routes.account_register_url }}">Create an account</a><a href="#recover">Forgot your password?</a></p>
+    {%- endform -%}
+  </div>
+  <div id="recover">
+    <h2 style="font-size:2.6rem;margin-bottom:20px">Reset password</h2>
+    {%- form 'recover_customer_password', class: 'form-card' -%}
+      {%- if form.posted_successfully? -%}<p class="success">We've sent you an email with a link to reset your password.</p>{%- endif -%}
+      {%- if form.errors -%}<div class="errors">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="field-row"><label for="recover-email">Email</label><input id="recover-email" type="email" name="email" autocomplete="email" required></div>
+      <button class="btn btn-ghost" type="submit" style="align-self:flex-start">Send reset link</button>
+    {%- endform -%}
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="wrap page-wrap cart-wrap">
+  <h1>Your cart</h1>
+  {%- if cart.item_count > 0 -%}
+    <form action="{{ routes.cart_url }}" method="post" novalidate>
+      <div class="scroll">
+        <table class="cart-table">
+          <thead><tr><th scope="col">Product</th><th scope="col">Quantity</th><th scope="col" style="text-align:right">Total</th></tr></thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td>
+                  <div class="cart-item">
+                    {%- if item.image -%}{{ item.image | image_url: width: 160 | image_tag: alt: item.product.title, width: 72, height: 72, loading: 'lazy' }}{%- endif -%}
+                    <div>
+                      <a href="{{ item.url }}" style="text-decoration:none"><b>{{ item.product.title | escape }}</b></a>
+                      {%- unless item.product.has_only_default_variant -%}<small>{{ item.variant.title | escape }}</small>{%- endunless -%}
+                      {%- if item.selling_plan_allocation -%}<small>{{ item.selling_plan_allocation.selling_plan.name | escape }}</small>{%- endif -%}
+                      <small><a href="{{ item.url_to_remove }}">Remove</a></small>
+                    </div>
+                  </div>
+                </td>
+                <td><label class="sr-only" for="qty-{{ forloop.index }}">Quantity for {{ item.product.title | escape }}</label><input class="qty-input" id="qty-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0"></td>
+                <td style="text-align:right" class="mono">{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+      <div class="cart-foot">
+        <button class="btn btn-ghost" type="submit" name="update">Update cart</button>
+        <div style="text-align:right">
+          <div class="cart-total">{{ cart.total_price | money }}</div>
+          <p class="fine" style="margin:0 0 14px">Taxes and shipping calculated at checkout.</p>
+          <button class="btn btn-orange" type="submit" name="checkout">Checkout</button>
+        </div>
+      </div>
+    </form>
+  {%- else -%}
+    <p class="lede" style="margin-bottom:24px">Your cart is empty.</p>
+    <a class="btn btn-orange" href="{{ settings.torq_product.url | default: routes.all_products_collection_url }}">Shop TORQ</a>
+  {%- endif -%}
+</div>
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

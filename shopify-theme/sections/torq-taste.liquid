@@ -1,0 +1,31 @@
+<section class="sec" aria-labelledby="tasteTitle-{{ section.id }}">
+  <div class="wrap taste-grid">
+    <div>
+      <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      <h2 id="tasteTitle-{{ section.id }}" style="margin-top:14px" data-fl="tasteTitle">Tart first. Sweet last.</h2>
+      <div class="bars" id="bars">
+        <div class="bar-row"><b>Tart</b><div class="bar"><i style="--v:80%"></i></div><span class="mono">8/10</span></div>
+        <div class="bar-row"><b>Fizz</b><div class="bar"><i style="--v:70%"></i></div><span class="mono">7/10</span></div>
+        <div class="bar-row"><b>Bitter</b><div class="bar"><i style="--v:40%"></i></div><span class="mono">4/10</span></div>
+        <div class="bar-row"><b>Sweet</b><div class="bar"><i style="--v:30%"></i></div><span class="mono">3/10</span></div>
+      </div>
+      <div class="notes" id="notes"></div>
+    </div>
+    <div class="taste-art" aria-hidden="true">
+      <div class="big-slice"><svg><use data-fruit="0" href="#slice-blood"/></svg></div>
+      <div class="small-slice"><svg viewBox="0 0 200 200"><use data-fruit="1" href="#slice-yuzu"/></svg></div>
+      {%- if section.settings.tag != blank -%}<div class="tag">{{ section.settings.tag | escape }}</div>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TORQ taste profile",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Taste profile" },
+    { "type": "text", "id": "tag", "label": "Sticker text", "default": "Best ice cold" }
+  ],
+  "presets": [{ "name": "TORQ taste profile" }]
+}
+{% endschema %}

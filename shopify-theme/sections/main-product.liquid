@@ -1,0 +1,168 @@
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign form_id = 'product-form-' | append: section.id
+  assign has_plans = false
+  if product.selling_plan_groups.size > 0
+    assign has_plans = true
+  endif
+  assign start_on_plan = false
+  if has_plans
+    if product.requires_selling_plan or section.settings.default_subscription
+      assign start_on_plan = true
+    endif
+  endif
+-%}
+<script type="application/json" id="TorqProduct">{{ product | json }}</script>
+<div class="wrap" data-product-section>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span><span aria-current="page">{{ product.title | escape }}</span></nav>
+  <div class="pdp">
+    <div class="gallery">
+      <div class="g-main" id="gMain">
+        <span class="g-word" aria-hidden="true">{{ section.settings.gallery_word | escape }}</span>
+        {%- if section.settings.badge != blank -%}<span class="badge">{{ section.settings.badge | escape }}</span>{%- endif -%}
+        <div class="pdp-stage" data-can-stage="product" role="img" aria-label="3D view of {{ product.title | escape }}. Drag to spin."></div>
+        <img class="g-photo" id="gPhoto" alt="" width="1400" height="1400" hidden>
+      </div>
+      {%- assign images = product.media | where: 'media_type', 'image' -%}
+      {%- if images.size > 0 -%}
+        <div class="thumbs" id="thumbs" role="group" aria-label="Product images">
+          <button type="button" aria-pressed="true" data-thumb="3d" aria-label="Show the 3D can"><span class="t3d">3D</span></button>
+          {%- for media in images limit: 7 -%}
+            <button type="button" aria-pressed="false" data-thumb="{{ media | image_url: width: 1400 }}" data-alt="{{ media.alt | escape }}" aria-label="Show image {{ forloop.index }}{% if media.alt != blank %}: {{ media.alt | escape }}{% endif %}">
+              {{ media | image_url: width: 300 | image_tag: class: 'photo', alt: '', loading: 'lazy', width: 300, height: 300 }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- form 'product', product, id: form_id, class: 'buy', novalidate: 'novalidate', data-product-form: '' -%}
+      <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+        <h1 style="margin-top:12px">{{ product.title | escape }}<span data-fl="name"></span></h1>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}{% render block %}{%- endif -%}
+      {%- endfor -%}
+
+      {%- if product.description != blank -%}<div class="desc rte">{{ product.description }}</div>{%- endif -%}
+
+      {%- assign pills = section.settings.pills | split: ',' -%}
+      {%- if pills.size > 0 -%}
+        <div class="feature-pills">{% for p in pills %}<span>{{ p | strip | escape }}</span>{% endfor %}</div>
+      {%- endif -%}
+
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
+          {%- assign oname = option.name | downcase -%}
+          {%- assign opt_index = forloop.index0 -%}
+          <fieldset class="opt-group" data-option="{{ opt_index }}">
+            <legend>{{ option.name | escape }}: <span data-option-label style="color:var(--peel)">{{ option.selected_value | escape }}</span></legend>
+            {%- if oname contains 'flavo' -%}
+              <div class="swatches">
+                {%- for value in option.values -%}
+                  {%- assign input_id = section.id | append: '-' | append: opt_index | append: '-' | append: forloop.index0 -%}
+                  <div class="swatch-opt">
+                    <input type="radio" id="{{ input_id }}" name="option-{{ opt_index }}" value="{{ value | escape }}" data-flavor="{{ value | handleize }}"{% if option.selected_value == value %} checked{% endif %}>
+                    <label class="swatch" for="{{ input_id }}" title="{{ value | escape }}"><i></i><span class="sr-only">{{ value | escape }}</span></label>
+                  </div>
+                {%- endfor -%}
+              </div>
+            {%- else -%}
+              {%- assign cols = option.values.size | at_most: 4 -%}
+              <div class="packs count-{{ cols }}">
+                {%- for value in option.values -%}
+                  {%- assign input_id = section.id | append: '-' | append: opt_index | append: '-' | append: forloop.index0 -%}
+                  <div class="opt">
+                    <input type="radio" id="{{ input_id }}" name="option-{{ opt_index }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>
+                    <label for="{{ input_id }}"><b>{{ value | escape }}</b><span data-opt-price></span><span data-opt-per></span></label>
+                  </div>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </fieldset>
+        {%- endfor -%}
+      {%- endunless -%}
+
+      {%- if has_plans -%}
+        <fieldset>
+          <legend>Purchase</legend>
+          <div class="plans">
+            {%- unless product.requires_selling_plan -%}
+              <div class="opt">
+                <input type="radio" id="{{ section.id }}-once" name="purchase_option" value=""{% unless start_on_plan %} checked{% endunless %}>
+                <label for="{{ section.id }}-once"><span style="display:flex;flex-direction:column;gap:2px"><b>One-time purchase</b><span data-plan-price=""></span></span></label>
+              </div>
+            {%- endunless -%}
+            {%- assign first_plan = true -%}
+            {%- for group in product.selling_plan_groups -%}
+              {%- for plan in group.selling_plans -%}
+                <div class="opt">
+                  <input type="radio" id="{{ section.id }}-plan-{{ plan.id }}" name="purchase_option" value="{{ plan.id }}"{% if start_on_plan and first_plan %} checked{% endif %}>
+                  <label for="{{ section.id }}-plan-{{ plan.id }}"><span style="display:flex;flex-direction:column;gap:2px"><b>{{ plan.name | escape }}</b><span data-plan-price="{{ plan.id }}">{{ group.name | escape }}</span></span></label>
+                </div>
+                {%- assign first_plan = false -%}
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        </fieldset>
+        <input type="hidden" name="selling_plan" value="" data-selling-plan>
+      {%- endif -%}
+
+      <div class="qty-row">
+        <div class="stepper" role="group" aria-label="Quantity">
+          <button type="button" data-qty="-1" aria-label="Decrease quantity">&minus;</button>
+          <input class="qty-num" type="number" name="quantity" value="1" min="1" max="20" aria-label="Quantity" inputmode="numeric">
+          <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
+        </div>
+        <div style="text-align:right">
+          <div class="price-big" data-price>{{ current.price | money }}{% if current.compare_at_price > current.price %}<s>{{ current.compare_at_price | money }}</s>{% endif %}</div>
+          <div class="per" data-per></div>
+        </div>
+      </div>
+      <p class="form-error" data-error role="alert" hidden></p>
+      <button type="submit" name="add" class="btn btn-orange btn-add" data-add{% unless current.available %} disabled{% endunless %}>
+        {%- if current.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+      </button>
+
+      {%- assign perks = section.settings.perks | split: ',' -%}
+      {%- if perks.size > 0 -%}
+        <div class="perks">
+          {%- for perk in perks -%}
+            <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>{{ perk | strip | escape }}</div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <div class="acc">
+        {%- if section.settings.details != blank -%}
+          <details open><summary>Details</summary><div class="rte">{{ section.settings.details }}</div></details>
+        {%- endif -%}
+        <details><summary>Ingredients</summary><div>Carbonated water, <span data-fl="ingr">fruit juice concentrate</span>, {{ section.settings.ingredients_rest | escape }}</div></details>
+        {%- if section.settings.shipping != blank -%}
+          <details><summary>Shipping &amp; returns</summary><div class="rte">{{ section.settings.shipping }}</div></details>
+        {%- endif -%}
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product page",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sparkling energy" },
+    { "type": "text", "id": "gallery_word", "label": "Gallery background word", "default": "TORQ" },
+    { "type": "text", "id": "badge", "label": "Gallery badge", "default": "12 FL OZ · 355 mL" },
+    { "type": "text", "id": "pills", "label": "Feature pills", "info": "Separate with commas", "default": "160mg caffeine, 0g sugar, 10 cal, Vegan, Gluten free" },
+    { "type": "checkbox", "id": "default_subscription", "label": "Select the subscription by default", "default": true },
+    { "type": "text", "id": "perks", "label": "Perks", "info": "Separate with commas", "default": "Free shipping over $40, Ships in 1–2 days, 30-day taste guarantee, Recyclable packaging" },
+    { "type": "richtext", "id": "details", "label": "Details", "default": "<p>12 fl oz (355 mL) aluminium cans. 160mg caffeine from guayusa leaf and green tea. Sweetened with allulose and monk fruit. Vegan, gluten free, no artificial colors.</p>" },
+    { "type": "textarea", "id": "ingredients_rest", "label": "Ingredients after the fruit", "default": "allulose, citric acid, natural caffeine (from guayusa leaf and green tea), L-theanine, sea salt, potassium citrate, natural flavors, monk fruit extract, pyridoxal-5-phosphate (vitamin B6), methylcobalamin (vitamin B12)." },
+    { "type": "richtext", "id": "shipping", "label": "Shipping & returns", "default": "<p>Orders ship within 1–2 business days. Free shipping over $40. Not happy with your first order? Contact us within 30 days for a full refund.</p>" }
+  ],
+  "blocks": [{ "type": "@app" }]
+}
+{% endschema %}
