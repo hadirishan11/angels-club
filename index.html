@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prestige Vault — Display Your Success</title>
+  <meta name="description" content="Luxury shadow-box frames. Handcrafted displays of success, made to order.">
+  <meta property="og:title" content="Prestige Vault">
+  <meta property="og:description" content="Luxury shadow-box frames. Display your success.">
+  <meta property="og:image" content="brand/keyhole-crest/prestige-vault-logo-black.png">
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <div class="announce" id="announce"></div>
+
+  <header class="nav">
+    <a href="#top" class="brand" aria-label="Prestige Vault home">
+      <img src="assets/crest.svg" alt="" width="34" height="34">
+      <span>PRESTIGE VAULT</span>
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#collection">Collection</a>
+      <a href="#bespoke">Bespoke</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="cart-btn" id="openCart" aria-label="Open cart">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Est. 2026 · Private Collection</p>
+        <h1>Display your<br><em>success.</em></h1>
+        <p class="lede">Handcrafted shadow-box frames for those who've earned it. Each piece is assembled to order and finished by hand.</p>
+        <div class="cta-row">
+          <a href="#collection" class="btn btn-gold">Enter the Vault</a>
+          <a href="#bespoke" class="btn btn-ghost">Make it bespoke</a>
+        </div>
+      </div>
+      <div class="hero-art" id="heroArt"></div>
+    </section>
+
+    <!-- Values strip -->
+    <section class="strip">
+      <div><span class="k">Handcrafted</span><span class="v">Assembled to order</span></div>
+      <div><span class="k">Velvet lined</span><span class="v">Glass-front shadow box</span></div>
+      <div><span class="k">Gift ready</span><span class="v">Signature black box</span></div>
+      <div><span class="k">Bespoke</span><span class="v">Personalised with your name</span></div>
+    </section>
+
+    <!-- Collection -->
+    <section class="section" id="collection">
+      <div class="section-head">
+        <img src="assets/crest.svg" alt="" width="40" height="40">
+        <h2>The Collection</h2>
+        <p>Three compositions. One standard.</p>
+      </div>
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <!-- Bespoke -->
+    <section class="section bespoke" id="bespoke">
+      <div class="bespoke-inner">
+        <div>
+          <p class="eyebrow">Bespoke</p>
+          <h2>Made only for you.</h2>
+          <p class="lede">Your name on the band. Your date on the plaque. A piece no one else will ever own.</p>
+          <ol class="steps">
+            <li><span>I</span><div><h3>Choose your piece</h3><p>Select The Legacy, or any frame, and your frame finish.</p></div></li>
+            <li><span>II</span><div><h3>Make it yours</h3><p>Tell us the name, initials or date you'd like engraved.</p></div></li>
+            <li><span>III</span><div><h3>Delivered to your door</h3><p>Finished by hand and sent in our signature gift box.</p></div></li>
+          </ol>
+          <button class="btn btn-gold" data-open="legacy">Create your Legacy</button>
+        </div>
+        <div class="bespoke-art" id="bespokeArt"></div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="section-head">
+        <h2>Questions</h2>
+      </div>
+      <div class="faq" id="faqList"></div>
+    </section>
+
+    <!-- Social -->
+    <section class="section inner-circle">
+      <img src="assets/crest.svg" alt="" width="56" height="56">
+      <h2>Join the Inner Circle</h2>
+      <p>New pieces, limited drops and private releases — first on our socials.</p>
+      <div class="cta-row center">
+        <a class="btn btn-ghost" id="igLink" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn btn-ghost" id="ttLink" target="_blank" rel="noopener">TikTok</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <img src="assets/crest.svg" alt="" width="36" height="36">
+    <p class="footer-name">PRESTIGE VAULT</p>
+    <p class="muted">Decorative display pieces. All notes are one-sided props, not legal tender.</p>
+    <p class="muted" id="footerContact"></p>
+    <p class="muted small">© <span id="year"></span> Prestige Vault. All rights reserved.</p>
+  </footer>
+
+  <!-- Product dialog -->
+  <dialog class="modal" id="productModal" aria-labelledby="pmName">
+    <button class="close" data-close aria-label="Close">×</button>
+    <div class="modal-grid">
+      <div class="modal-art" id="pmArt"></div>
+      <form class="modal-body" id="pmForm">
+        <p class="eyebrow" id="pmTagline"></p>
+        <h2 id="pmName"></h2>
+        <p class="price" id="pmPrice"></p>
+        <p id="pmDesc"></p>
+        <ul class="includes" id="pmIncludes"></ul>
+
+        <fieldset>
+          <legend>Frame finish</legend>
+          <div class="swatches" id="pmFrames"></div>
+        </fieldset>
+
+        <label class="field" id="pmPersonalWrap">
+          <span>Name or initials for your piece</span>
+          <input type="text" id="pmPersonal" maxlength="24" placeholder="e.g. A. MORGAN">
+        </label>
+
+        <div class="qty-row">
+          <div class="qty">
+            <button type="button" id="pmMinus" aria-label="Decrease">−</button>
+            <span id="pmQty">1</span>
+            <button type="button" id="pmPlus" aria-label="Increase">+</button>
+          </div>
+          <button type="submit" class="btn btn-gold grow">Add to cart</button>
+        </div>
+        <p class="muted small" id="pmShip"></p>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Cart drawer -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="cart" aria-label="Cart" aria-hidden="true">
+    <div class="drawer-head">
+      <h2>Your Vault</h2>
+      <button class="close" id="closeCart" aria-label="Close cart">×</button>
+    </div>
+    <div class="drawer-items" id="cartItems"></div>
+    <div class="drawer-foot">
+      <p class="ship-progress" id="shipProgress"></p>
+      <div class="subtotal"><span>Subtotal</span><span id="cartTotal">$0</span></div>
+      <button class="btn btn-gold full" id="checkout">Checkout</button>
+      <p class="muted small center" id="checkoutNote"></p>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/art.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
