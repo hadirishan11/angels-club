@@ -1,0 +1,59 @@
+TORQ PRODUCT PHOTOS
+===================
+
+27 images, 2048 x 2048 px JPG (Shopify's recommended square size).
+
+HOW TO ADD THEM IN SHOPIFY
+--------------------------
+1. Products > TORQ Sparkling Energy > Media: upload all 25 flavor photos.
+   Drag the Blood Orange hero photo to the first position; it becomes the main product image.
+2. Variants: open each variant and choose its image. Use the flavor's 01-hero photo
+   (for example, every Lime + Matcha variant uses torq-lime-01-hero.jpg).
+   When a shopper picks a flavor, Shopify then shows that flavor's photo.
+3. For each image, click it and paste the alt text below (helps accessibility and search).
+4. The two lineup photos are for collections, the home page or ads:
+   Products > Collections > (collection) > Image, or the theme editor.
+
+ALT TEXT
+--------
+
+Blood Orange + Yuzu
+  torq-blood-01-hero.jpg  ->  TORQ Blood Orange + Yuzu sparkling energy drink, can on a blood orange background with fruit
+  torq-blood-02-front.jpg  ->  TORQ Blood Orange + Yuzu sparkling energy drink, front of the can on white
+  torq-blood-03-side.jpg  ->  TORQ Blood Orange + Yuzu sparkling energy drink, side of the can showing the ingredient doses
+  torq-blood-04-nutrition.jpg  ->  TORQ Blood Orange + Yuzu sparkling energy drink, back of the can showing the Nutrition Facts
+  torq-blood-05-4-pack.jpg  ->  TORQ Blood Orange + Yuzu sparkling energy drink, four cans on a blood orange background
+
+Hibiscus + Raspberry
+  torq-hibiscus-01-hero.jpg  ->  TORQ Hibiscus + Raspberry sparkling energy drink, can on a pink background with fruit
+  torq-hibiscus-02-front.jpg  ->  TORQ Hibiscus + Raspberry sparkling energy drink, front of the can on white
+  torq-hibiscus-03-side.jpg  ->  TORQ Hibiscus + Raspberry sparkling energy drink, side of the can showing the ingredient doses
+  torq-hibiscus-04-nutrition.jpg  ->  TORQ Hibiscus + Raspberry sparkling energy drink, back of the can showing the Nutrition Facts
+  torq-hibiscus-05-4-pack.jpg  ->  TORQ Hibiscus + Raspberry sparkling energy drink, four cans on a pink background
+
+Lime + Matcha
+  torq-lime-01-hero.jpg  ->  TORQ Lime + Matcha sparkling energy drink, can on a green background with fruit
+  torq-lime-02-front.jpg  ->  TORQ Lime + Matcha sparkling energy drink, front of the can on white
+  torq-lime-03-side.jpg  ->  TORQ Lime + Matcha sparkling energy drink, side of the can showing the ingredient doses
+  torq-lime-04-nutrition.jpg  ->  TORQ Lime + Matcha sparkling energy drink, back of the can showing the Nutrition Facts
+  torq-lime-05-4-pack.jpg  ->  TORQ Lime + Matcha sparkling energy drink, four cans on a green background
+
+Blackcurrant + Violet
+  torq-currant-01-hero.jpg  ->  TORQ Blackcurrant + Violet sparkling energy drink, can on a purple background with fruit
+  torq-currant-02-front.jpg  ->  TORQ Blackcurrant + Violet sparkling energy drink, front of the can on white
+  torq-currant-03-side.jpg  ->  TORQ Blackcurrant + Violet sparkling energy drink, side of the can showing the ingredient doses
+  torq-currant-04-nutrition.jpg  ->  TORQ Blackcurrant + Violet sparkling energy drink, back of the can showing the Nutrition Facts
+  torq-currant-05-4-pack.jpg  ->  TORQ Blackcurrant + Violet sparkling energy drink, four cans on a purple background
+
+Pineapple + Chili
+  torq-pineapple-01-hero.jpg  ->  TORQ Pineapple + Chili sparkling energy drink, can on a yellow background with fruit
+  torq-pineapple-02-front.jpg  ->  TORQ Pineapple + Chili sparkling energy drink, front of the can on white
+  torq-pineapple-03-side.jpg  ->  TORQ Pineapple + Chili sparkling energy drink, side of the can showing the ingredient doses
+  torq-pineapple-04-nutrition.jpg  ->  TORQ Pineapple + Chili sparkling energy drink, back of the can showing the Nutrition Facts
+  torq-pineapple-05-4-pack.jpg  ->  TORQ Pineapple + Chili sparkling energy drink, four cans on a yellow background
+
+Lineup
+  torq-lineup-color.jpg  ->  All five TORQ sparkling energy flavors side by side
+  torq-lineup-white.jpg  ->  All five TORQ sparkling energy flavors on white
+
+NOTE: these are 3D renders of the label design. Replace them with real photos once cans are printed.
