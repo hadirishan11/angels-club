@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Read the Can</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: the page IS the can. A fixed 3D can fills the screen; scrolling turns it once, and each stop is a panel of the real label with a card that explains it. The sky behind follows the viewer's local clock. Single theme by design: the sky is the theme. */
+:root {
+  --sky-top: #FFB27A; --sky-bot: #FF5A1E; --glow: #FFE2B8;
+  --card: rgba(24, 6, 3, .78); --card-line: rgba(255, 240, 228, .18);
+  --peel: #FFF0E4; --peel-soft: #E9CDBE; --accent: #FF4A14; --accent-2: #F7DC1E; --ink: #1C0502;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; color: var(--peel); font: 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; background: var(--sky-bot); }
+img { max-width: 100%; } [hidden] { display: none !important; }
+h1, h2, h3 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .88; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Sky + stage (fixed behind everything) */
+.sky { position: fixed; inset: 0; z-index: 0; background: radial-gradient(70% 55% at 62% 48%, var(--glow) 0%, transparent 60%), linear-gradient(180deg, var(--sky-top), var(--sky-bot)); transition: background 1.2s ease; }
+.sky::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.4px); background-size: 140px 140px; opacity: var(--stars, 0); transition: opacity 1.2s ease; }
+#stage { position: fixed; inset: 0; z-index: 1; }
+#stage canvas { display: block; width: 100% !important; height: 100% !important; }
+.ghost { position: fixed; z-index: 0; left: 50%; top: 50%; transform: translate(-50%, -50%); font-family: var(--display); font-weight: 900; font-size: 38vw; line-height: .8; color: rgba(28,5,2,.12); pointer-events: none; user-select: none; white-space: nowrap; }
+
+/* Top bar */
+.bar { position: fixed; z-index: 5; top: env(safe-area-inset-top, 0px); left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px max(20px, env(safe-area-inset-right, 0px)) 16px max(20px, env(safe-area-inset-left, 0px)); pointer-events: none; }
+.bar > * { pointer-events: auto; }
+.logo { font-family: var(--display); font-weight: 900; font-size: 2rem; letter-spacing: -.01em; color: var(--ink); display: inline-flex; gap: 6px; align-items: center; }
+.logo i { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 0 2px var(--ink); }
+.clock { display: inline-flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--card-line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 999px; padding: 6px 8px 6px 14px; font: 600 .78rem var(--mono); letter-spacing: .06em; }
+.clock .dot { width: 9px; height: 9px; border-radius: 50%; background: #8FE3A6; box-shadow: 0 0 10px #8FE3A6; }
+.clock.closed .dot { background: #FF8A66; box-shadow: 0 0 10px #FF8A66; }
+.clock select { font: inherit; color: var(--peel); background: rgba(255,255,255,.08); border: 1px solid var(--card-line); border-radius: 999px; padding: 6px 10px; min-height: 36px; }
+
+/* Rotation rail */
+.rail { position: fixed; z-index: 5; right: max(18px, env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.rail a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font: 600 .7rem var(--mono); letter-spacing: .12em; text-transform: uppercase; min-height: 28px; }
+.rail a span { opacity: 0; transform: translateX(6px); transition: opacity .2s, transform .2s; background: var(--card); color: var(--peel); padding: 3px 8px; border-radius: 999px; }
+.rail a:hover span, .rail a:focus-visible span, .rail a[aria-current="true"] span { opacity: 1; transform: none; }
+.rail a i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); transition: background .2s, transform .2s; }
+.rail a[aria-current="true"] i { background: var(--ink); transform: scale(1.25); }
+.deg { position: fixed; z-index: 5; left: max(20px, env(safe-area-inset-left, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); font: 600 .78rem var(--mono); letter-spacing: .14em; color: var(--ink); text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.deg b { font: 900 2.4rem var(--display); letter-spacing: 0; display: block; line-height: .9; }
+
+/* Stops */
+main { position: relative; z-index: 3; }
+.stop { min-height: 100vh; display: flex; align-items: center; padding: 110px max(20px, env(safe-area-inset-right, 0px)) 80px max(20px, env(safe-area-inset-left, 0px)); }
+.stop[data-side="right"] { justify-content: flex-end; }
+.card { width: min(440px, 100%); background: var(--card); border: 1px solid var(--card-line); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); border-radius: 28px; padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; gap: 14px; box-shadow: 0 30px 80px rgba(20, 3, 0, .35); }
+.stop[data-side="right"] .card { margin-right: clamp(0px, 5vw, 70px); }
+.where { font: 600 .74rem var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--accent-2); display: flex; gap: 10px; align-items: center; }
+.where::before { content: ""; width: 22px; height: 2px; background: currentColor; }
+.card h2 { font-size: clamp(2.6rem, 5vw, 3.8rem); }
+.card p { color: var(--peel-soft); }
+.hero-card { width: min(520px, 100%); background: transparent; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; color: var(--ink); }
+.hero-card h1 { font-size: clamp(4.4rem, 11vw, 9rem); line-height: .8; }
+.hero-card p { color: var(--ink); font-weight: 500; font-size: 1.15rem; max-width: 34ch; }
+.hero-card .where { color: var(--ink); }
+.cue { display: inline-flex; align-items: center; gap: 10px; font: 600 .78rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.cue svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(5px); } }
+.notice { background: var(--ink); color: var(--peel); border-radius: 18px; padding: 14px 16px; font-weight: 600; font-size: .98rem; }
+.notice b { color: var(--accent-2); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--card-line); font-variant-numeric: tabular-nums; }
+.rows dt { font-weight: 600; } .rows dd { margin: 0; font-family: var(--mono); color: var(--accent-2); }
+.big-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.big-nums div { background: rgba(255,255,255,.06); border-radius: 16px; padding: 12px; }
+.big-nums b { font: 900 2.6rem var(--display); display: block; line-height: .9; color: var(--accent-2); }
+.big-nums span { font-size: .78rem; color: var(--peel-soft); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.sw { border: 2px solid transparent; border-radius: 16px; background: rgba(255,255,255,.06); padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--peel); font: 700 .72rem var(--body); text-align: center; cursor: pointer; min-height: 44px; }
+.sw i { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--a) 0 56%, var(--b) 56%); box-shadow: inset 0 0 0 2px rgba(0,0,0,.25); }
+.sw[aria-pressed="true"] { border-color: var(--peel); background: rgba(255,255,255,.12); }
+.packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pk { border: 2px solid var(--card-line); background: rgba(255,255,255,.04); border-radius: 16px; padding: 10px; color: var(--peel); text-align: left; cursor: pointer; min-height: 44px; }
+.pk b { font: 900 1.5rem var(--display); display: block; text-transform: uppercase; }
+.pk span { font: 500 .78rem var(--mono); color: var(--peel-soft); }
+.pk[aria-pressed="true"] { border-color: var(--accent-2); background: rgba(247,220,30,.1); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 26px; border: 0; border-radius: 999px; font: 900 1.35rem var(--display); text-transform: uppercase; letter-spacing: .02em; cursor: pointer; transition: transform .2s cubic-bezier(.2,.8,.2,1.3); }
+.btn:hover { transform: translateY(-2px) rotate(-1deg); }
+.btn-crack { background: var(--accent-2); color: var(--ink); }
+.btn-buy { background: var(--peel); color: var(--ink); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.msg { min-height: 1.4em; font-weight: 600; font-size: .92rem; color: var(--accent-2); }
+.fine { font-size: .8rem; color: var(--peel-soft); opacity: .85; }
+@media (prefers-reduced-motion: reduce) { .btn, .rail a span, .rail a i { transition: none; } .cue svg { animation: none; } .btn:hover { transform: none; } }
+
+@media (max-width: 760px) {
+  .stop { align-items: flex-end; min-height: 115vh; padding-top: 60vh; }
+  .stop[data-side="right"] { justify-content: flex-start; }
+  .stop[data-side="right"] .card { margin-right: 0; }
+  .hero-stop { align-items: flex-start !important; padding-top: 96px !important; min-height: 100vh !important; }
+  .hero-card h1 { font-size: 4.6rem; }
+  .rail { display: none; }
+  .clock .lbl { display: none; }
+  .clock { padding-left: 12px; font-size: .72rem; }
+  .logo { font-size: 1.7rem; }
+  .deg { display: none; }
+  .ghost { font-size: 52vw; top: 34%; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="slice-yuzu" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="98" fill="#E9C80F"/>
+      <circle cx="100" cy="100" r="88" fill="#FFF6B8"/>
+      <g fill="#F7DC1E">
+        <path d="M100 100 L100 20 A80 80 0 0 1 156.6 43.4 Z"/><path d="M100 100 L156.6 43.4 A80 80 0 0 1 180 100 Z"/>
+        <path d="M100 100 L180 100 A80 80 0 0 1 156.6 156.6 Z"/><path d="M100 100 L156.6 156.6 A80 80 0 0 1 100 180 Z"/>
+        <path d="M100 100 L100 180 A80 80 0 0 1 43.4 156.6 Z"/><path d="M100 100 L43.4 156.6 A80 80 0 0 1 20 100 Z"/>
+        <path d="M100 100 L20 100 A80 80 0 0 1 43.4 43.4 Z"/><path d="M100 100 L43.4 43.4 A80 80 0 0 1 100 20 Z"/>
+      </g>
+      <g stroke="#FFF6B8" stroke-width="5"><path d="M100 18V182M18 100H182M42 42L158 158M158 42L42 158"/></g>
+      <circle cx="100" cy="100" r="9" fill="#FFF6B8"/>
+      <ellipse cx="128" cy="70" rx="5" ry="9" fill="#FFFBE0" transform="rotate(30 128 70)"/>
+    </symbol>
+    <symbol id="slice-blood" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="98" fill="#E8540F"/>
+      <circle cx="100" cy="100" r="88" fill="#FFD9C4"/>
+      <g fill="#B5121B">
+        <path d="M100 100 L100 20 A80 80 0 0 1 156.6 43.4 Z"/><path d="M100 100 L156.6 43.4 A80 80 0 0 1 180 100 Z" fill="#D42A1C"/>
+        <path d="M100 100 L180 100 A80 80 0 0 1 156.6 156.6 Z"/><path d="M100 100 L156.6 156.6 A80 80 0 0 1 100 180 Z" fill="#8E0D14"/>
+        <path d="M100 100 L100 180 A80 80 0 0 1 43.4 156.6 Z" fill="#D42A1C"/><path d="M100 100 L43.4 156.6 A80 80 0 0 1 20 100 Z"/>
+        <path d="M100 100 L20 100 A80 80 0 0 1 43.4 43.4 Z" fill="#8E0D14"/><path d="M100 100 L43.4 43.4 A80 80 0 0 1 100 20 Z" fill="#D42A1C"/>
+      </g>
+      <g stroke="#FFD9C4" stroke-width="5"><path d="M100 18V182M18 100H182M42 42L158 158M158 42L42 158"/></g>
+      <circle cx="100" cy="100" r="9" fill="#FFD9C4"/>
+    </symbol>
+    <symbol id="leaf" viewBox="0 0 200 200">
+      <path d="M30 170 C30 80 90 30 175 25 C170 110 120 170 30 170 Z" fill="#3E7A2C"/>
+      <path d="M30 170 C70 120 110 80 165 35" stroke="#A9D67A" stroke-width="6" fill="none"/>
+      <path d="M70 128 L60 90M95 102 L92 68M122 76 L126 50M85 115 L120 118M110 90 L140 92" stroke="#A9D67A" stroke-width="4" fill="none"/>
+    </symbol>
+    <symbol id="can-flat" viewBox="0 0 200 400">
+      <path d="M40 22 Q100 8 160 22 L170 46 L170 354 L160 378 Q100 392 40 378 L30 354 L30 46 Z" fill="#C9CDD2"/>
+      <path d="M30 50 L170 50 L170 350 L30 350 Z" fill="#FF4A14"/>
+      <path d="M30 248 L170 212 L170 280 L30 316 Z" fill="#F7DC1E"/>
+      <rect x="40" y="50" width="18" height="300" fill="#fff" opacity=".2"/>
+      <text x="100" y="160" text-anchor="middle" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="900" font-size="74" fill="#1C0502" transform="rotate(-90 100 160)">TORQ</text>
+      <ellipse cx="100" cy="21" rx="58" ry="8" fill="#9AA0A6"/>
+    </symbol>
+    <symbol id="star" viewBox="0 0 24 24"><path d="M12 2l3 7 7.5.6-5.7 4.9 1.8 7.4L12 18l-6.6 3.9 1.8-7.4L1.5 9.6 9 9z"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  </defs>
+</svg>
+
+<div class="sky" id="sky" aria-hidden="true"></div>
+<div class="ghost" aria-hidden="true">TORQ</div>
+<div id="stage" aria-hidden="true"></div>
+
+<div class="bar">
+  <span class="logo">TORQ<i></i></span>
+  <div class="clock" id="clock" role="status">
+    <span class="dot" aria-hidden="true"></span>
+    <span id="clockText">Caffeine window open</span>
+    <label class="sr-only" for="bed">Your bedtime</label>
+    <select id="bed" title="Your bedtime">
+      <option value="21">Bed 9pm</option><option value="22" selected>Bed 10pm</option><option value="23">Bed 11pm</option><option value="24">Bed 12am</option><option value="25">Bed 1am</option>
+    </select>
+  </div>
+</div>
+
+<nav class="rail" id="rail" aria-label="Turn the can to"></nav>
+<div class="deg" aria-hidden="true"><b id="degNum">0°</b>can rotation</div>
+
+<main>
+  <section class="stop hero-stop" data-stop="front" data-label="Front" data-r="0" data-z="11.5" data-x="1.6" data-y="0" data-tilt="-.18">
+    <div class="card hero-card">
+      <span class="where">TORQ · sparkling energy</span>
+      <h1>Read the can.</h1>
+      <p>This website is printed on a can. Scroll and it turns once, panel by panel, until you crack it open.</p>
+      <p class="notice" id="nightNotice" hidden></p>
+      <span class="cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Scroll to turn it</span>
+    </div>
+  </section>
+
+  <section class="stop" data-side="left" data-stop="inside" data-label="What's inside" data-r="-2.58" data-z="7.4" data-x="1.5" data-y=".35" data-tilt="0">
+    <div class="card">
+      <span class="where">Right side panel · 148°</span>
+      <h2>Six things. Each one dosed.</h2>
+      <p>No blends with secret amounts. What's printed is what's in the can.</p>
+      <dl class="rows">
+        <div><dt>Guayusa leaf</dt><dd>120mg caffeine</dd></div>
+        <div><dt>Green tea</dt><dd>40mg caffeine</dd></div>
+        <div><dt>L-theanine</dt><dd>100mg</dd></div>
+        <div><dt>Electrolytes</dt><dd>380mg</dd></div>
+        <div><dt>B6 + B12</dt><dd>100% DV</dd></div>
+        <div><dt data-fl="name">Real fruit</dt><dd>5% juice</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="stop" data-side="right" data-stop="back" data-label="Back" data-r="-3.84" data-z="7.2" data-x="-1.5" data-y=".1" data-tilt="0">
+    <div class="card">
+      <span class="where">Back panel · 220°</span>
+      <h2>The back, in plain English.</h2>
+      <div class="big-nums"><div><b>10</b><span>Calories</span></div><div><b>0g</b><span>Sugar</span></div><div><b>5g</b><span>Carbs</span></div></div>
+      <p>The sweetness comes from allulose, a rare sugar your body barely absorbs, and a touch of monk fruit. That's why the carbs are 5g and the sugar line says zero.</p>
+    </div>
+  </section>
+
+  <section class="stop" data-side="left" data-stop="print" data-label="Small print" data-r="-4.81" data-z="7.2" data-x="1.5" data-y=".1" data-tilt="0">
+    <div class="card">
+      <span class="where">Left side panel · 276°</span>
+      <h2>We print the warning big.</h2>
+      <p>One can is 160mg of caffeine, about a 12 oz coffee. The FDA cites 400mg a day as generally safe for healthy adults, so two cans is the most we'd drink.</p>
+      <p>Not for children, anyone pregnant or nursing, or people sensitive to caffeine.</p>
+      <p class="notice" id="cutoffNote"></p>
+    </div>
+  </section>
+
+  <section class="stop" data-side="right" data-stop="flavors" data-label="Flavors" data-r="-6.28" data-z="10" data-x="-1.6" data-y="0" data-tilt=".12">
+    <div class="card">
+      <span class="where">Front again · 360°</span>
+      <h2>Pick the fruit. The can reprints.</h2>
+      <p>Same formula in every can. Only the fruit, the colours and the sky change.</p>
+      <div class="swatches" id="swatches" role="group" aria-label="Flavor"></div>
+      <p class="fine" id="tasteNote"></p>
+    </div>
+  </section>
+
+  <section class="stop" data-side="left" data-stop="crack" data-label="Crack it" data-r="-6.28" data-z="8.6" data-x="1.4" data-y="-.55" data-tilt="-.05" data-pitch=".38">
+    <div class="card">
+      <span class="where">The top · tab up</span>
+      <h2>Crack one.</h2>
+      <p>Turn your sound on first.</p>
+      <div class="btn-row"><button class="btn btn-crack" id="crackBtn" type="button">Crack it open</button></div>
+      <div class="packs" id="packs" role="group" aria-label="Pack size"></div>
+      <button class="btn btn-buy" id="buyBtn" type="button">Add to cart</button>
+      <p class="msg" id="buyMsg" role="status"></p>
+      <p class="fine">Concept site for a fictional brand. Nothing is sold here.</p>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const FLAVORS = [
+    { id: "blood", name: "Blood orange + yuzu", short: "Blood Orange", tag: "The original",
+      vars: { orange: "#FF4A14", "orange-2": "#FF7A3D", yuzu: "#F7DC1E", blood: "#240703", "blood-2": "#36100A", "blood-3": "#4A1A12", ink: "#1C0502", "ink-soft": "#5A1F10", "peel-soft": "#E3C3B3", "hero-hi": "#FF8A4C", "hero-lo": "#C92A06", "alt-hi": "#FFF07A", "alt2-hi": "#6A2316" },
+      label: { top: "#FF5A1E", bot: "#F23D0A", band: "#F7DC1E", ink: "#1C0502" },
+      fruits: ["blood", "yuzu", "leaf"], taste: [8, 7, 4, 3], tasteTitle: "Tart first. Sweet last.",
+      notes: ["Yuzu peel", "Blood orange", "Pink grapefruit", "White tea", "Dry finish"],
+      desc: "Tart, bright and lightly sparkling.", juiceTitle: "Yuzu + blood orange",
+      juice: "Kōchi yuzu and Sicilian blood orange. Tart, floral, a little bitter at the finish.",
+      ingr: "yuzu juice concentrate, blood orange juice concentrate" },
+    { id: "hibiscus", name: "Hibiscus + raspberry", short: "Hibiscus", tag: "New",
+      vars: { orange: "#FF3D8B", "orange-2": "#FF7AB0", yuzu: "#FFC2DA", blood: "#25040F", "blood-2": "#3A0A1C", "blood-3": "#541529", ink: "#22020D", "ink-soft": "#6B1033", "peel-soft": "#EBC1D0", "hero-hi": "#FF8CBC", "hero-lo": "#C2125A", "alt-hi": "#FFE6F0", "alt2-hi": "#6B1838" },
+      label: { top: "#FF4D94", bot: "#E8236F", band: "#FFC2DA", ink: "#22020D" },
+      fruits: ["hibiscus", "raspberry", "leaf"], taste: [7, 7, 2, 5], tasteTitle: "Juicy first. Floral last.",
+      notes: ["Raspberry", "Hibiscus tea", "Rose hip", "Red currant", "Juicy finish"],
+      desc: "Juicy, floral and a little tart.", juiceTitle: "Hibiscus + raspberry",
+      juice: "Raspberry juice and cold-steeped Egyptian hibiscus. Bright berry up front, floral tea at the finish.",
+      ingr: "raspberry juice concentrate, hibiscus flower extract" },
+    { id: "lime", name: "Lime + matcha", short: "Lime Matcha", tag: "New",
+      vars: { orange: "#45D96A", "orange-2": "#7FEA95", yuzu: "#E6FF6B", blood: "#04170B", "blood-2": "#0A2715", "blood-3": "#173B21", ink: "#04190C", "ink-soft": "#165A2A", "peel-soft": "#BFE3C6", "hero-hi": "#8CF2A3", "hero-lo": "#179A3B", "alt-hi": "#F4FFC2", "alt2-hi": "#134D27" },
+      label: { top: "#52E173", bot: "#22B84A", band: "#E6FF6B", ink: "#04190C" },
+      fruits: ["lime", "leaf", "lime"], taste: [9, 8, 3, 2], tasteTitle: "Zesty first. Grassy last.",
+      notes: ["Key lime", "Ceremonial matcha", "Cucumber", "Mint", "Grassy finish"],
+      desc: "Zesty, grassy and very crisp.", juiceTitle: "Lime + matcha",
+      juice: "Mexican key lime and stone-ground Uji matcha. Sharp citrus with a smooth, green finish.",
+      ingr: "lime juice concentrate, matcha green tea powder" },
+    { id: "currant", name: "Blackcurrant + violet", short: "Blackcurrant", tag: "Limited",
+      vars: { orange: "#A980FF", "orange-2": "#C6A8FF", yuzu: "#F3B6FF", blood: "#120826", "blood-2": "#1F1140", "blood-3": "#2F1C58", ink: "#0E0420", "ink-soft": "#3D2373", "peel-soft": "#CFC2EA", "hero-hi": "#CDB4FF", "hero-lo": "#6A3FD6", "alt-hi": "#FBE3FF", "alt2-hi": "#2F1C58" },
+      label: { top: "#B08AFF", bot: "#8458F0", band: "#F3B6FF", ink: "#0E0420" },
+      fruits: ["currant", "violet", "leaf"], taste: [6, 6, 3, 5], tasteTitle: "Dark fruit. Soft floral.",
+      notes: ["Blackcurrant", "Violet", "Blueberry", "Black tea", "Jammy finish"],
+      desc: "Dark, jammy and softly floral.", juiceTitle: "Blackcurrant + violet",
+      juice: "British blackcurrant and a drop of violet. Deep berry, gentle perfume, dry finish.",
+      ingr: "blackcurrant juice concentrate, violet flower extract" },
+    { id: "pineapple", name: "Pineapple + chili", short: "Pineapple Chili", tag: "New · spicy",
+      vars: { orange: "#FFC21A", "orange-2": "#FFD866", yuzu: "#FF5A36", blood: "#1F1000", "blood-2": "#301A04", "blood-3": "#4A2B0B", ink: "#1F0D00", "ink-soft": "#6B4300", "peel-soft": "#EBD7B5", "hero-hi": "#FFE07A", "hero-lo": "#E08A00", "alt-hi": "#FFB7A3", "alt2-hi": "#4A2B0B" },
+      label: { top: "#FFCB2E", bot: "#F5AE00", band: "#FF5A36", ink: "#1F0D00" },
+      fruits: ["pineapple", "chili", "leaf"], taste: [6, 7, 1, 6], tasteTitle: "Sweet first. Heat last.",
+      notes: ["Roasted pineapple", "Chili heat", "Lime zest", "Agave", "Warm finish"],
+      desc: "Tropical, juicy, with a slow chili kick.", juiceTitle: "Pineapple + chili",
+      juice: "Golden pineapple with a pinch of árbol chili. Sweet up front, gentle heat that builds.",
+      ingr: "pineapple juice concentrate, chili pepper extract" }
+  ];
+  const byId = id => FLAVORS.find(f => f.id === id) || FLAVORS[0];
+  // Fruit illustrations, one or two per flavor, built as SVG symbols
+  (() => {
+    const segs = (a, b) => [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const t0 = i * Math.PI / 4 - Math.PI / 2, t1 = t0 + Math.PI / 4; const p = t => `${(100 + 80 * Math.cos(t)).toFixed(1)} ${(100 + 80 * Math.sin(t)).toFixed(1)}`; return `<path d="M100 100 L${p(t0)} A80 80 0 0 1 ${p(t1)} Z" fill="${i % 2 ? b : a}"/>`; }).join("");
+    const citrus = (id, rind, pith, a, b) => `<symbol id="fr-${id}" viewBox="0 0 200 200"><circle cx="100" cy="100" r="98" fill="${rind}"/><circle cx="100" cy="100" r="88" fill="${pith}"/>${segs(a, b)}<g stroke="${pith}" stroke-width="5"><path d="M100 18V182M18 100H182M42 42L158 158M158 42L42 158"/></g><circle cx="100" cy="100" r="9" fill="${pith}"/></symbol>`;
+    const petals = (id, petal, deep, center) => `<symbol id="fr-${id}" viewBox="0 0 200 200">${[0, 72, 144, 216, 288].map(r => `<ellipse cx="100" cy="52" rx="38" ry="52" fill="${petal}" transform="rotate(${r} 100 100)"/><ellipse cx="100" cy="70" rx="14" ry="34" fill="${deep}" opacity=".35" transform="rotate(${r} 100 100)"/>`).join("")}<circle cx="100" cy="100" r="24" fill="${deep}"/><circle cx="100" cy="100" r="10" fill="${center}"/></symbol>`;
+    const rasp = `<symbol id="fr-raspberry" viewBox="0 0 200 200"><path d="M70 40 L100 58 L130 40 L118 66 L82 66 Z" fill="#3E7A2C"/>${[[100,80],[78,92],[122,92],[64,116],[100,108],[136,116],[78,134],[122,134],[100,140],[90,160],[110,160]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="21" fill="#D61F4A"/><circle cx="${x - 6}" cy="${y - 7}" r="6" fill="#FF7A9A"/>`).join("")}</symbol>`;
+    const currant = `<symbol id="fr-currant" viewBox="0 0 200 200"><path d="M100 20 C104 50 90 70 66 92 M100 20 C110 60 130 80 140 96 M100 20 C100 70 100 100 104 126" stroke="#3E7A2C" stroke-width="5" fill="none"/>${[[64,110,34],[140,112,30],[104,146,38]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#2B0F52"/><circle cx="${x - r * .35}" cy="${y - r * .35}" r="${r * .3}" fill="#8C6BD9"/>`).join("")}</symbol>`;
+    const pine = `<symbol id="fr-pineapple" viewBox="0 0 200 200"><circle cx="100" cy="100" r="98" fill="#B57A00"/><circle cx="100" cy="100" r="86" fill="#FFD23F"/>${Array.from({ length: 16 }, (_, i) => `<path d="M100 100 L${(100 + 84 * Math.cos(i * Math.PI / 8)).toFixed(1)} ${(100 + 84 * Math.sin(i * Math.PI / 8)).toFixed(1)}" stroke="#F5B400" stroke-width="4"/>`).join("")}${Array.from({ length: 16 }, (_, i) => `<circle cx="${(100 + 92 * Math.cos(i * Math.PI / 8)).toFixed(1)}" cy="${(100 + 92 * Math.sin(i * Math.PI / 8)).toFixed(1)}" r="4" fill="#5A3A00"/>`).join("")}<circle cx="100" cy="100" r="26" fill="#FFF0B0"/></symbol>`;
+    const chili = `<symbol id="fr-chili" viewBox="0 0 200 200"><path d="M150 40 C120 40 120 60 110 80 C95 112 70 140 30 168 C80 172 132 140 150 92 C158 70 162 54 150 40 Z" fill="#E5251B"/><path d="M140 60 C128 86 112 116 84 140" stroke="#FF8A70" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M150 40 C150 28 160 20 172 18 L170 26 C162 28 158 34 158 44 Z" fill="#3E7A2C"/><path d="M136 44 C146 34 160 36 166 48 C156 46 146 46 136 44 Z" fill="#3E7A2C"/></symbol>`;
+    const leafSym = `<symbol id="fr-leaf" viewBox="0 0 200 200"><use href="#leaf"/></symbol>`;
+    const html = citrus("blood", "#E8540F", "#FFD9C4", "#B5121B", "#D42A1C") + citrus("yuzu", "#E9C80F", "#FFF6B8", "#F7DC1E", "#F2D20A") +
+      citrus("lime", "#2F8F2E", "#E6F7C9", "#7BD957", "#9BE36F") + petals("hibiscus", "#F0307A", "#7A0A33", "#FFD23F") +
+      petals("violet", "#8458F0", "#3D2373", "#F3E36A") + rasp + currant + pine + chili + leafSym;
+    document.querySelector("svg defs").insertAdjacentHTML("beforeend", html);
+  })();
+  /* ---------- Can label (packaging artwork) ----------
+     The label wraps the can once: x runs around the circumference and the front faces
+     the viewer at x = W / 2. Panels, left to right: back (Nutrition Facts) at the seam,
+     left side (ingredients, warning, barcode), front, right side (what's inside).
+     Each flavor gets a colour canvas and a metal/roughness canvas, so the wordmark
+     prints as bare aluminium while the inks stay satin. */
+  const LW = 2560, LH = 1280, FX = LW / 2;
+  const TOP = 74, BOT = LH - 150;
+  const disp = (w, s) => `${w} ${s}px "Big Shoulders Display", "Arial Narrow", Impact, sans-serif`;
+  const monoF = (w, s) => `${w} ${s}px "IBM Plex Mono", ui-monospace, Menlo, monospace`;
+  const bodyF = (w, s) => `${w} ${s}px "Barlow", "Helvetica Neue", Arial, sans-serif`;
+  const helv = (w, s) => `${w} ${s}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+  const FRUIT_ART = {
+    blood: ["blood", "yuzu"], hibiscus: ["hibiscus", "raspberry"], lime: ["lime", "lime"],
+    currant: ["currant", "violet"], pineapple: ["pineapple", "chili"]
+  };
+
+  function fruitImage(name) {
+    return new Promise(resolve => {
+      const sym = document.getElementById("fr-" + name);
+      if (!sym) return resolve(null);
+      const ser = new XMLSerializer();
+      const leaf = document.getElementById("leaf");
+      const defs = (leaf ? ser.serializeToString(leaf) : "") + ser.serializeToString(sym);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="800" viewBox="0 0 200 200"><defs>${defs}</defs><use href="#fr-${name}" xlink:href="#fr-${name}" width="200" height="200"/></svg>`;
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = () => resolve(null);
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
+  }
+
+  function spacedText(g, text, x, y, spacing) {
+    // canvas letterSpacing is not everywhere yet, so space glyphs by hand
+    const chars = [...text];
+    const widths = chars.map(c => g.measureText(c).width);
+    const total = widths.reduce((a, b) => a + b, 0) + spacing * (chars.length - 1);
+    let cx = g.textAlign === "center" ? x - total / 2 : g.textAlign === "right" ? x - total : x;
+    const align = g.textAlign; g.textAlign = "left";
+    chars.forEach((c, i) => { g.fillText(c, cx, y); cx += widths[i] + spacing; });
+    g.textAlign = align;
+    return total;
+  }
+  function roundRect(g, x, y, w, h, r) {
+    g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  }
+  function wrapLines(g, text, maxW) {
+    const out = []; let line = "";
+    for (const w of text.split(" ")) { const t = line ? line + " " + w : w; if (g.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; }
+    if (line) out.push(line);
+    return out;
+  }
+
+  function drawLabelArt(f, imgs) {
+    const L = f.label, ink = L.ink, band = L.band;
+    const c = document.createElement("canvas"); c.width = LW; c.height = LH;
+    const m = document.createElement("canvas"); m.width = LW; m.height = LH;
+    const g = c.getContext("2d"), mg = m.getContext("2d");
+    // metal/roughness: G = roughness, B = metalness. Satin ink by default.
+    mg.fillStyle = "rgb(0, 92, 40)"; mg.fillRect(0, 0, LW, LH);
+
+    // 1. Ground: flavor gradient with a halftone that thickens towards the base
+    const grad = g.createLinearGradient(0, 0, 0, LH);
+    grad.addColorStop(0, L.top); grad.addColorStop(1, L.bot);
+    g.fillStyle = grad; g.fillRect(0, 0, LW, LH);
+    g.fillStyle = ink; g.globalAlpha = .1;
+    for (let y = LH * .5; y < BOT; y += 18) {
+      const r = Math.max(0, (y - LH * .5) / (BOT - LH * .5)) * 6.5;
+      const off = (Math.round(y / 18) % 2) * 9;
+      for (let x = off; x < LW; x += 18) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }
+    }
+    g.globalAlpha = 1;
+
+    // 2. Fruit, cropped large on the right of the front and small above it
+    const drawFruit = (im, cx, cy, size, rot) => { if (!im) return; g.save(); g.translate(cx, cy); g.rotate(rot); g.drawImage(im, -size / 2, -size / 2, size, size); g.restore(); };
+    g.save(); g.shadowColor = "rgba(0,0,0,.28)"; g.shadowBlur = 30; g.shadowOffsetY = 14;
+    drawFruit(imgs[0], FX + 520, LH * .55, 680, .35);
+    drawFruit(imgs[1], FX + 360, 255, 300, -.4);
+    drawFruit(imgs[1] || imgs[0], 2300, 1010, 220, .9);
+    g.restore();
+
+    // 3. Bands: top tagline, bottom claims
+    g.fillStyle = ink; g.fillRect(0, 0, LW, TOP); g.fillRect(0, BOT, LW, LH - BOT);
+    g.fillStyle = band; g.fillRect(0, TOP, LW, 8); g.fillRect(0, BOT - 8, LW, 8);
+    g.font = monoF(600, 26); g.textBaseline = "middle"; g.textAlign = "left";
+    for (let x = 20; x < LW; x += 560) spacedText(g, "CLEAN LIFT ✦ NO CRASH ✦", x, TOP / 2, 6);
+    g.font = disp(900, 58); g.textBaseline = "middle";
+    const claim = "160MG NATURAL CAFFEINE   ✦   0G SUGAR   ✦   10 CALORIES   ✦   ";
+    const cw = g.measureText(claim).width;
+    for (let x = -cw / 2 + 140; x < LW; x += cw) g.fillText(claim, x, BOT + (LH - BOT) / 2 + 2);
+
+    // 4. Front: identity, wordmark, flavor, net contents
+    g.textAlign = "center"; g.textBaseline = "alphabetic"; g.fillStyle = ink;
+    g.font = monoF(600, 30); spacedText(g, "NATURALLY CAFFEINATED", FX, 190, 9);
+    // wordmark sized to the front panel
+    let ws = 400; g.font = disp(900, ws);
+    const ww = g.measureText("TORQ").width; ws = Math.round(ws * Math.min(1.25, 820 / ww)); g.font = disp(900, ws);
+    const wy = 590;
+    g.lineJoin = "round";
+    g.fillStyle = ink; g.strokeStyle = ink; g.lineWidth = 22;
+    g.fillText("TORQ", FX + 14, wy + 16); g.strokeText("TORQ", FX + 14, wy + 16);   // offset shadow
+    g.strokeText("TORQ", FX, wy);
+    const sg = g.createLinearGradient(0, wy - ws * .75, 0, wy);
+    sg.addColorStop(0, "#F4F6F8"); sg.addColorStop(.55, "#C9CED4"); sg.addColorStop(1, "#E9ECEF");
+    g.fillStyle = sg; g.fillText("TORQ", FX, wy);
+    mg.textAlign = "center"; mg.font = g.font; mg.fillStyle = "rgb(0, 64, 225)"; mg.fillText("TORQ", FX, wy);  // bare aluminium
+    // flavor pill
+    g.font = disp(900, 66);
+    const name = f.name.toUpperCase(), nw = g.measureText(name).width + 80;
+    g.fillStyle = ink; roundRect(g, FX - nw / 2, 628, nw, 96, 48); g.fill();
+    g.fillStyle = band; g.textBaseline = "middle"; g.fillText(name, FX, 678);
+    g.textBaseline = "alphabetic";
+    // statement of identity + net contents in the bottom 30% of the front panel
+    g.fillStyle = ink; g.font = disp(900, 54); g.fillText("SPARKLING ENERGY DRINK", FX, 1008);
+    g.font = monoF(600, 30); spacedText(g, "12 FL OZ (355 mL)", FX, 1060, 4);
+
+    // 5. Caffeine roundel, front left
+    const rx = FX - 330, ry = 842, rr = 106;
+    g.save(); g.shadowColor = "rgba(0,0,0,.25)"; g.shadowBlur = 18; g.shadowOffsetY = 8;
+    g.fillStyle = band; g.beginPath(); g.arc(rx, ry, rr, 0, Math.PI * 2); g.fill(); g.restore();
+    g.strokeStyle = ink; g.lineWidth = 6; g.beginPath(); g.arc(rx, ry, rr, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(rx, ry, rr - 36, 0, Math.PI * 2); g.lineWidth = 3; g.stroke();
+    g.fillStyle = ink; g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.font = disp(900, 84); g.fillText("160", rx, ry + 20);
+    g.font = disp(800, 28); g.fillText("MG", rx, ry + 49);
+    g.font = monoF(600, 17);
+    const ring = "NATURAL CAFFEINE ✦ FROM GUAYUSA LEAF ✦ ";
+    const step = (Math.PI * 2) / [...ring].length;
+    [...ring].forEach((ch, i) => { g.save(); g.translate(rx, ry); g.rotate(i * step - Math.PI / 2); g.fillText(ch, 0, -(rr - 14)); g.restore(); });
+
+    // 6. Right side: what's inside + taste notes
+    const sx = 2150;
+    g.textAlign = "left"; g.fillStyle = ink;
+    g.font = disp(900, 54); g.fillText("WHAT'S INSIDE", sx, 190);
+    g.fillRect(sx, 208, 360, 5);
+    const rows = [["GUAYUSA LEAF", "120MG"], ["GREEN TEA", "40MG"], ["L-THEANINE", "100MG"], ["ELECTROLYTES", "380MG"], ["B6 + B12", "100% DV"], ["REAL FRUIT", "5%"]];
+    g.font = monoF(600, 24);
+    rows.forEach(([k, v], i) => {
+      const y = 262 + i * 46;
+      g.textAlign = "left"; g.fillText(k, sx, y);
+      g.textAlign = "right"; g.fillText(v, sx + 360, y);
+      g.globalAlpha = .35; g.fillRect(sx, y + 14, 360, 2); g.globalAlpha = 1;
+    });
+    g.textAlign = "left"; g.font = disp(900, 46); g.fillText("TASTES LIKE", sx, 600);
+    g.font = bodyF(600, 28);
+    f.notes.slice(0, 4).forEach((n, i) => g.fillText("— " + n, sx, 646 + i * 40));
+
+    // 7. Back: Nutrition Facts (black on white, as the regulation expects)
+    const nx = 92, ny = 112, nw2 = 390, nh = 880;
+    g.fillStyle = "#FFFFFF"; g.fillRect(nx, ny, nw2, nh);
+    g.strokeStyle = "#000"; g.lineWidth = 4; g.strokeRect(nx, ny, nw2, nh);
+    let y = ny + 62; const px = nx + 16, pr = nx + nw2 - 16;
+    const rule = h => { g.fillStyle = "#000"; g.fillRect(px, y, pr - px, h); y += h + 6; };
+    const row = (l, r, bold, indent, size = 23) => {
+      y += size + 4; g.fillStyle = "#000"; g.font = helv(bold ? 800 : 400, size);
+      g.textAlign = "left"; g.fillText(l, px + (indent || 0), y); if (r) { g.textAlign = "right"; g.font = helv(800, size); g.fillText(r, pr, y); }
+      y += 6; g.fillRect(px, y, pr - px, 1.5); y += 2;
+    };
+    g.fillStyle = "#000"; g.textAlign = "left"; g.font = helv(900, 45); g.fillText("Nutrition Facts", px, y); y += 14;
+    g.font = helv(400, 22); y += 26; g.fillText("1 serving per container", px, y); y += 8;
+    g.font = helv(800, 24); y += 30; g.fillText("Serving size", px, y); g.textAlign = "right"; g.fillText("1 can (355mL)", pr, y); y += 12;
+    rule(14);
+    g.textAlign = "left"; g.font = helv(800, 20); y += 20; g.fillText("Amount per serving", px, y); y += 4;
+    g.font = helv(900, 46); y += 44; g.fillText("Calories", px, y); g.textAlign = "right"; g.fillText("10", pr, y); y += 10;
+    rule(8);
+    g.font = helv(800, 20); g.textAlign = "right"; y += 20; g.fillText("% Daily Value*", pr, y); y += 6; g.fillRect(px, y, pr - px, 1.5); y += 2;
+    row("Total Fat 0g", "0%", true); row("Sodium 180mg", "8%", true); row("Total Carbohydrate 5g", "2%", true);
+    row("Total Sugars 0g", "", false, 24); row("Incl. 0g Added Sugars", "0%", false, 44);
+    row("Protein 0g", "", true);
+    rule(14);
+    row("Potassium 200mg", "4%"); row("Vitamin B6 1.7mg", "100%"); row("Vitamin B12 2.4mcg", "100%");
+    rule(8);
+    g.font = helv(400, 17); g.textAlign = "left";
+    wrapLines(g, "*The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.", pr - px).forEach(t => { y += 22; g.fillText(t, px, y); });
+
+    // 8. Left side: ingredients, caffeine statement, maker, barcode
+    const ix = 520, iw = 300;
+    g.fillStyle = ink; g.textAlign = "left";
+    g.font = disp(900, 40); g.fillText("INGREDIENTS", ix, 160);
+    g.font = bodyF(500, 22);
+    let iy = 196;
+    wrapLines(g, "Carbonated water, " + f.ingr + ", allulose, citric acid, natural caffeine (from guayusa leaf and green tea), L-theanine, sea salt, potassium citrate, natural flavors, monk fruit extract, pyridoxal-5-phosphate (vitamin B6), methylcobalamin (vitamin B12).", iw).forEach(t => { g.fillText(t, ix, iy); iy += 28; });
+    iy += 22; g.font = disp(900, 32); wrapLines(g, "CAFFEINE: 160MG PER CAN", iw).forEach(t => { g.fillText(t, ix, iy); iy += 34; });
+    g.font = bodyF(600, 21);
+    wrapLines(g, "Not recommended for children, people who are pregnant or nursing, or persons sensitive to caffeine.", iw).forEach(t => { g.fillText(t, ix, iy); iy += 26; });
+    iy += 18; g.font = monoF(600, 18);
+    ["DISTRIBUTED BY", "TORQ BEVERAGE CO.", "PORTLAND, OR"].forEach(t => { g.fillText(t, ix, iy); iy += 24; });
+    // barcode area (placeholder bars: replace with the GS1 barcode before print)
+    const bx = ix, by = 900, bw = 230, bh = 150;
+    g.fillStyle = "#FFFFFF"; roundRect(g, bx, by, bw, bh, 10); g.fill();
+    g.fillStyle = "#000";
+    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    for (let x = bx + 18; x < bx + bw - 18;) { const w = 2 + Math.floor(rnd() * 3) * 2; if (rnd() > .42) g.fillRect(x, by + 14, w, bh - 52); x += w + 2 + Math.floor(rnd() * 2) * 2; }
+    g.font = monoF(600, 15); g.textAlign = "center"; g.fillText("GS1 BARCODE HERE", bx + bw / 2, by + bh - 16);
+    // recycling mark
+    g.strokeStyle = ink; g.lineWidth = 5; g.fillStyle = ink;
+    const cx2 = ix + 268, cy2 = by + 50;
+    g.beginPath(); g.arc(cx2, cy2, 30, Math.PI * .2, Math.PI * 1.8); g.stroke();
+    g.beginPath(); g.moveTo(cx2 + 30 * Math.cos(Math.PI * 1.8) - 9, cy2 + 30 * Math.sin(Math.PI * 1.8) - 4); g.lineTo(cx2 + 30 * Math.cos(Math.PI * 1.8) + 9, cy2 + 30 * Math.sin(Math.PI * 1.8) - 12); g.lineTo(cx2 + 30 * Math.cos(Math.PI * 1.8) + 6, cy2 + 30 * Math.sin(Math.PI * 1.8) + 10); g.fill();
+    g.font = monoF(600, 14); g.textAlign = "center"; g.fillText("RECYCLE", cx2, cy2 + 56); g.fillText("ME", cx2, cy2 + 74);
+
+    // 9. Print grain
+    g.globalAlpha = .04;
+    for (let i = 0; i < 6000; i++) { g.fillStyle = i % 2 ? "#fff" : "#000"; g.fillRect(Math.random() * LW, Math.random() * LH, 2, 2); }
+    g.globalAlpha = 1;
+    return { color: c, mr: m };
+  }
+
+  const labelCache = {};
+  const fruitCache = {};
+  const fruitFor = n => fruitCache[n] || (fruitCache[n] = fruitImage(n));
+  async function buildLabel(f) {
+    if (labelCache[f.id] && labelCache[f.id].full) return labelCache[f.id];
+    const art = FRUIT_ART[f.id] || f.fruits;
+    const imgs = await Promise.all(art.map(fruitFor));
+    const L = drawLabelArt(f, imgs); L.full = true;
+    return (labelCache[f.id] = L);
+  }
+  // Synchronous fallback (no fruit art yet); buildLabel replaces it once images load
+  const labelFor = f => labelCache[f.id] || (labelCache[f.id] = drawLabelArt(f, []));
+  let flavor = FLAVORS[0];
+
+  /* ---------- Clock: the sky follows the viewer's local time ---------- */
+  const SKIES = {
+    dawn:  { top: "#FFC7A1", bot: "#FF7A4A", glow: "#FFF1D6", stars: 0, light: 0xfff0dc, amb: .35 },
+    day:   { top: "#FFB27A", bot: "#FF5A1E", glow: "#FFE2B8", stars: 0, light: 0xfff4e6, amb: .3 },
+    dusk:  { top: "#C2486A", bot: "#4A1340", glow: "#FF9A6A", stars: .25, light: 0xffc49a, amb: .22 },
+    night: { top: "#0E1330", bot: "#05060F", glow: "#2B3A7A", stars: .8, light: 0xb8c6ff, amb: .16 }
+  };
+  const fmtH = h => { h = ((h % 24) + 24) % 24; return `${h % 12 || 12}${h >= 12 ? "pm" : "am"}`; };
+  let phase = "day", sky = SKIES.day;
+  function tick() {
+    const now = new Date(), h = now.getHours() + now.getMinutes() / 60;
+    const bed = +$("bed").value, cutoff = bed - 8;
+    phase = h >= 5 && h < 9 ? "dawn" : h >= 9 && h < 17 ? "day" : h >= 17 && h < 21 ? "dusk" : "night";
+    sky = SKIES[phase];
+    const r = document.documentElement.style;
+    r.setProperty("--sky-top", sky.top); r.setProperty("--sky-bot", sky.bot); r.setProperty("--glow", sky.glow); r.setProperty("--stars", sky.stars);
+    const dark = phase === "dusk" || phase === "night";
+    document.querySelectorAll(".logo, .rail a, .deg, .hero-card, .hero-card p, .hero-card .where, .cue").forEach(el => el.style.color = dark ? "var(--peel)" : "");
+    document.querySelectorAll(".rail a i").forEach(el => el.style.borderColor = dark ? "var(--peel)" : "");
+    const open = h >= 5 && h < cutoff;
+    const time = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    $("clock").classList.toggle("closed", !open);
+    $("clockText").innerHTML = `<span class="lbl">${time} · </span>${open ? `<span class="lbl">Caffeine window </span>open until ${fmtH(cutoff)}` : `<span class="lbl">Caffeine window </span>closed`}`;
+    const n = $("nightNotice");
+    n.hidden = open;
+    if (!open) n.innerHTML = h < 5 ? `It's ${time}. <b>TORQ is closed for the night.</b> Read the can, then come back after sunrise.` : `It's ${time}, past your ${fmtH(cutoff)} cut-off for a ${fmtH(bed)} bedtime. <b>Read the can tonight, drink it tomorrow.</b>`;
+    $("cutoffNote").innerHTML = `Caffeine's half-life is about five hours. For a ${fmtH(bed)} bedtime, your last can is at <b>${fmtH(cutoff)}</b>.`;
+    if (lights) { lights.key.color.setHex(sky.light); lights.amb.intensity = sky.amb; }
+  }
+  $("bed").addEventListener("change", tick);
+
+  /* ---------- Flavors ---------- */
+  function renderSwatches() {
+    $("swatches").innerHTML = FLAVORS.map(f => `<button type="button" class="sw" data-id="${f.id}" aria-pressed="${f === flavor}" style="--a:${f.vars.orange};--b:${f.vars.yuzu}"><i></i>${esc(f.short)}</button>`).join("");
+    $("tasteNote").textContent = `${flavor.name}: ${flavor.notes.slice(0, 3).join(", ").toLowerCase()}.`;
+    document.querySelectorAll("[data-fl]").forEach(el => el.textContent = flavor[el.dataset.fl]);
+  }
+  $("swatches").addEventListener("click", e => {
+    const b = e.target.closest("[data-id]"); if (!b || b.dataset.id === flavor.id) return;
+    flavor = FLAVORS.find(f => f.id === b.dataset.id); renderSwatches();
+    $("swatches").querySelector(`[data-id="${flavor.id}"]`).focus();
+    document.documentElement.style.setProperty("--accent", flavor.vars.orange);
+    if (can) { setLabel(flavor); reprint = 1; }
+  });
+
+  /* ---------- Shop (demo) ---------- */
+  const PACKS = [["4-pack", "$13"], ["12-pack", "$36"], ["24-pack", "$66"]];
+  let pack = 1;
+  const renderPacks = () => { $("packs").innerHTML = PACKS.map((p, i) => `<button type="button" class="pk" data-i="${i}" aria-pressed="${i === pack}"><b>${p[0]}</b><span>${p[1]}</span></button>`).join(""); };
+  $("packs").addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (!b) return; pack = +b.dataset.i; renderPacks(); $("packs").querySelector(`[data-i="${pack}"]`).focus(); });
+  $("buyBtn").addEventListener("click", () => {
+    const closed = $("clock").classList.contains("closed");
+    $("buyMsg").textContent = `Added a ${PACKS[pack][0]} of ${flavor.name}${closed ? ". It ships tomorrow, which suits your cut-off." : "."} (Demo, no order placed.)`;
+  });
+
+  /* ---------- Rail ---------- */
+  const stops = [...document.querySelectorAll(".stop")];
+  stops.forEach((s, i) => { s.id = "stop-" + s.dataset.stop; });
+  $("rail").innerHTML = stops.map(s => `<a href="#stop-${s.dataset.stop}"><span>${esc(s.dataset.label)}</span><i></i></a>`).join("");
+
+  /* ---------- 3D ---------- */
+  function envMap(renderer) {
+    const pm = new THREE.PMREMGenerator(renderer);
+    const sc = new THREE.Scene();
+    sc.background = new THREE.Color("#3a1208");
+    const box = (col, w, h, x, y, z, ry) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); sc.add(m); };
+    box(new THREE.Color(6, 5.6, 5.2), 6, 10, -8, 3, 4);
+    box(new THREE.Color(4, 3.6, 1.2), 4, 12, 9, 1, -2);
+    box(new THREE.Color(3.2, 1.2, .5), 12, 4, 0, -8, 0);
+    box(new THREE.Color(2.4, 2.4, 2.6), 10, 3, 0, 9, 2);
+    const tex = pm.fromScene(sc, 0.03).texture; pm.dispose();
+    return tex;
+  }
+
+  function buildCan(maps) {
+    const group = new THREE.Group();
+    const silver = new THREE.MeshStandardMaterial({ color: 0xd9dde2, metalness: 1, roughness: .22 });
+    const darkSilver = new THREE.MeshStandardMaterial({ color: 0xb8bec6, metalness: 1, roughness: .32 });
+    const label = new THREE.MeshPhysicalMaterial({ map: maps.color, metalnessMap: maps.mr, roughnessMap: maps.mr, metalness: 1, roughness: 1, clearcoat: .55, clearcoatRoughness: .14 });
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3.2, 128, 1, true, -Math.PI, Math.PI * 2), label);
+    group.add(body); group.userData.label = label;
+    const top = [[1, 1.6], [.995, 1.66], [.95, 1.76], [.89, 1.86], [.885, 1.9], [.9, 1.935], [.89, 1.955], [.86, 1.95], [.845, 1.915]].map(p => new THREE.Vector2(p[0], p[1]));
+    group.add(new THREE.Mesh(new THREE.LatheGeometry(top, 128), silver));
+    const lid = new THREE.Mesh(new THREE.CircleGeometry(.85, 96), darkSilver); lid.rotation.x = -Math.PI / 2; lid.position.y = 1.905; group.add(lid);
+    const bot = [[.8, -1.9], [.9, -1.86], [.96, -1.76], [.995, -1.66], [1, -1.6]].map(p => new THREE.Vector2(p[0], p[1]));
+    group.add(new THREE.Mesh(new THREE.LatheGeometry(bot, 128), silver));
+    const base = new THREE.Mesh(new THREE.CircleGeometry(.8, 64), darkSilver); base.rotation.x = Math.PI / 2; base.position.y = -1.9; group.add(base);
+    // pull tab
+    const tabShape = new THREE.Shape(); tabShape.absarc(0, 0, .2, 0, Math.PI * 2, false);
+    const hole = new THREE.Path(); hole.absarc(0, .03, .11, 0, Math.PI * 2, true); tabShape.holes.push(hole);
+    const tab = new THREE.Mesh(new THREE.ExtrudeGeometry(tabShape, { depth: .02, bevelEnabled: false }), silver);
+    tab.rotation.x = -Math.PI / 2; tab.position.set(0, 1.92, .28); tab.scale.set(1, 1.5, 1); group.add(tab);
+    const rivet = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .03, 24), silver); rivet.position.set(0, 1.925, .05); group.add(rivet);
+    const mouth = new THREE.Mesh(new THREE.CircleGeometry(.2, 32), new THREE.MeshStandardMaterial({ color: 0x8b9199, metalness: 1, roughness: .5 }));
+    mouth.rotation.x = -Math.PI / 2; mouth.position.set(0, 1.908, -.42); mouth.scale.set(1.4, .8, 1); group.add(mouth);
+    return group;
+  }
+
+  function makeMaps(renderer, L) {
+    const mk = (cv, srgb) => { const t = new THREE.CanvasTexture(cv); if (srgb) t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); return t; };
+    return { color: mk(L.color, true), mr: mk(L.mr, false) };
+  }
+
+  let renderer, scene, cam, can, pivot, hinge, lights = null, bubbles, renderLoop, reprint = 0, crack = 0, burst = 0;
+  function setLabel(f) {
+    const m = can.userData.label, maps = makeMaps(renderer, labelCache[f.id] || labelFor(f));
+    [m.map, m.metalnessMap].forEach(t => t && t.dispose());
+    m.map = maps.color; m.metalnessMap = m.roughnessMap = maps.mr; m.needsUpdate = true;
+  }
+  function init3D() {
+    let ok = !!window.THREE;
+    try { const c = document.createElement("canvas"); ok = ok && !!(c.getContext("webgl") || c.getContext("experimental-webgl")); } catch (e) { ok = false; }
+    if (!ok) return false;
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    $("stage").appendChild(renderer.domElement);
+    scene = new THREE.Scene(); scene.environment = envMap(renderer);
+    const key = new THREE.DirectionalLight(sky.light, 1.35); key.position.set(-4, 6, 8); scene.add(key);
+    const rim = new THREE.DirectionalLight(0xffd8a0, 1.3); rim.position.set(6, 3, -5); scene.add(rim);
+    const amb = new THREE.AmbientLight(0xffffff, sky.amb); scene.add(amb);
+    lights = { key, amb };
+    cam = new THREE.PerspectiveCamera(30, 1, .1, 100);
+    can = buildCan(makeMaps(renderer, labelCache[flavor.id] || labelFor(flavor)));
+    // hinge the tab at its rivet so it can lift
+    const tab = can.children.find(m => m.geometry && m.geometry.type === "ExtrudeGeometry");
+    hinge = new THREE.Group(); hinge.position.set(0, 1.92, .05); can.add(hinge);
+    if (tab) { can.remove(tab); tab.position.set(0, 0, .23); hinge.add(tab); }
+    pivot = new THREE.Group(); pivot.add(can); scene.add(pivot);
+    // fizz: bubbles drifting up around the can, plus a burst when cracked
+    const N = 260, pos = new Float32Array(N * 3), spd = new Float32Array(N);
+    for (let i = 0; i < N; i++) { pos[i * 3] = (Math.random() - .5) * 7; pos[i * 3 + 1] = (Math.random() - .5) * 8; pos[i * 3 + 2] = (Math.random() - .5) * 4 - 1; spd[i] = .004 + Math.random() * .012; }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    const dot = document.createElement("canvas"); dot.width = dot.height = 64;
+    const dg = dot.getContext("2d"), rg = dg.createRadialGradient(32, 32, 4, 32, 32, 30);
+    rg.addColorStop(0, "rgba(255,255,255,.0)"); rg.addColorStop(.7, "rgba(255,255,255,.55)"); rg.addColorStop(1, "rgba(255,255,255,0)");
+    dg.fillStyle = rg; dg.beginPath(); dg.arc(32, 32, 30, 0, Math.PI * 2); dg.fill();
+    bubbles = new THREE.Points(geo, new THREE.PointsMaterial({ size: .12, map: new THREE.CanvasTexture(dot), transparent: true, depthWrite: false, opacity: .7 }));
+    bubbles.userData.spd = spd; scene.add(bubbles);
+    addEventListener("resize", resize); resize();
+    return true;
+  }
+  function resize() {
+    if (!renderer) return;
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
+  }
+
+  // scroll position -> can pose, blended between the two nearest stops
+  const num = (s, k, d) => s.dataset[k] !== undefined ? +s.dataset[k] : d;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  function targetPose() {
+    const mid = innerHeight / 2, mobile = innerWidth < 760;
+    const centers = stops.map(s => { const b = s.getBoundingClientRect(); return b.top + b.height / 2; });
+    let i = 0; while (i < stops.length - 1 && centers[i + 1] <= mid) i++;
+    const j = Math.min(stops.length - 1, i + 1);
+    const t = i === j ? 0 : ease(Math.min(1, Math.max(0, (mid - centers[i]) / (centers[j] - centers[i]))));
+    const lerp = k => { const a = num(stops[i], k, 0), b = num(stops[j], k, 0); return a + (b - a) * t; };
+    const pose = { r: lerp("r"), z: lerp("z"), x: lerp("x"), y: lerp("y"), tilt: lerp("tilt"), pitch: lerp("pitch"), active: t > .5 ? j : i };
+    if (mobile) { pose.x = 0; pose.y = pose.y + .8; pose.z = pose.z * 1.35 + 3.2; }
+    else if (innerWidth / innerHeight < 1.3) pose.z *= 1.15;
+    return pose;
+  }
+  const cur = { r: 0, z: 11.5, x: 1.6, y: 0, tilt: -.18, pitch: 0 };
+  let lastActive = -1, dragR = 0, dragVel = 0;
+  function frame(t) {
+    const p = targetPose(), k = reduced ? 1 : .085;
+    for (const key of ["r", "z", "x", "y", "tilt", "pitch"]) cur[key] += (p[key] - cur[key]) * k;
+    if (p.active !== lastActive) {
+      lastActive = p.active;
+      $("rail").querySelectorAll("a").forEach((a, i) => a.setAttribute("aria-current", i === p.active));
+    }
+    dragR += dragVel; dragVel *= .92; dragR *= .97;
+    if (reprint > 0) reprint = Math.max(0, reprint - .03);
+    const spinIn = reprint > 0 ? ease(reprint) * Math.PI * 2 : 0;
+    const idle = reduced ? 0 : Math.sin(t / 1600) * .06;
+    can.rotation.y = cur.r + dragR + spinIn + idle;
+    pivot.rotation.z = cur.tilt; pivot.rotation.x = cur.pitch;
+    pivot.position.set(cur.x, cur.y + (reduced ? 0 : Math.sin(t / 900) * .05), 0);
+    cam.position.set(0, .25, cur.z); cam.lookAt(0, 0, 0);
+    // tab + fizz
+    hinge.rotation.x += ((crack ? -1.15 : 0) - hinge.rotation.x) * .2;
+    const pa = bubbles.geometry.attributes.position, spd = bubbles.userData.spd;
+    for (let i = 0; i < spd.length; i++) {
+      const boost = burst > 0 && i < 120 ? 6 * burst : 1;
+      pa.array[i * 3 + 1] += reduced ? 0 : spd[i] * boost;
+      if (pa.array[i * 3 + 1] > 4.5) { pa.array[i * 3 + 1] = -4; pa.array[i * 3] = (Math.random() - .5) * 7; }
+    }
+    pa.needsUpdate = true;
+    if (burst > 0) { burst = Math.max(0, burst - .01); bubbles.material.opacity = .7 + burst * .3; }
+    $("degNum").textContent = Math.round(((-(cur.r + dragR) * 180 / Math.PI) % 360 + 360) % 360) + "°";
+    renderer.render(scene, cam);
+    requestAnimationFrame(frame);
+  }
+  // drag to give the can a spin; it settles back to the panel
+  $("stage").style.pointerEvents = "none";
+  addEventListener("pointerdown", e => { if (e.target.closest(".card, .bar, .rail, button, select, a")) return; let lx = e.clientX; const mv = ev => { dragVel = (ev.clientX - lx) * .004; lx = ev.clientX; }; const up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); });
+
+  /* ---------- Crack: tab, fizz burst and a synthesized pssht ---------- */
+  function pssht() {
+    try {
+      const A = new (window.AudioContext || window.webkitAudioContext)();
+      const len = A.sampleRate * 1.6, buf = A.createBuffer(1, len, A.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) { const tt = i / A.sampleRate; const env = tt < .02 ? tt / .02 : Math.exp(-(tt - .02) * 3.2); d[i] = (Math.random() * 2 - 1) * env * (Math.random() < .002 ? 3 : 1); }
+      const src = A.createBufferSource(); src.buffer = buf;
+      const hp = A.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1800;
+      const bp = A.createBiquadFilter(); bp.type = "peaking"; bp.frequency.value = 5200; bp.gain.value = 8;
+      const g = A.createGain(); g.gain.value = .5;
+      src.connect(hp).connect(bp).connect(g).connect(A.destination); src.start();
+      // the click of the tab
+      const o = A.createOscillator(), og = A.createGain(); o.frequency.value = 1900; og.gain.setValueAtTime(.4, A.currentTime); og.gain.exponentialRampToValueAtTime(.001, A.currentTime + .05);
+      o.connect(og).connect(A.destination); o.start(); o.stop(A.currentTime + .06);
+      setTimeout(() => A.close(), 2000);
+    } catch (e) {}
+  }
+  $("crackBtn").addEventListener("click", () => {
+    crack = crack ? 0 : 1;
+    $("crackBtn").textContent = crack ? "Close the tab" : "Crack it open";
+    if (crack) { burst = 1; pssht(); }
+  });
+
+  /* ---------- Boot ---------- */
+  renderSwatches(); renderPacks(); tick(); setInterval(tick, 30000);
+  (async () => {
+    try { await Promise.race([Promise.all(['900 120px "Big Shoulders Display"', '600 30px "IBM Plex Mono"', '600 30px "Barlow"'].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
+    await Promise.all(FLAVORS.map(buildLabel)).catch(() => {});
+    if (init3D()) { tick(); requestAnimationFrame(frame); }
+    else document.querySelector(".ghost").textContent = "TORQ";
+  })();
+})();
+</script>
+</body>
+</html>
