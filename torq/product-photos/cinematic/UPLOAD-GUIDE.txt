@@ -1,0 +1,39 @@
+TORQ CINEMATIC PHOTOS
+=====================
+
+16 images, 2048 x 2048 px JPG.
+
+Use them as extra product images after the hero and white shots, and for ads, social posts and banners.
+In Shopify: Products > TORQ Sparkling Energy > Media, upload, then paste the alt text below.
+
+ALT TEXT
+--------
+
+Blood Orange + Yuzu
+  torq-blood-06-slate.jpg  ->  Chilled TORQ Blood Orange + Yuzu can on dark slate with fresh fruit, backlit
+  torq-blood-07-splash.jpg ->  TORQ Blood Orange + Yuzu can floating in rising bubbles with fruit
+  torq-blood-08-neon.jpg   ->  Cold TORQ Blood Orange + Yuzu can in front of a neon ring on a wet black surface
+
+Hibiscus + Raspberry
+  torq-hibiscus-06-slate.jpg  ->  Chilled TORQ Hibiscus + Raspberry can on dark slate with fresh fruit, backlit
+  torq-hibiscus-07-splash.jpg ->  TORQ Hibiscus + Raspberry can floating in rising bubbles with fruit
+  torq-hibiscus-08-neon.jpg   ->  Cold TORQ Hibiscus + Raspberry can in front of a neon ring on a wet black surface
+
+Lime + Matcha
+  torq-lime-06-slate.jpg  ->  Chilled TORQ Lime + Matcha can on dark slate with fresh fruit, backlit
+  torq-lime-07-splash.jpg ->  TORQ Lime + Matcha can floating in rising bubbles with fruit
+  torq-lime-08-neon.jpg   ->  Cold TORQ Lime + Matcha can in front of a neon ring on a wet black surface
+
+Blackcurrant + Violet
+  torq-currant-06-slate.jpg  ->  Chilled TORQ Blackcurrant + Violet can on dark slate with fresh fruit, backlit
+  torq-currant-07-splash.jpg ->  TORQ Blackcurrant + Violet can floating in rising bubbles with fruit
+  torq-currant-08-neon.jpg   ->  Cold TORQ Blackcurrant + Violet can in front of a neon ring on a wet black surface
+
+Pineapple + Chili
+  torq-pineapple-06-slate.jpg  ->  Chilled TORQ Pineapple + Chili can on dark slate with fresh fruit, backlit
+  torq-pineapple-07-splash.jpg ->  TORQ Pineapple + Chili can floating in rising bubbles with fruit
+  torq-pineapple-08-neon.jpg   ->  Cold TORQ Pineapple + Chili can in front of a neon ring on a wet black surface
+
+  torq-lineup-neon.jpg   ->  All five TORQ flavors lined up under neon lights
+
+NOTE: these are 3D renders of the label design, not photographs. Replace them with real photos once cans are printed.
