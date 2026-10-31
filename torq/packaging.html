@@ -1,0 +1,679 @@
+<title>TORQ Can Packaging</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a packaging spec sheet in the TORQ world. 3D lineup on a lit stage, then the flat print layout with its panels, then specs and a pre-print checklist. Deliberately single-theme (dark brand ground). */
+:root {
+  --ground: #170805; --ground-2: #24100B; --line: #3D1D15;
+  --peel: #FFF0E4; --peel-soft: #D9BBAB; --accent: #FF4A14; --accent-2: #F7DC1E; --ink: #1C0502;
+  --ok: #8FE3A6; --todo: #FFB35C;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--peel); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .9; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.kicker { font-family: var(--mono); font-size: .76rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+code { font-family: var(--mono); font-size: .86em; }
+
+.stage { position: relative; background: radial-gradient(60% 70% at 50% 60%, #4A1A10 0%, var(--ground) 72%); border-bottom: 2px solid var(--line); overflow: hidden; }
+.stage .wrap { position: relative; z-index: 2; padding-block: clamp(36px, 5vw, 60px) 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; align-items: end; pointer-events: none; }
+.stage h1 { font-size: clamp(3.2rem, 9vw, 7rem); margin-top: 10px; }
+.stage .lede { color: var(--peel-soft); max-width: 44ch; }
+#lineup3d { height: clamp(360px, 52vw, 560px); position: relative; touch-action: pan-y; cursor: grab; }
+#lineup3d canvas { display: block; width: 100% !important; height: 100% !important; }
+#lineup3d:active { cursor: grabbing; }
+.stage-hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--peel-soft); z-index: 2; white-space: nowrap; }
+.no3d { position: absolute; inset: 0; display: grid; place-items: center; color: var(--peel-soft); }
+
+section { padding-block: clamp(48px, 7vw, 84px); border-bottom: 2px solid var(--line); }
+.head { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 48px; align-items: end; margin-bottom: 28px; }
+.head h2 { font-size: clamp(2.4rem, 6vw, 4.2rem); margin-top: 10px; }
+.head p { color: var(--peel-soft); max-width: 52ch; }
+@media (max-width: 800px) { .head { grid-template-columns: 1fr; } }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.tab { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px 0 8px; border-radius: 999px; border: 2px solid var(--line); background: var(--ground-2); color: var(--peel); font: 700 .92rem var(--body); cursor: pointer; }
+.tab i { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--a) 0 56%, var(--b) 56%); box-shadow: inset 0 0 0 2px rgba(0,0,0,.25); }
+.tab[aria-pressed="true"] { border-color: var(--peel); background: var(--line); }
+.flat { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5); background: var(--ground-2); aspect-ratio: 2 / 1; max-width: 100%; }
+.flat img { display: block; width: 100%; height: 100%; }
+.guides { position: absolute; inset: 0; display: grid; grid-template-columns: 19% 13.5% 34.5% 33%; pointer-events: none; }
+.guides div { border-right: 2px dashed rgba(255,255,255,.75); position: relative; }
+.guides div:last-child { border-right: 0; }
+.guides span { position: absolute; bottom: 3.5%; left: 6px; font: 600 clamp(.55rem, 1vw, .72rem) var(--mono); letter-spacing: .1em; text-transform: uppercase; background: var(--peel); color: var(--ink); padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.guides[hidden] { display: none; }
+.flat-tools { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-top: 16px; }
+.toggle { display: inline-flex; gap: 10px; align-items: center; font-weight: 600; cursor: pointer; }
+.toggle input { width: 20px; height: 20px; accent-color: var(--accent); }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 24px; border: 0; border-radius: 999px; background: var(--accent-2); color: var(--ink); font: 900 1.2rem var(--display); text-transform: uppercase; letter-spacing: .02em; cursor: pointer; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+.dl-msg { font-size: .9rem; font-weight: 600; color: var(--peel-soft); min-height: 1.3em; }
+.panels { display: grid; grid-template-columns: 19fr 13.5fr 34.5fr 33fr; gap: 10px; margin-top: 18px; }
+.panel { background: var(--ground-2); border-radius: 14px; padding: 14px 16px; min-width: 0; }
+.panel b { display: block; font: 900 1.25rem var(--display); text-transform: uppercase; margin-bottom: 4px; }
+.panel p { color: var(--peel-soft); font-size: .92rem; }
+@media (max-width: 900px) { .panels { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .panels { grid-template-columns: 1fr; } .guides span { display: none; } }
+
+.palette { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.sw { border-radius: 18px; overflow: hidden; background: var(--ground-2); }
+.sw .chips { display: grid; grid-template-columns: 2fr 1fr 1fr; height: 92px; }
+.sw .chips span { display: block; }
+.sw .body { padding: 12px 14px 14px; }
+.sw b { font: 900 1.2rem var(--display); text-transform: uppercase; display: block; line-height: 1; margin-bottom: 8px; }
+.sw dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; font: 500 .8rem var(--mono); color: var(--peel-soft); }
+.sw dd { margin: 0; color: var(--peel); text-align: right; }
+@media (max-width: 960px) { .palette { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+
+.specs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 800px) { .specs { grid-template-columns: 1fr; } }
+.spec-table { width: 100%; border-collapse: collapse; }
+.spec-table th, .spec-table td { text-align: left; padding: 12px 6px; border-bottom: 2px solid var(--line); vertical-align: top; }
+.spec-table th { font: 600 .76rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--peel-soft); width: 38%; }
+.note { background: var(--ground-2); border-radius: 18px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.note h3 { font-size: 1.7rem; }
+.note p { color: var(--peel-soft); }
+
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.checks li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 14px 0; border-bottom: 2px solid var(--line); align-items: baseline; }
+.pill { justify-self: start; font: 600 .7rem var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+.pill.ok { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
+.pill.todo { background: color-mix(in srgb, var(--todo) 20%, transparent); color: var(--todo); }
+.checks b { display: block; }
+.checks span.d { color: var(--peel-soft); font-size: .95rem; }
+@media (max-width: 520px) { .checks li { grid-template-columns: 1fr; gap: 6px; } }
+footer { padding-block: 28px 48px; color: var(--peel-soft); font-size: .9rem; }
+footer a { color: var(--accent-2); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="slice-yuzu" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="98" fill="#E9C80F"/>
+      <circle cx="100" cy="100" r="88" fill="#FFF6B8"/>
+      <g fill="#F7DC1E">
+        <path d="M100 100 L100 20 A80 80 0 0 1 156.6 43.4 Z"/><path d="M100 100 L156.6 43.4 A80 80 0 0 1 180 100 Z"/>
+        <path d="M100 100 L180 100 A80 80 0 0 1 156.6 156.6 Z"/><path d="M100 100 L156.6 156.6 A80 80 0 0 1 100 180 Z"/>
+        <path d="M100 100 L100 180 A80 80 0 0 1 43.4 156.6 Z"/><path d="M100 100 L43.4 156.6 A80 80 0 0 1 20 100 Z"/>
+        <path d="M100 100 L20 100 A80 80 0 0 1 43.4 43.4 Z"/><path d="M100 100 L43.4 43.4 A80 80 0 0 1 100 20 Z"/>
+      </g>
+      <g stroke="#FFF6B8" stroke-width="5"><path d="M100 18V182M18 100H182M42 42L158 158M158 42L42 158"/></g>
+      <circle cx="100" cy="100" r="9" fill="#FFF6B8"/>
+      <ellipse cx="128" cy="70" rx="5" ry="9" fill="#FFFBE0" transform="rotate(30 128 70)"/>
+    </symbol>
+    <symbol id="slice-blood" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="98" fill="#E8540F"/>
+      <circle cx="100" cy="100" r="88" fill="#FFD9C4"/>
+      <g fill="#B5121B">
+        <path d="M100 100 L100 20 A80 80 0 0 1 156.6 43.4 Z"/><path d="M100 100 L156.6 43.4 A80 80 0 0 1 180 100 Z" fill="#D42A1C"/>
+        <path d="M100 100 L180 100 A80 80 0 0 1 156.6 156.6 Z"/><path d="M100 100 L156.6 156.6 A80 80 0 0 1 100 180 Z" fill="#8E0D14"/>
+        <path d="M100 100 L100 180 A80 80 0 0 1 43.4 156.6 Z" fill="#D42A1C"/><path d="M100 100 L43.4 156.6 A80 80 0 0 1 20 100 Z"/>
+        <path d="M100 100 L20 100 A80 80 0 0 1 43.4 43.4 Z" fill="#8E0D14"/><path d="M100 100 L43.4 43.4 A80 80 0 0 1 100 20 Z" fill="#D42A1C"/>
+      </g>
+      <g stroke="#FFD9C4" stroke-width="5"><path d="M100 18V182M18 100H182M42 42L158 158M158 42L42 158"/></g>
+      <circle cx="100" cy="100" r="9" fill="#FFD9C4"/>
+    </symbol>
+    <symbol id="leaf" viewBox="0 0 200 200">
+      <path d="M30 170 C30 80 90 30 175 25 C170 110 120 170 30 170 Z" fill="#3E7A2C"/>
+      <path d="M30 170 C70 120 110 80 165 35" stroke="#A9D67A" stroke-width="6" fill="none"/>
+      <path d="M70 128 L60 90M95 102 L92 68M122 76 L126 50M85 115 L120 118M110 90 L140 92" stroke="#A9D67A" stroke-width="4" fill="none"/>
+    </symbol>
+    <symbol id="can-flat" viewBox="0 0 200 400">
+      <path d="M40 22 Q100 8 160 22 L170 46 L170 354 L160 378 Q100 392 40 378 L30 354 L30 46 Z" fill="#C9CDD2"/>
+      <path d="M30 50 L170 50 L170 350 L30 350 Z" fill="#FF4A14"/>
+      <path d="M30 248 L170 212 L170 280 L30 316 Z" fill="#F7DC1E"/>
+      <rect x="40" y="50" width="18" height="300" fill="#fff" opacity=".2"/>
+      <text x="100" y="160" text-anchor="middle" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="900" font-size="74" fill="#1C0502" transform="rotate(-90 100 160)">TORQ</text>
+      <ellipse cx="100" cy="21" rx="58" ry="8" fill="#9AA0A6"/>
+    </symbol>
+    <symbol id="star" viewBox="0 0 24 24"><path d="M12 2l3 7 7.5.6-5.7 4.9 1.8 7.4L12 18l-6.6 3.9 1.8-7.4L1.5 9.6 9 9z"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  </defs>
+</svg>
+
+<header class="stage">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Packaging · 12 fl oz can · 5 flavors</span>
+      <h1>TORQ Can Packaging</h1>
+    </div>
+    <p class="lede">One system across the range: the same panels and type on every can, with the colour, fruit and roundel ink changing per flavor. The TORQ wordmark is left as bare aluminium.</p>
+  </div>
+  <div id="lineup3d" role="img" aria-label="The five TORQ cans side by side. Drag to spin, click a can to see its print layout."></div>
+  <span class="stage-hint" aria-hidden="true">Drag to spin · click a can</span>
+</header>
+
+<main>
+  <section aria-labelledby="flatTitle">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="kicker">Print layout</span><h2 id="flatTitle">The label, unwrapped</h2></div>
+        <p>The full wrap around the can, seam at the back. The front sits in the middle third, so it faces the shelf.</p>
+      </div>
+      <div class="tabs" id="tabs" role="group" aria-label="Flavor"></div>
+      <div class="flat">
+        <img id="flatImg" alt="" width="2560" height="1280">
+        <div class="guides" id="guides" aria-hidden="true">
+          <div><span>Back</span></div><div><span>Left side</span></div><div><span>Front</span></div><div><span>Right side</span></div>
+        </div>
+      </div>
+      <div class="flat-tools">
+        <label class="toggle" for="guideToggle"><input type="checkbox" id="guideToggle" checked> Show panel guides</label>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <span class="dl-msg" id="dlMsg" role="status"></span>
+          <button class="btn" id="dlBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg><span id="dlLabel">Download label PNG</span></button>
+        </div>
+      </div>
+      <div class="panels">
+        <div class="panel"><b>Back</b><p>Nutrition Facts in black on white, at the seam where it reads as one block.</p></div>
+        <div class="panel"><b>Left side</b><p>Ingredients, caffeine statement and warning, distributor, barcode and recycling mark.</p></div>
+        <div class="panel"><b>Front</b><p>Wordmark in bare aluminium, flavor pill, 160mg roundel, product name and net contents in the bottom 30%.</p></div>
+        <div class="panel"><b>Right side</b><p>What's inside with doses, and taste notes. The fruit wraps in from the front.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="palTitle">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="kicker">Colour</span><h2 id="palTitle">Flavor inks</h2></div>
+        <p>Screen values for each flavor's label. Have the printer convert them to the press profile and approve a physical proof, since bright screen colours shift on metal.</p>
+      </div>
+      <div class="palette" id="palette"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="specTitle">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="kicker">Format</span><h2 id="specTitle">Can and print specs</h2></div>
+        <p>A standard 12 oz can, so it fits stock can lines, coolers and multipack carriers.</p>
+      </div>
+      <div class="specs">
+        <table class="spec-table">
+          <tbody>
+            <tr><th scope="row">Can</th><td>12 fl oz (355 mL) standard aluminium can</td></tr>
+            <tr><th scope="row">Body diameter</th><td>211 (2.6 in, 66 mm)</td></tr>
+            <tr><th scope="row">Height</th><td>About 4.8 in (122 mm) with the lid</td></tr>
+            <tr><th scope="row">End</th><td>202 lid, standard stay-on tab</td></tr>
+            <tr><th scope="row">Wrap</th><td>Full 360°, seam at the back panel</td></tr>
+            <tr><th scope="row">Finish</th><td>Satin inks, gloss overvarnish; wordmark unprinted to show the metal</td></tr>
+            <tr><th scope="row">Mockup art</th><td>2560 × 1280 px per flavor, for review only</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="note"><h3>How to print it</h3><p><b>Printed cans</b> give the best result, including the bare-metal wordmark, but can makers set high minimum orders per design.</p><p><b>Shrink sleeves or printed labels</b> on blank cans suit a launch with small runs. Sleeves can carry a metallic ink in place of bare aluminium.</p></div>
+          <div class="note"><h3>Turning this into print files</h3><p>This artwork is a concept at screen resolution. For print, rebuild it as vector files on your can maker's or label printer's template, with their bleed and safe zones.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="chkTitle">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="kicker">Before print</span><h2 id="chkTitle">Label checklist</h2></div>
+        <p>For US retail. The design covers the required elements; a few need your real business details, and a food-labelling specialist should review the final files.</p>
+      </div>
+      <ul class="checks">
+        <li><span class="pill ok">On label</span><div><b>Product name on the front</b><span class="d">“Sparkling Energy Drink” under the wordmark, with the flavor name.</span></div></li>
+        <li><span class="pill ok">On label</span><div><b>Net contents in the bottom 30% of the front</b><span class="d">“12 FL OZ (355 mL)” in both US and metric units.</span></div></li>
+        <li><span class="pill ok">On label</span><div><b>Nutrition Facts panel</b><span class="d">Layout is in place. Replace the figures with your lab-tested values.</span></div></li>
+        <li><span class="pill ok">On label</span><div><b>Ingredient list</b><span class="d">Check the order matches your final formula, heaviest first.</span></div></li>
+        <li><span class="pill ok">On label</span><div><b>Caffeine amount and warning</b><span class="d">160mg per can, plus who should avoid it.</span></div></li>
+        <li><span class="pill todo">To do</span><div><b>Full distributor address</b><span class="d">The label says “Portland, OR”. Add the street address and ZIP unless your business is listed in a public directory.</span></div></li>
+        <li><span class="pill todo">To do</span><div><b>Real barcode</b><span class="d">Get a GS1 company prefix and a UPC for each flavor; the label shows a placeholder.</span></div></li>
+        <li><span class="pill todo">To do</span><div><b>Deposit and recycling marks</b><span class="d">States with can deposits (for example California, New York and Michigan) need their refund marks.</span></div></li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><p>TORQ is a fictional brand created as a design concept. See it on the <a href="https://claude.ai/artifact/S6gwAzwUa3oQhSFudJ4Up7">TORQ Energy</a> site and the <a href="https://claude.ai/artifact/KYVWC5zX8nJ2YgVymAdpUy">TORQ Shopify Theme</a>.</p></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const FLAVORS = [
+    { id: "blood", name: "Blood orange + yuzu", short: "Blood Orange", tag: "The original",
+      vars: { orange: "#FF4A14", "orange-2": "#FF7A3D", yuzu: "#F7DC1E", blood: "#240703", "blood-2": "#36100A", "blood-3": "#4A1A12", ink: "#1C0502", "ink-soft": "#5A1F10", "peel-soft": "#E3C3B3", "hero-hi": "#FF8A4C", "hero-lo": "#C92A06", "alt-hi": "#FFF07A", "alt2-hi": "#6A2316" },
+      label: { top: "#FF5A1E", bot: "#F23D0A", band: "#F7DC1E", ink: "#1C0502" },
+      fruits: ["blood", "yuzu", "leaf"], taste: [8, 7, 4, 3], tasteTitle: "Tart first. Sweet last.",
+      notes: ["Yuzu peel", "Blood orange", "Pink grapefruit", "White tea", "Dry finish"],
+      desc: "Tart, bright and lightly sparkling.", juiceTitle: "Yuzu + blood orange",
+      juice: "Kōchi yuzu and Sicilian blood orange. Tart, floral, a little bitter at the finish.",
+      ingr: "yuzu juice concentrate, blood orange juice concentrate" },
+    { id: "hibiscus", name: "Hibiscus + raspberry", short: "Hibiscus", tag: "New",
+      vars: { orange: "#FF3D8B", "orange-2": "#FF7AB0", yuzu: "#FFC2DA", blood: "#25040F", "blood-2": "#3A0A1C", "blood-3": "#541529", ink: "#22020D", "ink-soft": "#6B1033", "peel-soft": "#EBC1D0", "hero-hi": "#FF8CBC", "hero-lo": "#C2125A", "alt-hi": "#FFE6F0", "alt2-hi": "#6B1838" },
+      label: { top: "#FF4D94", bot: "#E8236F", band: "#FFC2DA", ink: "#22020D" },
+      fruits: ["hibiscus", "raspberry", "leaf"], taste: [7, 7, 2, 5], tasteTitle: "Juicy first. Floral last.",
+      notes: ["Raspberry", "Hibiscus tea", "Rose hip", "Red currant", "Juicy finish"],
+      desc: "Juicy, floral and a little tart.", juiceTitle: "Hibiscus + raspberry",
+      juice: "Raspberry juice and cold-steeped Egyptian hibiscus. Bright berry up front, floral tea at the finish.",
+      ingr: "raspberry juice concentrate, hibiscus flower extract" },
+    { id: "lime", name: "Lime + matcha", short: "Lime Matcha", tag: "New",
+      vars: { orange: "#45D96A", "orange-2": "#7FEA95", yuzu: "#E6FF6B", blood: "#04170B", "blood-2": "#0A2715", "blood-3": "#173B21", ink: "#04190C", "ink-soft": "#165A2A", "peel-soft": "#BFE3C6", "hero-hi": "#8CF2A3", "hero-lo": "#179A3B", "alt-hi": "#F4FFC2", "alt2-hi": "#134D27" },
+      label: { top: "#52E173", bot: "#22B84A", band: "#E6FF6B", ink: "#04190C" },
+      fruits: ["lime", "leaf", "lime"], taste: [9, 8, 3, 2], tasteTitle: "Zesty first. Grassy last.",
+      notes: ["Key lime", "Ceremonial matcha", "Cucumber", "Mint", "Grassy finish"],
+      desc: "Zesty, grassy and very crisp.", juiceTitle: "Lime + matcha",
+      juice: "Mexican key lime and stone-ground Uji matcha. Sharp citrus with a smooth, green finish.",
+      ingr: "lime juice concentrate, matcha green tea powder" },
+    { id: "currant", name: "Blackcurrant + violet", short: "Blackcurrant", tag: "Limited",
+      vars: { orange: "#A980FF", "orange-2": "#C6A8FF", yuzu: "#F3B6FF", blood: "#120826", "blood-2": "#1F1140", "blood-3": "#2F1C58", ink: "#0E0420", "ink-soft": "#3D2373", "peel-soft": "#CFC2EA", "hero-hi": "#CDB4FF", "hero-lo": "#6A3FD6", "alt-hi": "#FBE3FF", "alt2-hi": "#2F1C58" },
+      label: { top: "#B08AFF", bot: "#8458F0", band: "#F3B6FF", ink: "#0E0420" },
+      fruits: ["currant", "violet", "leaf"], taste: [6, 6, 3, 5], tasteTitle: "Dark fruit. Soft floral.",
+      notes: ["Blackcurrant", "Violet", "Blueberry", "Black tea", "Jammy finish"],
+      desc: "Dark, jammy and softly floral.", juiceTitle: "Blackcurrant + violet",
+      juice: "British blackcurrant and a drop of violet. Deep berry, gentle perfume, dry finish.",
+      ingr: "blackcurrant juice concentrate, violet flower extract" },
+    { id: "pineapple", name: "Pineapple + chili", short: "Pineapple Chili", tag: "New · spicy",
+      vars: { orange: "#FFC21A", "orange-2": "#FFD866", yuzu: "#FF5A36", blood: "#1F1000", "blood-2": "#301A04", "blood-3": "#4A2B0B", ink: "#1F0D00", "ink-soft": "#6B4300", "peel-soft": "#EBD7B5", "hero-hi": "#FFE07A", "hero-lo": "#E08A00", "alt-hi": "#FFB7A3", "alt2-hi": "#4A2B0B" },
+      label: { top: "#FFCB2E", bot: "#F5AE00", band: "#FF5A36", ink: "#1F0D00" },
+      fruits: ["pineapple", "chili", "leaf"], taste: [6, 7, 1, 6], tasteTitle: "Sweet first. Heat last.",
+      notes: ["Roasted pineapple", "Chili heat", "Lime zest", "Agave", "Warm finish"],
+      desc: "Tropical, juicy, with a slow chili kick.", juiceTitle: "Pineapple + chili",
+      juice: "Golden pineapple with a pinch of árbol chili. Sweet up front, gentle heat that builds.",
+      ingr: "pineapple juice concentrate, chili pepper extract" }
+  ];
+  const byId = id => FLAVORS.find(f => f.id === id) || FLAVORS[0];
+  // Fruit illustrations, one or two per flavor, built as SVG symbols
+  (() => {
+    const segs = (a, b) => [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const t0 = i * Math.PI / 4 - Math.PI / 2, t1 = t0 + Math.PI / 4; const p = t => `${(100 + 80 * Math.cos(t)).toFixed(1)} ${(100 + 80 * Math.sin(t)).toFixed(1)}`; return `<path d="M100 100 L${p(t0)} A80 80 0 0 1 ${p(t1)} Z" fill="${i % 2 ? b : a}"/>`; }).join("");
+    const citrus = (id, rind, pith, a, b) => `<symbol id="fr-${id}" viewBox="0 0 200 200"><circle cx="100" cy="100" r="98" fill="${rind}"/><circle cx="100" cy="100" r="88" fill="${pith}"/>${segs(a, b)}<g stroke="${pith}" stroke-width="5"><path d="M100 18V182M18 100H182M42 42L158 158M158 42L42 158"/></g><circle cx="100" cy="100" r="9" fill="${pith}"/></symbol>`;
+    const petals = (id, petal, deep, center) => `<symbol id="fr-${id}" viewBox="0 0 200 200">${[0, 72, 144, 216, 288].map(r => `<ellipse cx="100" cy="52" rx="38" ry="52" fill="${petal}" transform="rotate(${r} 100 100)"/><ellipse cx="100" cy="70" rx="14" ry="34" fill="${deep}" opacity=".35" transform="rotate(${r} 100 100)"/>`).join("")}<circle cx="100" cy="100" r="24" fill="${deep}"/><circle cx="100" cy="100" r="10" fill="${center}"/></symbol>`;
+    const rasp = `<symbol id="fr-raspberry" viewBox="0 0 200 200"><path d="M70 40 L100 58 L130 40 L118 66 L82 66 Z" fill="#3E7A2C"/>${[[100,80],[78,92],[122,92],[64,116],[100,108],[136,116],[78,134],[122,134],[100,140],[90,160],[110,160]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="21" fill="#D61F4A"/><circle cx="${x - 6}" cy="${y - 7}" r="6" fill="#FF7A9A"/>`).join("")}</symbol>`;
+    const currant = `<symbol id="fr-currant" viewBox="0 0 200 200"><path d="M100 20 C104 50 90 70 66 92 M100 20 C110 60 130 80 140 96 M100 20 C100 70 100 100 104 126" stroke="#3E7A2C" stroke-width="5" fill="none"/>${[[64,110,34],[140,112,30],[104,146,38]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#2B0F52"/><circle cx="${x - r * .35}" cy="${y - r * .35}" r="${r * .3}" fill="#8C6BD9"/>`).join("")}</symbol>`;
+    const pine = `<symbol id="fr-pineapple" viewBox="0 0 200 200"><circle cx="100" cy="100" r="98" fill="#B57A00"/><circle cx="100" cy="100" r="86" fill="#FFD23F"/>${Array.from({ length: 16 }, (_, i) => `<path d="M100 100 L${(100 + 84 * Math.cos(i * Math.PI / 8)).toFixed(1)} ${(100 + 84 * Math.sin(i * Math.PI / 8)).toFixed(1)}" stroke="#F5B400" stroke-width="4"/>`).join("")}${Array.from({ length: 16 }, (_, i) => `<circle cx="${(100 + 92 * Math.cos(i * Math.PI / 8)).toFixed(1)}" cy="${(100 + 92 * Math.sin(i * Math.PI / 8)).toFixed(1)}" r="4" fill="#5A3A00"/>`).join("")}<circle cx="100" cy="100" r="26" fill="#FFF0B0"/></symbol>`;
+    const chili = `<symbol id="fr-chili" viewBox="0 0 200 200"><path d="M150 40 C120 40 120 60 110 80 C95 112 70 140 30 168 C80 172 132 140 150 92 C158 70 162 54 150 40 Z" fill="#E5251B"/><path d="M140 60 C128 86 112 116 84 140" stroke="#FF8A70" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M150 40 C150 28 160 20 172 18 L170 26 C162 28 158 34 158 44 Z" fill="#3E7A2C"/><path d="M136 44 C146 34 160 36 166 48 C156 46 146 46 136 44 Z" fill="#3E7A2C"/></symbol>`;
+    const leafSym = `<symbol id="fr-leaf" viewBox="0 0 200 200"><use href="#leaf"/></symbol>`;
+    const html = citrus("blood", "#E8540F", "#FFD9C4", "#B5121B", "#D42A1C") + citrus("yuzu", "#E9C80F", "#FFF6B8", "#F7DC1E", "#F2D20A") +
+      citrus("lime", "#2F8F2E", "#E6F7C9", "#7BD957", "#9BE36F") + petals("hibiscus", "#F0307A", "#7A0A33", "#FFD23F") +
+      petals("violet", "#8458F0", "#3D2373", "#F3E36A") + rasp + currant + pine + chili + leafSym;
+    document.querySelector("svg defs").insertAdjacentHTML("beforeend", html);
+  })();
+  /* ---------- Can label (packaging artwork) ----------
+     The label wraps the can once: x runs around the circumference and the front faces
+     the viewer at x = W / 2. Panels, left to right: back (Nutrition Facts) at the seam,
+     left side (ingredients, warning, barcode), front, right side (what's inside).
+     Each flavor gets a colour canvas and a metal/roughness canvas, so the wordmark
+     prints as bare aluminium while the inks stay satin. */
+  const LW = 2560, LH = 1280, FX = LW / 2;
+  const TOP = 74, BOT = LH - 150;
+  const disp = (w, s) => `${w} ${s}px "Big Shoulders Display", "Arial Narrow", Impact, sans-serif`;
+  const monoF = (w, s) => `${w} ${s}px "IBM Plex Mono", ui-monospace, Menlo, monospace`;
+  const bodyF = (w, s) => `${w} ${s}px "Barlow", "Helvetica Neue", Arial, sans-serif`;
+  const helv = (w, s) => `${w} ${s}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+  const FRUIT_ART = {
+    blood: ["blood", "yuzu"], hibiscus: ["hibiscus", "raspberry"], lime: ["lime", "lime"],
+    currant: ["currant", "violet"], pineapple: ["pineapple", "chili"]
+  };
+
+  function fruitImage(name) {
+    return new Promise(resolve => {
+      const sym = document.getElementById("fr-" + name);
+      if (!sym) return resolve(null);
+      const ser = new XMLSerializer();
+      const leaf = document.getElementById("leaf");
+      const defs = (leaf ? ser.serializeToString(leaf) : "") + ser.serializeToString(sym);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="800" viewBox="0 0 200 200"><defs>${defs}</defs><use href="#fr-${name}" xlink:href="#fr-${name}" width="200" height="200"/></svg>`;
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = () => resolve(null);
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
+  }
+
+  function spacedText(g, text, x, y, spacing) {
+    // canvas letterSpacing is not everywhere yet, so space glyphs by hand
+    const chars = [...text];
+    const widths = chars.map(c => g.measureText(c).width);
+    const total = widths.reduce((a, b) => a + b, 0) + spacing * (chars.length - 1);
+    let cx = g.textAlign === "center" ? x - total / 2 : g.textAlign === "right" ? x - total : x;
+    const align = g.textAlign; g.textAlign = "left";
+    chars.forEach((c, i) => { g.fillText(c, cx, y); cx += widths[i] + spacing; });
+    g.textAlign = align;
+    return total;
+  }
+  function roundRect(g, x, y, w, h, r) {
+    g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  }
+  function wrapLines(g, text, maxW) {
+    const out = []; let line = "";
+    for (const w of text.split(" ")) { const t = line ? line + " " + w : w; if (g.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; }
+    if (line) out.push(line);
+    return out;
+  }
+
+  function drawLabelArt(f, imgs) {
+    const L = f.label, ink = L.ink, band = L.band;
+    const c = document.createElement("canvas"); c.width = LW; c.height = LH;
+    const m = document.createElement("canvas"); m.width = LW; m.height = LH;
+    const g = c.getContext("2d"), mg = m.getContext("2d");
+    // metal/roughness: G = roughness, B = metalness. Satin ink by default.
+    mg.fillStyle = "rgb(0, 92, 40)"; mg.fillRect(0, 0, LW, LH);
+
+    // 1. Ground: flavor gradient with a halftone that thickens towards the base
+    const grad = g.createLinearGradient(0, 0, 0, LH);
+    grad.addColorStop(0, L.top); grad.addColorStop(1, L.bot);
+    g.fillStyle = grad; g.fillRect(0, 0, LW, LH);
+    g.fillStyle = ink; g.globalAlpha = .1;
+    for (let y = LH * .5; y < BOT; y += 18) {
+      const r = Math.max(0, (y - LH * .5) / (BOT - LH * .5)) * 6.5;
+      const off = (Math.round(y / 18) % 2) * 9;
+      for (let x = off; x < LW; x += 18) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }
+    }
+    g.globalAlpha = 1;
+
+    // 2. Fruit, cropped large on the right of the front and small above it
+    const drawFruit = (im, cx, cy, size, rot) => { if (!im) return; g.save(); g.translate(cx, cy); g.rotate(rot); g.drawImage(im, -size / 2, -size / 2, size, size); g.restore(); };
+    g.save(); g.shadowColor = "rgba(0,0,0,.28)"; g.shadowBlur = 30; g.shadowOffsetY = 14;
+    drawFruit(imgs[0], FX + 520, LH * .55, 680, .35);
+    drawFruit(imgs[1], FX + 360, 255, 300, -.4);
+    drawFruit(imgs[1] || imgs[0], 2300, 1010, 220, .9);
+    g.restore();
+
+    // 3. Bands: top tagline, bottom claims
+    g.fillStyle = ink; g.fillRect(0, 0, LW, TOP); g.fillRect(0, BOT, LW, LH - BOT);
+    g.fillStyle = band; g.fillRect(0, TOP, LW, 8); g.fillRect(0, BOT - 8, LW, 8);
+    g.font = monoF(600, 26); g.textBaseline = "middle"; g.textAlign = "left";
+    for (let x = 20; x < LW; x += 560) spacedText(g, "CLEAN LIFT ✦ NO CRASH ✦", x, TOP / 2, 6);
+    g.font = disp(900, 58); g.textBaseline = "middle";
+    const claim = "160MG NATURAL CAFFEINE   ✦   0G SUGAR   ✦   10 CALORIES   ✦   ";
+    const cw = g.measureText(claim).width;
+    for (let x = -cw / 2 + 140; x < LW; x += cw) g.fillText(claim, x, BOT + (LH - BOT) / 2 + 2);
+
+    // 4. Front: identity, wordmark, flavor, net contents
+    g.textAlign = "center"; g.textBaseline = "alphabetic"; g.fillStyle = ink;
+    g.font = monoF(600, 30); spacedText(g, "NATURALLY CAFFEINATED", FX, 190, 9);
+    // wordmark sized to the front panel
+    let ws = 400; g.font = disp(900, ws);
+    const ww = g.measureText("TORQ").width; ws = Math.round(ws * Math.min(1.25, 820 / ww)); g.font = disp(900, ws);
+    const wy = 590;
+    g.lineJoin = "round";
+    g.fillStyle = ink; g.strokeStyle = ink; g.lineWidth = 22;
+    g.fillText("TORQ", FX + 14, wy + 16); g.strokeText("TORQ", FX + 14, wy + 16);   // offset shadow
+    g.strokeText("TORQ", FX, wy);
+    const sg = g.createLinearGradient(0, wy - ws * .75, 0, wy);
+    sg.addColorStop(0, "#F4F6F8"); sg.addColorStop(.55, "#C9CED4"); sg.addColorStop(1, "#E9ECEF");
+    g.fillStyle = sg; g.fillText("TORQ", FX, wy);
+    mg.textAlign = "center"; mg.font = g.font; mg.fillStyle = "rgb(0, 64, 225)"; mg.fillText("TORQ", FX, wy);  // bare aluminium
+    // flavor pill
+    g.font = disp(900, 66);
+    const name = f.name.toUpperCase(), nw = g.measureText(name).width + 80;
+    g.fillStyle = ink; roundRect(g, FX - nw / 2, 628, nw, 96, 48); g.fill();
+    g.fillStyle = band; g.textBaseline = "middle"; g.fillText(name, FX, 678);
+    g.textBaseline = "alphabetic";
+    // statement of identity + net contents in the bottom 30% of the front panel
+    g.fillStyle = ink; g.font = disp(900, 54); g.fillText("SPARKLING ENERGY DRINK", FX, 1008);
+    g.font = monoF(600, 30); spacedText(g, "12 FL OZ (355 mL)", FX, 1060, 4);
+
+    // 5. Caffeine roundel, front left
+    const rx = FX - 330, ry = 842, rr = 106;
+    g.save(); g.shadowColor = "rgba(0,0,0,.25)"; g.shadowBlur = 18; g.shadowOffsetY = 8;
+    g.fillStyle = band; g.beginPath(); g.arc(rx, ry, rr, 0, Math.PI * 2); g.fill(); g.restore();
+    g.strokeStyle = ink; g.lineWidth = 6; g.beginPath(); g.arc(rx, ry, rr, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(rx, ry, rr - 36, 0, Math.PI * 2); g.lineWidth = 3; g.stroke();
+    g.fillStyle = ink; g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.font = disp(900, 84); g.fillText("160", rx, ry + 20);
+    g.font = disp(800, 28); g.fillText("MG", rx, ry + 49);
+    g.font = monoF(600, 17);
+    const ring = "NATURAL CAFFEINE ✦ FROM GUAYUSA LEAF ✦ ";
+    const step = (Math.PI * 2) / [...ring].length;
+    [...ring].forEach((ch, i) => { g.save(); g.translate(rx, ry); g.rotate(i * step - Math.PI / 2); g.fillText(ch, 0, -(rr - 14)); g.restore(); });
+
+    // 6. Right side: what's inside + taste notes
+    const sx = 2150;
+    g.textAlign = "left"; g.fillStyle = ink;
+    g.font = disp(900, 54); g.fillText("WHAT'S INSIDE", sx, 190);
+    g.fillRect(sx, 208, 360, 5);
+    const rows = [["GUAYUSA LEAF", "120MG"], ["GREEN TEA", "40MG"], ["L-THEANINE", "100MG"], ["ELECTROLYTES", "380MG"], ["B6 + B12", "100% DV"], ["REAL FRUIT", "5%"]];
+    g.font = monoF(600, 24);
+    rows.forEach(([k, v], i) => {
+      const y = 262 + i * 46;
+      g.textAlign = "left"; g.fillText(k, sx, y);
+      g.textAlign = "right"; g.fillText(v, sx + 360, y);
+      g.globalAlpha = .35; g.fillRect(sx, y + 14, 360, 2); g.globalAlpha = 1;
+    });
+    g.textAlign = "left"; g.font = disp(900, 46); g.fillText("TASTES LIKE", sx, 600);
+    g.font = bodyF(600, 28);
+    f.notes.slice(0, 4).forEach((n, i) => g.fillText("— " + n, sx, 646 + i * 40));
+
+    // 7. Back: Nutrition Facts (black on white, as the regulation expects)
+    const nx = 92, ny = 112, nw2 = 390, nh = 880;
+    g.fillStyle = "#FFFFFF"; g.fillRect(nx, ny, nw2, nh);
+    g.strokeStyle = "#000"; g.lineWidth = 4; g.strokeRect(nx, ny, nw2, nh);
+    let y = ny + 62; const px = nx + 16, pr = nx + nw2 - 16;
+    const rule = h => { g.fillStyle = "#000"; g.fillRect(px, y, pr - px, h); y += h + 6; };
+    const row = (l, r, bold, indent, size = 23) => {
+      y += size + 4; g.fillStyle = "#000"; g.font = helv(bold ? 800 : 400, size);
+      g.textAlign = "left"; g.fillText(l, px + (indent || 0), y); if (r) { g.textAlign = "right"; g.font = helv(800, size); g.fillText(r, pr, y); }
+      y += 6; g.fillRect(px, y, pr - px, 1.5); y += 2;
+    };
+    g.fillStyle = "#000"; g.textAlign = "left"; g.font = helv(900, 45); g.fillText("Nutrition Facts", px, y); y += 14;
+    g.font = helv(400, 22); y += 26; g.fillText("1 serving per container", px, y); y += 8;
+    g.font = helv(800, 24); y += 30; g.fillText("Serving size", px, y); g.textAlign = "right"; g.fillText("1 can (355mL)", pr, y); y += 12;
+    rule(14);
+    g.textAlign = "left"; g.font = helv(800, 20); y += 20; g.fillText("Amount per serving", px, y); y += 4;
+    g.font = helv(900, 46); y += 44; g.fillText("Calories", px, y); g.textAlign = "right"; g.fillText("10", pr, y); y += 10;
+    rule(8);
+    g.font = helv(800, 20); g.textAlign = "right"; y += 20; g.fillText("% Daily Value*", pr, y); y += 6; g.fillRect(px, y, pr - px, 1.5); y += 2;
+    row("Total Fat 0g", "0%", true); row("Sodium 180mg", "8%", true); row("Total Carbohydrate 5g", "2%", true);
+    row("Total Sugars 0g", "", false, 24); row("Incl. 0g Added Sugars", "0%", false, 44);
+    row("Protein 0g", "", true);
+    rule(14);
+    row("Potassium 200mg", "4%"); row("Vitamin B6 1.7mg", "100%"); row("Vitamin B12 2.4mcg", "100%");
+    rule(8);
+    g.font = helv(400, 17); g.textAlign = "left";
+    wrapLines(g, "*The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.", pr - px).forEach(t => { y += 22; g.fillText(t, px, y); });
+
+    // 8. Left side: ingredients, caffeine statement, maker, barcode
+    const ix = 520, iw = 300;
+    g.fillStyle = ink; g.textAlign = "left";
+    g.font = disp(900, 40); g.fillText("INGREDIENTS", ix, 160);
+    g.font = bodyF(500, 22);
+    let iy = 196;
+    wrapLines(g, "Carbonated water, " + f.ingr + ", allulose, citric acid, natural caffeine (from guayusa leaf and green tea), L-theanine, sea salt, potassium citrate, natural flavors, monk fruit extract, pyridoxal-5-phosphate (vitamin B6), methylcobalamin (vitamin B12).", iw).forEach(t => { g.fillText(t, ix, iy); iy += 28; });
+    iy += 22; g.font = disp(900, 32); wrapLines(g, "CAFFEINE: 160MG PER CAN", iw).forEach(t => { g.fillText(t, ix, iy); iy += 34; });
+    g.font = bodyF(600, 21);
+    wrapLines(g, "Not recommended for children, people who are pregnant or nursing, or persons sensitive to caffeine.", iw).forEach(t => { g.fillText(t, ix, iy); iy += 26; });
+    iy += 18; g.font = monoF(600, 18);
+    ["DISTRIBUTED BY", "TORQ BEVERAGE CO.", "PORTLAND, OR"].forEach(t => { g.fillText(t, ix, iy); iy += 24; });
+    // barcode area (placeholder bars: replace with the GS1 barcode before print)
+    const bx = ix, by = 900, bw = 230, bh = 150;
+    g.fillStyle = "#FFFFFF"; roundRect(g, bx, by, bw, bh, 10); g.fill();
+    g.fillStyle = "#000";
+    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    for (let x = bx + 18; x < bx + bw - 18;) { const w = 2 + Math.floor(rnd() * 3) * 2; if (rnd() > .42) g.fillRect(x, by + 14, w, bh - 52); x += w + 2 + Math.floor(rnd() * 2) * 2; }
+    g.font = monoF(600, 15); g.textAlign = "center"; g.fillText("GS1 BARCODE HERE", bx + bw / 2, by + bh - 16);
+    // recycling mark
+    g.strokeStyle = ink; g.lineWidth = 5; g.fillStyle = ink;
+    const cx2 = ix + 268, cy2 = by + 50;
+    g.beginPath(); g.arc(cx2, cy2, 30, Math.PI * .2, Math.PI * 1.8); g.stroke();
+    g.beginPath(); g.moveTo(cx2 + 30 * Math.cos(Math.PI * 1.8) - 9, cy2 + 30 * Math.sin(Math.PI * 1.8) - 4); g.lineTo(cx2 + 30 * Math.cos(Math.PI * 1.8) + 9, cy2 + 30 * Math.sin(Math.PI * 1.8) - 12); g.lineTo(cx2 + 30 * Math.cos(Math.PI * 1.8) + 6, cy2 + 30 * Math.sin(Math.PI * 1.8) + 10); g.fill();
+    g.font = monoF(600, 14); g.textAlign = "center"; g.fillText("RECYCLE", cx2, cy2 + 56); g.fillText("ME", cx2, cy2 + 74);
+
+    // 9. Print grain
+    g.globalAlpha = .04;
+    for (let i = 0; i < 6000; i++) { g.fillStyle = i % 2 ? "#fff" : "#000"; g.fillRect(Math.random() * LW, Math.random() * LH, 2, 2); }
+    g.globalAlpha = 1;
+    return { color: c, mr: m };
+  }
+
+  const labelCache = {};
+  const fruitCache = {};
+  const fruitFor = n => fruitCache[n] || (fruitCache[n] = fruitImage(n));
+  async function buildLabel(f) {
+    if (labelCache[f.id] && labelCache[f.id].full) return labelCache[f.id];
+    const art = FRUIT_ART[f.id] || f.fruits;
+    const imgs = await Promise.all(art.map(fruitFor));
+    const L = drawLabelArt(f, imgs); L.full = true;
+    return (labelCache[f.id] = L);
+  }
+  // Synchronous fallback (no fruit art yet); buildLabel replaces it once images load
+  const labelFor = f => labelCache[f.id] || (labelCache[f.id] = drawLabelArt(f, []));
+
+  /* ---------- Flat layout ---------- */
+  let current = FLAVORS[0];
+  function renderTabs() {
+    $("tabs").innerHTML = FLAVORS.map(f => `<button type="button" class="tab" data-id="${f.id}" aria-pressed="${f === current}" style="--a:${f.vars.orange};--b:${f.vars.yuzu}"><i></i>${esc(f.name)}</button>`).join("");
+  }
+  function showFlat(f) {
+    current = f; renderTabs();
+    const L = labelCache[f.id] || labelFor(f);
+    $("flatImg").src = L.color.toDataURL("image/png");
+    $("flatImg").alt = `Flat print layout of the ${f.name} label`;
+    $("dlLabel").textContent = `Download ${f.short} label`;
+    $("dlMsg").textContent = "";
+  }
+  $("tabs").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if (b) { showFlat(FLAVORS.find(f => f.id === b.dataset.id)); b.focus(); } });
+  $("guideToggle").addEventListener("change", e => { $("guides").hidden = !e.target.checked; });
+
+  $("palette").innerHTML = FLAVORS.map(f => `<div class="sw"><div class="chips"><span style="background:${f.label.top}"></span><span style="background:${f.label.band}"></span><span style="background:${f.label.ink}"></span></div>
+    <div class="body"><b>${esc(f.name)}</b><dl><dt>Ground</dt><dd>${f.label.top}</dd><dt>Shade</dt><dd>${f.label.bot}</dd><dt>Accent</dt><dd>${f.label.band}</dd><dt>Ink</dt><dd>${f.label.ink}</dd></dl></div></div>`).join("");
+
+  /* ---------- Download ---------- */
+  let downloads = null;
+  (async () => {
+    try { downloads = await window.claude?.use?.("downloads"); } catch (e) { downloads = null; }
+    if (!downloads) { $("dlBtn").disabled = true; $("dlMsg").textContent = "Downloads aren't available in this view."; }
+  })();
+  $("dlBtn").addEventListener("click", async () => {
+    if (!downloads) return;
+    $("dlBtn").disabled = true; $("dlMsg").textContent = "";
+    try {
+      const L = labelCache[current.id] || labelFor(current);
+      const blob = await new Promise(r => L.color.toBlob(r, "image/png"));
+      await downloads.save({ filename: `torq-label-${current.id}.png`, data: blob });
+      $("dlMsg").textContent = "Saved.";
+    } catch (e) {
+      const c = e && e.code;
+      $("dlMsg").textContent = c === "declined" ? "Download cancelled." : c === "rate_limited" ? "A download prompt is already open." : "That download didn't work. Try again.";
+    }
+    $("dlBtn").disabled = false;
+  });
+
+  /* ---------- 3D lineup ---------- */
+  function envMap(renderer) {
+    const pm = new THREE.PMREMGenerator(renderer);
+    const sc = new THREE.Scene();
+    sc.background = new THREE.Color("#3a1208");
+    const box = (col, w, h, x, y, z, ry) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); sc.add(m); };
+    box(new THREE.Color(6, 5.6, 5.2), 6, 10, -8, 3, 4);
+    box(new THREE.Color(4, 3.6, 1.2), 4, 12, 9, 1, -2);
+    box(new THREE.Color(3.2, 1.2, .5), 12, 4, 0, -8, 0);
+    box(new THREE.Color(2.4, 2.4, 2.6), 10, 3, 0, 9, 2);
+    const tex = pm.fromScene(sc, 0.03).texture; pm.dispose();
+    return tex;
+  }
+
+  function buildCan(maps) {
+    const group = new THREE.Group();
+    const silver = new THREE.MeshStandardMaterial({ color: 0xd9dde2, metalness: 1, roughness: .22 });
+    const darkSilver = new THREE.MeshStandardMaterial({ color: 0xb8bec6, metalness: 1, roughness: .32 });
+    const label = new THREE.MeshPhysicalMaterial({ map: maps.color, metalnessMap: maps.mr, roughnessMap: maps.mr, metalness: 1, roughness: 1, clearcoat: .55, clearcoatRoughness: .14 });
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3.2, 128, 1, true, -Math.PI, Math.PI * 2), label);
+    group.add(body); group.userData.label = label;
+    const top = [[1, 1.6], [.995, 1.66], [.95, 1.76], [.89, 1.86], [.885, 1.9], [.9, 1.935], [.89, 1.955], [.86, 1.95], [.845, 1.915]].map(p => new THREE.Vector2(p[0], p[1]));
+    group.add(new THREE.Mesh(new THREE.LatheGeometry(top, 128), silver));
+    const lid = new THREE.Mesh(new THREE.CircleGeometry(.85, 96), darkSilver); lid.rotation.x = -Math.PI / 2; lid.position.y = 1.905; group.add(lid);
+    const bot = [[.8, -1.9], [.9, -1.86], [.96, -1.76], [.995, -1.66], [1, -1.6]].map(p => new THREE.Vector2(p[0], p[1]));
+    group.add(new THREE.Mesh(new THREE.LatheGeometry(bot, 128), silver));
+    const base = new THREE.Mesh(new THREE.CircleGeometry(.8, 64), darkSilver); base.rotation.x = Math.PI / 2; base.position.y = -1.9; group.add(base);
+    // pull tab
+    const tabShape = new THREE.Shape(); tabShape.absarc(0, 0, .2, 0, Math.PI * 2, false);
+    const hole = new THREE.Path(); hole.absarc(0, .03, .11, 0, Math.PI * 2, true); tabShape.holes.push(hole);
+    const tab = new THREE.Mesh(new THREE.ExtrudeGeometry(tabShape, { depth: .02, bevelEnabled: false }), silver);
+    tab.rotation.x = -Math.PI / 2; tab.position.set(0, 1.92, .28); tab.scale.set(1, 1.5, 1); group.add(tab);
+    const rivet = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .03, 24), silver); rivet.position.set(0, 1.925, .05); group.add(rivet);
+    const mouth = new THREE.Mesh(new THREE.CircleGeometry(.2, 32), new THREE.MeshStandardMaterial({ color: 0x8b9199, metalness: 1, roughness: .5 }));
+    mouth.rotation.x = -Math.PI / 2; mouth.position.set(0, 1.908, -.42); mouth.scale.set(1.4, .8, 1); group.add(mouth);
+    return group;
+  }
+
+  function makeMaps(renderer, L) {
+    const mk = (cv, srgb) => { const t = new THREE.CanvasTexture(cv); if (srgb) t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); return t; };
+    return { color: mk(L.color, true), mr: mk(L.mr, false) };
+  }
+  function initLineup() {
+    const el = $("lineup3d");
+    let ok = !!window.THREE;
+    try { const c = document.createElement("canvas"); ok = ok && !!(c.getContext("webgl") || c.getContext("experimental-webgl")); } catch (e) { ok = false; }
+    if (!ok) { el.innerHTML = '<p class="no3d">3D preview isn\'t available on this device. The print layouts below show every can.</p>'; return; }
+    const r = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    r.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); r.outputEncoding = THREE.sRGBEncoding; r.toneMapping = THREE.ACESFilmicToneMapping;
+    el.appendChild(r.domElement); r.domElement.setAttribute("aria-hidden", "true");
+    const scene = new THREE.Scene(); scene.environment = envMap(r);
+    const key = new THREE.DirectionalLight(0xfff1e0, 1.3); key.position.set(-4, 6, 8); scene.add(key);
+    const rim = new THREE.DirectionalLight(0xffd8a0, 1.4); rim.position.set(6, 3, -5); scene.add(rim);
+    scene.add(new THREE.AmbientLight(0xffffff, .25));
+    const cam = new THREE.PerspectiveCamera(30, 1, .1, 100);
+    const cans = FLAVORS.map((f, i) => {
+      const g = buildCan(makeMaps(r, labelCache[f.id] || labelFor(f)));
+      const pivot = new THREE.Group(); pivot.add(g);
+      const x = (i - 2) * 2.45, z = -Math.abs(i - 2) * .9;
+      pivot.position.set(x, 0, z); g.rotation.y = (i - 2) * -.28;
+      pivot.userData = { f, base: g.rotation.y, spin: 0 };
+      scene.add(pivot); return pivot;
+    });
+    const resize = () => {
+      const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
+      r.setSize(w, h, false); cam.aspect = w / h;
+      const fit = Math.max(1, 2.1 / (w / h));
+      cam.position.set(0, 1.5 * fit, 12.2 * fit); cam.lookAt(0, -.15, -1);
+      cam.updateProjectionMatrix();
+    };
+    new ResizeObserver(resize).observe(el); resize();
+    // drag spins every can; click picks one
+    let down = false, lx = 0, moved = 0, vel = 0, spinAll = 0;
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+    r.domElement.addEventListener("pointerdown", e => { down = true; lx = e.clientX; moved = 0; vel = 0; r.domElement.setPointerCapture(e.pointerId); });
+    r.domElement.addEventListener("pointermove", e => { if (!down) return; const dx = e.clientX - lx; lx = e.clientX; moved += Math.abs(dx); spinAll += dx * .01; vel = dx * .01; });
+    r.domElement.addEventListener("pointerup", e => {
+      down = false; if (moved > 6) return;
+      const b = r.domElement.getBoundingClientRect();
+      ndc.set((e.clientX - b.left) / b.width * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1);
+      ray.setFromCamera(ndc, cam);
+      const hit = ray.intersectObjects(cans, true)[0];
+      if (!hit) return;
+      let o = hit.object; while (o && !o.userData.f) o = o.parent;
+      if (o) { o.userData.spin = Math.PI * 2; showFlat(o.userData.f); $("flatTitle").scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); }
+    });
+    let visible = true;
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(el);
+    const loop = t => {
+      if (visible) {
+        if (!down) { spinAll += vel; vel *= .94; if (!reduced && Math.abs(vel) < .001) spinAll += .003; }
+        cans.forEach((c, i) => {
+          const u = c.userData; if (u.spin > 0) { u.spin = Math.max(0, u.spin - .12); }
+          c.children[0].rotation.y = u.base + spinAll + (Math.PI * 2 - u.spin);
+          if (!reduced) c.position.y = Math.sin(t / 1000 + i * 1.3) * .06;
+        });
+        r.render(scene, cam);
+      }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  (async () => {
+    renderTabs();
+    try { await Promise.race([Promise.all(['900 120px "Big Shoulders Display"', '600 30px "IBM Plex Mono"', '600 30px "Barlow"'].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
+    await Promise.all(FLAVORS.map(buildLabel)).catch(() => {});
+    showFlat(current);
+    initLineup();
+  })();
+})();
+</script>

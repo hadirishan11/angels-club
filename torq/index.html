@@ -135,9 +135,9 @@ img { display: block; }
   display: grid; grid-template-rows: 1fr auto;
 }
 .hero-word {
-  position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%);
+  position: absolute; left: 50%; top: 33%; transform: translate(-50%, -50%);
   font-family: var(--font-display); font-weight: 900; line-height: .75;
-  font-size: clamp(9rem, 30vw, 26rem); letter-spacing: -.02em; color: var(--ink);
+  font-size: clamp(9rem, 27vw, 23rem); letter-spacing: -.02em; color: var(--ink);
   white-space: nowrap; user-select: none; pointer-events: none;
 }
 .hero-word span { display: inline-block; }
@@ -1176,59 +1176,227 @@ legend { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; tex
   /* ---------- 3D can ---------- */
   const hasGL = !!window.THREE && (() => { try { const c = document.createElement("canvas"); return !!(c.getContext("webgl") || c.getContext("experimental-webgl")); } catch (e) { return false; } })();
 
-  function drawLabel(f) {
-    const L = f.label, W = 2048, H = 1024, c = document.createElement("canvas");
-    c.width = W; c.height = H;
-    const g = c.getContext("2d");
-    const grad = g.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, L.top); grad.addColorStop(1, L.bot);
-    g.fillStyle = grad; g.fillRect(0, 0, W, H);
-    g.fillStyle = L.band;
-    g.beginPath(); g.moveTo(0, 700); g.lineTo(W, 520); g.lineTo(W, 690); g.lineTo(0, 870); g.closePath(); g.fill();
-    g.fillStyle = L.ink;
-    g.beginPath(); g.moveTo(0, 870); g.lineTo(W, 690); g.lineTo(W, 712); g.lineTo(0, 892); g.closePath(); g.fill();
-    g.fillRect(0, 0, W, 34); g.fillRect(0, H - 34, W, 34);
-    g.fillStyle = L.band; g.fillRect(0, 34, W, 6); g.fillRect(0, H - 40, W, 6);
-    g.save(); g.translate(W / 2, H / 2 + 10); g.rotate(-Math.PI / 2);
-    g.font = '900 420px "Big Shoulders Display", "Arial Narrow", Impact, sans-serif';
-    g.textAlign = "center"; g.textBaseline = "middle";
-    const tw = g.measureText("TORQ").width; g.scale(Math.min(1, 860 / tw), 1);
-    g.fillStyle = L.ink; g.fillText("TORQ", 0, 0);
-    g.restore();
-    g.fillStyle = L.ink; g.textAlign = "left"; g.textBaseline = "alphabetic";
-    g.font = '600 30px "IBM Plex Mono", monospace';
-    g.fillText(f.name.toUpperCase(), W / 2 + 190, 120);
-    g.fillText("SPARKLING ENERGY", W / 2 + 190, 162);
-    g.font = '900 120px "Big Shoulders Display", Impact, sans-serif';
-    g.fillText("160MG", W / 2 + 190, 330);
-    g.font = '700 30px "Barlow", Arial, sans-serif';
-    g.fillText("NATURAL CAFFEINE", W / 2 + 194, 372);
-    g.font = '900 120px "Big Shoulders Display", Impact, sans-serif';
-    g.fillText("0G", W / 2 + 190, 520);
-    g.font = '700 30px "Barlow", Arial, sans-serif';
-    g.fillText("SUGAR · 10 CAL", W / 2 + 194, 562);
-    g.textAlign = "right";
-    g.font = '600 28px "IBM Plex Mono", monospace';
-    g.fillText("12 FL OZ (355 mL)", W / 2 - 190, 120);
-    g.fillText("+ L-THEANINE", W / 2 - 190, 160);
-    g.fillText("+ ELECTROLYTES", W / 2 - 190, 200);
-    g.textAlign = "left";
-    g.font = '900 64px "Big Shoulders Display", Impact, sans-serif';
-    g.fillText("CLEAN LIFT.", 90, 160); g.fillText("NO CRASH.", 90, 225);
-    g.font = '500 24px "Barlow", Arial, sans-serif';
-    const ing = ("Carbonated water, " + f.ingr + ", allulose, citric acid, natural caffeine (guayusa, green tea), L-theanine, sea salt, potassium citrate, natural flavors, monk fruit, B6, B12.").split(" ");
-    let line = "", y = 300;
-    for (const w of ing) { if (g.measureText(line + w).width > 560) { g.fillText(line, 90, y); y += 34; line = ""; } line += w + " "; }
-    g.fillText(line, 90, y);
-    g.font = '600 22px "IBM Plex Mono", monospace';
-    g.fillText("CONTAINS 160MG CAFFEINE PER CAN.", 90, y + 70);
-    g.fillText("NOT FOR CHILDREN OR THOSE PREGNANT.", 90, y + 102);
-    g.globalAlpha = .05; for (let i = 0; i < 4000; i++) { g.fillStyle = i % 2 ? "#fff" : "#000"; g.fillRect(Math.random() * W, Math.random() * H, 2, 2); }
-    g.globalAlpha = 1;
-    return c;
+  /* ---------- Can label (packaging artwork) ----------
+     The label wraps the can once: x runs around the circumference and the front faces
+     the viewer at x = W / 2. Panels, left to right: back (Nutrition Facts) at the seam,
+     left side (ingredients, warning, barcode), front, right side (what's inside).
+     Each flavor gets a colour canvas and a metal/roughness canvas, so the wordmark
+     prints as bare aluminium while the inks stay satin. */
+  const LW = 2560, LH = 1280, FX = LW / 2;
+  const TOP = 74, BOT = LH - 150;
+  const disp = (w, s) => `${w} ${s}px "Big Shoulders Display", "Arial Narrow", Impact, sans-serif`;
+  const monoF = (w, s) => `${w} ${s}px "IBM Plex Mono", ui-monospace, Menlo, monospace`;
+  const bodyF = (w, s) => `${w} ${s}px "Barlow", "Helvetica Neue", Arial, sans-serif`;
+  const helv = (w, s) => `${w} ${s}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+  const FRUIT_ART = {
+    blood: ["blood", "yuzu"], hibiscus: ["hibiscus", "raspberry"], lime: ["lime", "lime"],
+    currant: ["currant", "violet"], pineapple: ["pineapple", "chili"]
+  };
+
+  function fruitImage(name) {
+    return new Promise(resolve => {
+      const sym = document.getElementById("fr-" + name);
+      if (!sym) return resolve(null);
+      const ser = new XMLSerializer();
+      const leaf = document.getElementById("leaf");
+      const defs = (leaf ? ser.serializeToString(leaf) : "") + ser.serializeToString(sym);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="800" viewBox="0 0 200 200"><defs>${defs}</defs><use href="#fr-${name}" xlink:href="#fr-${name}" width="200" height="200"/></svg>`;
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = () => resolve(null);
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
   }
+
+  function spacedText(g, text, x, y, spacing) {
+    // canvas letterSpacing is not everywhere yet, so space glyphs by hand
+    const chars = [...text];
+    const widths = chars.map(c => g.measureText(c).width);
+    const total = widths.reduce((a, b) => a + b, 0) + spacing * (chars.length - 1);
+    let cx = g.textAlign === "center" ? x - total / 2 : g.textAlign === "right" ? x - total : x;
+    const align = g.textAlign; g.textAlign = "left";
+    chars.forEach((c, i) => { g.fillText(c, cx, y); cx += widths[i] + spacing; });
+    g.textAlign = align;
+    return total;
+  }
+  function roundRect(g, x, y, w, h, r) {
+    g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  }
+  function wrapLines(g, text, maxW) {
+    const out = []; let line = "";
+    for (const w of text.split(" ")) { const t = line ? line + " " + w : w; if (g.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; }
+    if (line) out.push(line);
+    return out;
+  }
+
+  function drawLabelArt(f, imgs) {
+    const L = f.label, ink = L.ink, band = L.band;
+    const c = document.createElement("canvas"); c.width = LW; c.height = LH;
+    const m = document.createElement("canvas"); m.width = LW; m.height = LH;
+    const g = c.getContext("2d"), mg = m.getContext("2d");
+    // metal/roughness: G = roughness, B = metalness. Satin ink by default.
+    mg.fillStyle = "rgb(0, 92, 40)"; mg.fillRect(0, 0, LW, LH);
+
+    // 1. Ground: flavor gradient with a halftone that thickens towards the base
+    const grad = g.createLinearGradient(0, 0, 0, LH);
+    grad.addColorStop(0, L.top); grad.addColorStop(1, L.bot);
+    g.fillStyle = grad; g.fillRect(0, 0, LW, LH);
+    g.fillStyle = ink; g.globalAlpha = .1;
+    for (let y = LH * .5; y < BOT; y += 18) {
+      const r = Math.max(0, (y - LH * .5) / (BOT - LH * .5)) * 6.5;
+      const off = (Math.round(y / 18) % 2) * 9;
+      for (let x = off; x < LW; x += 18) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }
+    }
+    g.globalAlpha = 1;
+
+    // 2. Fruit, cropped large on the right of the front and small above it
+    const drawFruit = (im, cx, cy, size, rot) => { if (!im) return; g.save(); g.translate(cx, cy); g.rotate(rot); g.drawImage(im, -size / 2, -size / 2, size, size); g.restore(); };
+    g.save(); g.shadowColor = "rgba(0,0,0,.28)"; g.shadowBlur = 30; g.shadowOffsetY = 14;
+    drawFruit(imgs[0], FX + 520, LH * .55, 680, .35);
+    drawFruit(imgs[1], FX + 360, 255, 300, -.4);
+    drawFruit(imgs[1] || imgs[0], 2300, 1010, 220, .9);
+    g.restore();
+
+    // 3. Bands: top tagline, bottom claims
+    g.fillStyle = ink; g.fillRect(0, 0, LW, TOP); g.fillRect(0, BOT, LW, LH - BOT);
+    g.fillStyle = band; g.fillRect(0, TOP, LW, 8); g.fillRect(0, BOT - 8, LW, 8);
+    g.font = monoF(600, 26); g.textBaseline = "middle"; g.textAlign = "left";
+    for (let x = 20; x < LW; x += 560) spacedText(g, "CLEAN LIFT ✦ NO CRASH ✦", x, TOP / 2, 6);
+    g.font = disp(900, 58); g.textBaseline = "middle";
+    const claim = "160MG NATURAL CAFFEINE   ✦   0G SUGAR   ✦   10 CALORIES   ✦   ";
+    const cw = g.measureText(claim).width;
+    for (let x = -cw / 2 + 140; x < LW; x += cw) g.fillText(claim, x, BOT + (LH - BOT) / 2 + 2);
+
+    // 4. Front: identity, wordmark, flavor, net contents
+    g.textAlign = "center"; g.textBaseline = "alphabetic"; g.fillStyle = ink;
+    g.font = monoF(600, 30); spacedText(g, "NATURALLY CAFFEINATED", FX, 190, 9);
+    // wordmark sized to the front panel
+    let ws = 400; g.font = disp(900, ws);
+    const ww = g.measureText("TORQ").width; ws = Math.round(ws * Math.min(1.25, 820 / ww)); g.font = disp(900, ws);
+    const wy = 590;
+    g.lineJoin = "round";
+    g.fillStyle = ink; g.strokeStyle = ink; g.lineWidth = 22;
+    g.fillText("TORQ", FX + 14, wy + 16); g.strokeText("TORQ", FX + 14, wy + 16);   // offset shadow
+    g.strokeText("TORQ", FX, wy);
+    const sg = g.createLinearGradient(0, wy - ws * .75, 0, wy);
+    sg.addColorStop(0, "#F4F6F8"); sg.addColorStop(.55, "#C9CED4"); sg.addColorStop(1, "#E9ECEF");
+    g.fillStyle = sg; g.fillText("TORQ", FX, wy);
+    mg.textAlign = "center"; mg.font = g.font; mg.fillStyle = "rgb(0, 64, 225)"; mg.fillText("TORQ", FX, wy);  // bare aluminium
+    // flavor pill
+    g.font = disp(900, 66);
+    const name = f.name.toUpperCase(), nw = g.measureText(name).width + 80;
+    g.fillStyle = ink; roundRect(g, FX - nw / 2, 628, nw, 96, 48); g.fill();
+    g.fillStyle = band; g.textBaseline = "middle"; g.fillText(name, FX, 678);
+    g.textBaseline = "alphabetic";
+    // statement of identity + net contents in the bottom 30% of the front panel
+    g.fillStyle = ink; g.font = disp(900, 54); g.fillText("SPARKLING ENERGY DRINK", FX, 1008);
+    g.font = monoF(600, 30); spacedText(g, "12 FL OZ (355 mL)", FX, 1060, 4);
+
+    // 5. Caffeine roundel, front left
+    const rx = FX - 330, ry = 842, rr = 106;
+    g.save(); g.shadowColor = "rgba(0,0,0,.25)"; g.shadowBlur = 18; g.shadowOffsetY = 8;
+    g.fillStyle = band; g.beginPath(); g.arc(rx, ry, rr, 0, Math.PI * 2); g.fill(); g.restore();
+    g.strokeStyle = ink; g.lineWidth = 6; g.beginPath(); g.arc(rx, ry, rr, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(rx, ry, rr - 36, 0, Math.PI * 2); g.lineWidth = 3; g.stroke();
+    g.fillStyle = ink; g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.font = disp(900, 84); g.fillText("160", rx, ry + 20);
+    g.font = disp(800, 28); g.fillText("MG", rx, ry + 49);
+    g.font = monoF(600, 17);
+    const ring = "NATURAL CAFFEINE ✦ FROM GUAYUSA LEAF ✦ ";
+    const step = (Math.PI * 2) / [...ring].length;
+    [...ring].forEach((ch, i) => { g.save(); g.translate(rx, ry); g.rotate(i * step - Math.PI / 2); g.fillText(ch, 0, -(rr - 14)); g.restore(); });
+
+    // 6. Right side: what's inside + taste notes
+    const sx = 2150;
+    g.textAlign = "left"; g.fillStyle = ink;
+    g.font = disp(900, 54); g.fillText("WHAT'S INSIDE", sx, 190);
+    g.fillRect(sx, 208, 360, 5);
+    const rows = [["GUAYUSA LEAF", "120MG"], ["GREEN TEA", "40MG"], ["L-THEANINE", "100MG"], ["ELECTROLYTES", "380MG"], ["B6 + B12", "100% DV"], ["REAL FRUIT", "5%"]];
+    g.font = monoF(600, 24);
+    rows.forEach(([k, v], i) => {
+      const y = 262 + i * 46;
+      g.textAlign = "left"; g.fillText(k, sx, y);
+      g.textAlign = "right"; g.fillText(v, sx + 360, y);
+      g.globalAlpha = .35; g.fillRect(sx, y + 14, 360, 2); g.globalAlpha = 1;
+    });
+    g.textAlign = "left"; g.font = disp(900, 46); g.fillText("TASTES LIKE", sx, 600);
+    g.font = bodyF(600, 28);
+    f.notes.slice(0, 4).forEach((n, i) => g.fillText("— " + n, sx, 646 + i * 40));
+
+    // 7. Back: Nutrition Facts (black on white, as the regulation expects)
+    const nx = 92, ny = 112, nw2 = 390, nh = 880;
+    g.fillStyle = "#FFFFFF"; g.fillRect(nx, ny, nw2, nh);
+    g.strokeStyle = "#000"; g.lineWidth = 4; g.strokeRect(nx, ny, nw2, nh);
+    let y = ny + 62; const px = nx + 16, pr = nx + nw2 - 16;
+    const rule = h => { g.fillStyle = "#000"; g.fillRect(px, y, pr - px, h); y += h + 6; };
+    const row = (l, r, bold, indent, size = 23) => {
+      y += size + 4; g.fillStyle = "#000"; g.font = helv(bold ? 800 : 400, size);
+      g.textAlign = "left"; g.fillText(l, px + (indent || 0), y); if (r) { g.textAlign = "right"; g.font = helv(800, size); g.fillText(r, pr, y); }
+      y += 6; g.fillRect(px, y, pr - px, 1.5); y += 2;
+    };
+    g.fillStyle = "#000"; g.textAlign = "left"; g.font = helv(900, 45); g.fillText("Nutrition Facts", px, y); y += 14;
+    g.font = helv(400, 22); y += 26; g.fillText("1 serving per container", px, y); y += 8;
+    g.font = helv(800, 24); y += 30; g.fillText("Serving size", px, y); g.textAlign = "right"; g.fillText("1 can (355mL)", pr, y); y += 12;
+    rule(14);
+    g.textAlign = "left"; g.font = helv(800, 20); y += 20; g.fillText("Amount per serving", px, y); y += 4;
+    g.font = helv(900, 46); y += 44; g.fillText("Calories", px, y); g.textAlign = "right"; g.fillText("10", pr, y); y += 10;
+    rule(8);
+    g.font = helv(800, 20); g.textAlign = "right"; y += 20; g.fillText("% Daily Value*", pr, y); y += 6; g.fillRect(px, y, pr - px, 1.5); y += 2;
+    row("Total Fat 0g", "0%", true); row("Sodium 180mg", "8%", true); row("Total Carbohydrate 5g", "2%", true);
+    row("Total Sugars 0g", "", false, 24); row("Incl. 0g Added Sugars", "0%", false, 44);
+    row("Protein 0g", "", true);
+    rule(14);
+    row("Potassium 200mg", "4%"); row("Vitamin B6 1.7mg", "100%"); row("Vitamin B12 2.4mcg", "100%");
+    rule(8);
+    g.font = helv(400, 17); g.textAlign = "left";
+    wrapLines(g, "*The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.", pr - px).forEach(t => { y += 22; g.fillText(t, px, y); });
+
+    // 8. Left side: ingredients, caffeine statement, maker, barcode
+    const ix = 520, iw = 300;
+    g.fillStyle = ink; g.textAlign = "left";
+    g.font = disp(900, 40); g.fillText("INGREDIENTS", ix, 160);
+    g.font = bodyF(500, 22);
+    let iy = 196;
+    wrapLines(g, "Carbonated water, " + f.ingr + ", allulose, citric acid, natural caffeine (from guayusa leaf and green tea), L-theanine, sea salt, potassium citrate, natural flavors, monk fruit extract, pyridoxal-5-phosphate (vitamin B6), methylcobalamin (vitamin B12).", iw).forEach(t => { g.fillText(t, ix, iy); iy += 28; });
+    iy += 22; g.font = disp(900, 32); wrapLines(g, "CAFFEINE: 160MG PER CAN", iw).forEach(t => { g.fillText(t, ix, iy); iy += 34; });
+    g.font = bodyF(600, 21);
+    wrapLines(g, "Not recommended for children, people who are pregnant or nursing, or persons sensitive to caffeine.", iw).forEach(t => { g.fillText(t, ix, iy); iy += 26; });
+    iy += 18; g.font = monoF(600, 18);
+    ["DISTRIBUTED BY", "TORQ BEVERAGE CO.", "PORTLAND, OR"].forEach(t => { g.fillText(t, ix, iy); iy += 24; });
+    // barcode area (placeholder bars: replace with the GS1 barcode before print)
+    const bx = ix, by = 900, bw = 230, bh = 150;
+    g.fillStyle = "#FFFFFF"; roundRect(g, bx, by, bw, bh, 10); g.fill();
+    g.fillStyle = "#000";
+    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    for (let x = bx + 18; x < bx + bw - 18;) { const w = 2 + Math.floor(rnd() * 3) * 2; if (rnd() > .42) g.fillRect(x, by + 14, w, bh - 52); x += w + 2 + Math.floor(rnd() * 2) * 2; }
+    g.font = monoF(600, 15); g.textAlign = "center"; g.fillText("GS1 BARCODE HERE", bx + bw / 2, by + bh - 16);
+    // recycling mark
+    g.strokeStyle = ink; g.lineWidth = 5; g.fillStyle = ink;
+    const cx2 = ix + 268, cy2 = by + 50;
+    g.beginPath(); g.arc(cx2, cy2, 30, Math.PI * .2, Math.PI * 1.8); g.stroke();
+    g.beginPath(); g.moveTo(cx2 + 30 * Math.cos(Math.PI * 1.8) - 9, cy2 + 30 * Math.sin(Math.PI * 1.8) - 4); g.lineTo(cx2 + 30 * Math.cos(Math.PI * 1.8) + 9, cy2 + 30 * Math.sin(Math.PI * 1.8) - 12); g.lineTo(cx2 + 30 * Math.cos(Math.PI * 1.8) + 6, cy2 + 30 * Math.sin(Math.PI * 1.8) + 10); g.fill();
+    g.font = monoF(600, 14); g.textAlign = "center"; g.fillText("RECYCLE", cx2, cy2 + 56); g.fillText("ME", cx2, cy2 + 74);
+
+    // 9. Print grain
+    g.globalAlpha = .04;
+    for (let i = 0; i < 6000; i++) { g.fillStyle = i % 2 ? "#fff" : "#000"; g.fillRect(Math.random() * LW, Math.random() * LH, 2, 2); }
+    g.globalAlpha = 1;
+    return { color: c, mr: m };
+  }
+
   const labelCache = {};
-  const labelFor = f => labelCache[f.id] || (labelCache[f.id] = drawLabel(f));
+  const fruitCache = {};
+  const fruitFor = n => fruitCache[n] || (fruitCache[n] = fruitImage(n));
+  async function buildLabel(f) {
+    if (labelCache[f.id] && labelCache[f.id].full) return labelCache[f.id];
+    const art = FRUIT_ART[f.id] || f.fruits;
+    const imgs = await Promise.all(art.map(fruitFor));
+    const L = drawLabelArt(f, imgs); L.full = true;
+    return (labelCache[f.id] = L);
+  }
+  // Synchronous fallback (no fruit art yet); buildLabel replaces it once images load
+  const labelFor = f => labelCache[f.id] || (labelCache[f.id] = drawLabelArt(f, []));
 
   function envMap(renderer) {
     const pm = new THREE.PMREMGenerator(renderer);
@@ -1243,11 +1411,11 @@ legend { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; tex
     return tex;
   }
 
-  function buildCan(labelTex) {
+  function buildCan(maps) {
     const group = new THREE.Group();
     const silver = new THREE.MeshStandardMaterial({ color: 0xd9dde2, metalness: 1, roughness: .22 });
     const darkSilver = new THREE.MeshStandardMaterial({ color: 0xb8bec6, metalness: 1, roughness: .32 });
-    const label = new THREE.MeshStandardMaterial({ map: labelTex, metalness: .45, roughness: .28 });
+    const label = new THREE.MeshPhysicalMaterial({ map: maps.color, metalnessMap: maps.mr, roughnessMap: maps.mr, metalness: 1, roughness: 1, clearcoat: .55, clearcoatRoughness: .14 });
     const body = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3.2, 128, 1, true, -Math.PI, Math.PI * 2), label);
     group.add(body); group.userData.label = label;
     const top = [[1, 1.6], [.995, 1.66], [.95, 1.76], [.89, 1.86], [.885, 1.9], [.9, 1.935], [.89, 1.955], [.86, 1.95], [.845, 1.915]].map(p => new THREE.Vector2(p[0], p[1]));
@@ -1275,7 +1443,7 @@ legend { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; tex
       r.outputEncoding = THREE.sRGBEncoding; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05;
       this.scene = new THREE.Scene();
       this.scene.environment = envMap(r);
-      this.can = buildCan(this.makeTex(labelFor(flavor)));
+      this.can = buildCan(this.makeMaps(labelFor(flavor)));
       this.pivot = new THREE.Group(); this.pivot.add(this.can); this.scene.add(this.pivot);
       this.camera = new THREE.PerspectiveCamera(opts.fov || 26, 1, .1, 100);
       this.camera.position.set(0, .25, opts.dist || 11);
@@ -1297,14 +1465,14 @@ legend { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; tex
         if (opts.drag) this.bindDrag();
       }
     }
-    makeTex(canvas) {
-      const t = new THREE.CanvasTexture(canvas);
-      t.encoding = THREE.sRGBEncoding; t.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
-      return t;
+    makeMaps(L) {
+      const mk = (cv, srgb) => { const t = new THREE.CanvasTexture(cv); if (srgb) t.encoding = THREE.sRGBEncoding; t.anisotropy = this.renderer.capabilities.getMaxAnisotropy(); return t; };
+      return { color: mk(L.color, true), mr: mk(L.mr, false) };
     }
-    setLabel(canvas, spin) {
-      const m = this.can.userData.label, old = m.map;
-      m.map = this.makeTex(canvas); m.needsUpdate = true; old && old.dispose();
+    setLabel(L, spin) {
+      const m = this.can.userData.label, maps = this.makeMaps(L);
+      [m.map, m.metalnessMap].forEach(t => t && t.dispose());
+      m.map = maps.color; m.metalnessMap = m.roughnessMap = maps.mr; m.needsUpdate = true;
       if (spin && !reduced && this.target === null) this.vel = .5;
     }
     resize() {
@@ -1370,6 +1538,7 @@ legend { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; tex
         new Promise(r => setTimeout(r, 2500))
       ]);
     } catch (e) {}
+    await Promise.all(FLAVORS.map(buildLabel)).catch(() => {});
     const hero = new CanStage($("heroStage"), { drag: true, bob: true, tiltZ: -.22, dist: 12.5, yOffset: .15, minAspect: .55, spin: .005, wideX: 1.25 });
     const anat = new CanStage($("anatStage"), { tiltZ: .08, dist: 11, spin: .006, minAspect: .5 });
     stages.push(hero, anat);
