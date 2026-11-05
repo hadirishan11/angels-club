@@ -1,0 +1,42 @@
+{
+  "current": "Veloura",
+  "presets": {
+    "Veloura": {
+      "logo_width": 170,
+      "default_world": "noir",
+      "remember_world": true,
+      "noir_bg": "#0B0B0D",
+      "noir_surface": "#323438",
+      "noir_muted": "#A9AAAC",
+      "noir_accent": "#B99B6B",
+      "noir_text": "#F5F2EA",
+      "rose_berry": "#981F50",
+      "rose_vibrant": "#F05291",
+      "rose_baby": "#F3A6C5",
+      "rose_blush": "#FAD5E2",
+      "rose_ivory": "#FFF0F5",
+      "rose_gold": "#C98B7B",
+      "rose_text": "#4A0A26",
+      "use_brand_fonts": true,
+      "type_heading_font": "playfair_display_n4",
+      "type_body_font": "montserrat_n4",
+      "heading_scale": 100,
+      "heading_tracking": 14,
+      "motion_level": "full",
+      "enable_3d": true,
+      "enable_particles": true,
+      "enable_tilt": true,
+      "enable_world_transition": true,
+      "show_vendor": true,
+      "show_secondary_image": true,
+      "show_size_badge": true,
+      "card_ratio": "portrait",
+      "cart_type": "drawer",
+      "cart_note": true,
+      "free_shipping_threshold": 0,
+      "mobile_tabbar": true,
+      "sticky_atc": true,
+      "predictive_search": true
+    }
+  }
+}

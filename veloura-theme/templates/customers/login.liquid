@@ -1,0 +1,32 @@
+<section class="section section--tight account-page">
+  <div class="container account-auth">
+    <div class="card-surface account-auth__panel" id="login">
+      <h1 class="h2 text-center">{{ 'customer.login.title' | t }}</h1>
+      {%- form 'customer_login', novalidate: 'novalidate' -%}
+        {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        <div class="field"><label for="LoginEmail">{{ 'customer.login.email' | t }}</label><input class="input" type="email" id="LoginEmail" name="customer[email]" autocomplete="email" required></div>
+        {%- if form.password_needed -%}
+          <div class="field"><label for="LoginPassword">{{ 'customer.login.password' | t }}</label><input class="input" type="password" id="LoginPassword" name="customer[password]" autocomplete="current-password" required></div>
+          <p><a class="link-underline" href="#recover">{{ 'customer.login.forgot' | t }}</a></p>
+        {%- endif -%}
+        <button class="btn btn--primary btn--full" type="submit">{{ 'customer.login.submit' | t }}</button>
+        <p class="text-center" style="margin-top:18px"><a class="link-underline" href="{{ routes.account_register_url }}">{{ 'customer.login.create' | t }}</a></p>
+      {%- endform -%}
+    </div>
+    <div class="card-surface account-auth__panel" id="recover">
+      <h2 class="h3">{{ 'customer.recover.title' | t }}</h2>
+      <p class="muted">{{ 'customer.recover.text' | t }}</p>
+      {%- form 'recover_customer_password' -%}
+        {%- if form.posted_successfully? -%}<p class="form-message form-message--success" role="status">{{ 'customer.recover.success' | t }}</p>{%- endif -%}
+        {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        <div class="field"><label for="RecoverEmail">{{ 'customer.login.email' | t }}</label><input class="input" type="email" id="RecoverEmail" name="email" autocomplete="email" required></div>
+        <button class="btn btn--outline btn--full" type="submit">{{ 'customer.recover.submit' | t }}</button>
+      {%- endform -%}
+    </div>
+    {%- if shop.checkout.guest_login -%}
+      <div class="card-surface account-auth__panel">
+        {%- form 'guest_login' -%}<button class="btn btn--outline btn--full" type="submit">{{ 'customer.login.guest' | t }}</button>{%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>

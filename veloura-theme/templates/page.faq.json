@@ -1,0 +1,136 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "show_logo": true,
+        "eyebrow": "Client care",
+        "heading": "Frequently asked questions"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Are your fragrances authentic?",
+            "answer": "<p>[Describe your sourcing, e.g. 'We purchase from authorised distributors and brand-owned channels.' Only state what you can verify.]</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "What sizes are your miniatures?",
+            "answer": "<p>Each product page lists the bottle size and concentration (for example 5 ml, 7.5 ml or 10 ml) in the product details.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Are miniatures decanted or original?",
+            "answer": "<p>[Explain clearly whether products are manufacturer-made miniatures, travel sprays or decants. This must match each listing.]</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Where do you ship?",
+            "answer": "<p>We currently ship within Canada. Rates and delivery estimates are calculated at checkout. See our <a href=\"/policies/shipping-policy\">shipping policy</a>.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Why can't some fragrances ship by air?",
+            "answer": "<p>Fragrances contain alcohol and may be regulated as dangerous goods. Some orders therefore ship by ground, which can take longer to remote regions.</p>"
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>For hygiene reasons, opened fragrances may not be returnable. Please read our <a href=\"/policies/refund-policy\">refund policy</a> for full details.</p>"
+          }
+        },
+        "q7": {
+          "type": "question",
+          "settings": {
+            "question": "Can I add a gift message?",
+            "answer": "<p>Yes — open your bag and add a gift message or order note before checkout.</p>"
+          }
+        },
+        "q8": {
+          "type": "question",
+          "settings": {
+            "question": "How can I track my order?",
+            "answer": "<p>Your shipping confirmation email contains a tracking link. You can also sign in to your account to view your orders.</p>"
+          }
+        },
+        "q9": {
+          "type": "question",
+          "settings": {
+            "question": "Which payment methods do you accept?",
+            "answer": "<p>Payments are processed securely by Shopify. Available methods are shown at checkout.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8",
+        "q9"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Everything you need to know",
+        "single": true
+      }
+    },
+    "contact": {
+      "type": "rich-text",
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "Still curious?",
+            "size": "h2"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our team is happy to help you find a fragrance or answer a question about your order.</p>"
+          }
+        },
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Contact us",
+            "link": "/pages/contact",
+            "style": "btn--outline"
+          }
+        }
+      },
+      "block_order": [
+        "h",
+        "t",
+        "b"
+      ],
+      "settings": {
+        "center": true,
+        "band": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "faq",
+    "contact"
+  ]
+}

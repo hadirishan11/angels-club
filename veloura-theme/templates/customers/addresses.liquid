@@ -1,0 +1,25 @@
+<section class="section section--tight account-page">
+  <div class="container container--narrow">
+    <p><a class="link-underline" href="{{ routes.account_url }}">← {{ 'customer.account.return' | t }}</a></p>
+    <h1 class="h1">{{ 'customer.addresses.title' | t }}</h1>
+    {%- paginate customer.addresses by 10 -%}
+      {%- for address in customer.addresses -%}
+        <div class="card-surface" style="margin-bottom:18px">
+          {%- if address == customer.default_address -%}<span class="badge">{{ 'customer.addresses.default' | t }}</span>{%- endif -%}
+          {{ address | format_address }}
+          <details style="margin-top:12px"><summary class="link-underline">{{ 'customer.addresses.edit' | t }}</summary>
+            {%- form 'customer_address', address -%}{% render 'address-fields', form: form, address: address %}{%- endform -%}
+          </details>
+          <form method="post" action="{{ routes.account_addresses_url }}/{{ address.id }}" onsubmit="return confirm({{ 'customer.addresses.delete_confirm' | t | json | escape }});">
+            <input type="hidden" name="_method" value="delete">
+            <button class="btn btn--ghost link-underline" type="submit">{{ 'customer.addresses.delete' | t }}</button>
+          </form>
+        </div>
+      {%- endfor -%}
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+    <details class="card-surface"><summary class="h3" style="cursor:pointer">{{ 'customer.addresses.add' | t }}</summary>
+      {%- form 'customer_address', customer.new_address -%}{% render 'address-fields', form: form, address: customer.new_address %}{%- endform -%}
+    </details>
+  </div>
+</section>

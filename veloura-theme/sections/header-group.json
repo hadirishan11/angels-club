@@ -1,0 +1,9 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": { "type": "announcement-bar", "settings": { "text": "Iconic scents. Miniature luxury. — Shipping across Canada", "link": "" } },
+    "header": { "type": "header", "settings": { "menu": "main-menu", "show_world_switch": true, "overlay_home": true, "overlay_collections": true, "sticky": "smart" } }
+  },
+  "order": ["announcement", "header"]
+}

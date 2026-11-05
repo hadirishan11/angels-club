@@ -1,0 +1,99 @@
+{%- comment -%} Design tokens generated from theme settings. Worlds are switched with html[data-world]. {%- endcomment -%}
+{%- liquid
+  if settings.use_brand_fonts
+    assign f_head = "'Cinzel', 'Trajan Pro', Georgia, serif"
+    assign f_body = "'Montserrat', 'Helvetica Neue', Arial, sans-serif"
+  else
+    assign f_head = settings.type_heading_font.family | append: ', ' | append: settings.type_heading_font.fallback_families
+    assign f_body = settings.type_body_font.family | append: ', ' | append: settings.type_body_font.fallback_families
+  endif
+  assign tracking = settings.heading_tracking | divided_by: 100.0
+-%}
+<style>
+  {%- if settings.use_brand_fonts %}
+  @font-face { font-family: 'Cinzel'; font-style: normal; font-weight: 400 700; font-display: swap; src: url({{ 'cinzel-latin.woff2' | asset_url }}) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 300 600; font-display: swap; src: url({{ 'montserrat-latin.woff2' | asset_url }}) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-style: italic; font-weight: 400; font-display: swap; src: url({{ 'montserrat-italic-latin.woff2' | asset_url }}) format('woff2'); }
+  {%- else %}
+  {{ settings.type_heading_font | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+  {%- endif %}
+
+  :root {
+    --f-heading: {{ f_head }};
+    --f-body: {{ f_body }};
+    --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+    --heading-tracking: {{ tracking }}em;
+    --logo-width: {{ settings.logo_width }}px;
+
+    --noir-black: {{ settings.noir_bg }};
+    --noir-charcoal: {{ settings.noir_surface }};
+    --noir-silver: {{ settings.noir_muted }};
+    --noir-gold: {{ settings.noir_accent }};
+    --noir-white: {{ settings.noir_text }};
+
+    --rose-berry: {{ settings.rose_berry }};
+    --rose-vibrant: {{ settings.rose_vibrant }};
+    --rose-baby: {{ settings.rose_baby }};
+    --rose-blush: {{ settings.rose_blush }};
+    --rose-ivory: {{ settings.rose_ivory }};
+    --rose-gold: {{ settings.rose_gold }};
+    --rose-ink: {{ settings.rose_text }};
+
+    --tex-marble-noir: url({{ 'veloura-texture-marble-noir.webp' | asset_url }});
+    --tex-marble-rose: url({{ 'veloura-texture-marble-rose.webp' | asset_url }});
+    --tex-satin-rose: url({{ 'veloura-texture-satin-rose.webp' | asset_url }});
+  }
+
+  html[data-world='noir'] {
+    --c-bg: var(--noir-black);
+    --c-bg-alt: {{ settings.noir_bg | color_mix: settings.noir_surface, 70 }};
+    --c-surface: {{ settings.noir_bg | color_mix: settings.noir_surface, 55 }};
+    --c-surface-2: var(--noir-charcoal);
+    --c-text: var(--noir-white);
+    --c-text-soft: var(--noir-silver);
+    --c-heading: var(--noir-white);
+    --c-accent: var(--noir-gold);
+    --c-accent-strong: {{ settings.noir_accent | color_lighten: 12 }};
+    --c-on-accent: var(--noir-black);
+    --c-line: {{ settings.noir_accent | color_modify: 'alpha', 0.28 }};
+    --c-glow: {{ settings.noir_accent | color_modify: 'alpha', 0.35 }};
+    --c-band-bg: var(--noir-charcoal);
+    --c-band-text: var(--noir-white);
+    --c-badge: var(--noir-gold);
+    --c-focus: {{ settings.noir_accent | color_lighten: 18 }};
+    --g-metal: linear-gradient(100deg, #8f7447 0%, var(--noir-gold) 25%, #f9e1b8 50%, var(--noir-gold) 72%, #ad8153 100%);
+    --g-hero: radial-gradient(120% 90% at 70% 10%, {{ settings.noir_surface | color_modify: 'alpha', 0.55 }} 0%, transparent 55%), radial-gradient(80% 60% at 20% 100%, {{ settings.noir_accent | color_modify: 'alpha', 0.14 }} 0%, transparent 60%), var(--noir-black);
+    --g-card: linear-gradient(160deg, {{ settings.noir_surface | color_modify: 'alpha', 0.65 }} 0%, {{ settings.noir_bg | color_modify: 'alpha', 0.9 }} 100%);
+    --logo-paint: url(#vl-grad-noir);
+    --logo-solid: var(--noir-gold);
+    --shadow-card: 0 30px 60px -30px rgba(0, 0, 0, 0.85), 0 0 0 1px var(--c-line);
+    color-scheme: dark;
+  }
+
+  html[data-world='rose'] {
+    --c-bg: var(--rose-blush);
+    --c-bg-alt: {{ settings.rose_blush | color_mix: settings.rose_baby, 55 }};
+    --c-surface: var(--rose-ivory);
+    --c-surface-2: {{ settings.rose_ivory | color_mix: settings.rose_blush, 50 }};
+    --c-text: var(--rose-ink);
+    --c-text-soft: {{ settings.rose_text | color_mix: settings.rose_berry, 45 }};
+    --c-heading: var(--rose-berry);
+    --c-accent: var(--rose-berry);
+    --c-accent-strong: var(--rose-vibrant);
+    --c-on-accent: #ffffff;
+    --c-line: {{ settings.rose_berry | color_modify: 'alpha', 0.22 }};
+    --c-glow: {{ settings.rose_vibrant | color_modify: 'alpha', 0.4 }};
+    --c-band-bg: var(--rose-berry);
+    --c-band-text: var(--rose-ivory);
+    --c-badge: var(--rose-vibrant);
+    --c-focus: var(--rose-berry);
+    --g-metal: linear-gradient(100deg, var(--rose-berry) 0%, var(--rose-vibrant) 45%, var(--rose-baby) 75%, var(--rose-gold) 100%);
+    --g-hero: radial-gradient(90% 70% at 75% 15%, {{ settings.rose_ivory | color_modify: 'alpha', 0.75 }} 0%, transparent 55%), radial-gradient(70% 60% at 10% 90%, {{ settings.rose_vibrant | color_modify: 'alpha', 0.55 }} 0%, transparent 60%), linear-gradient(160deg, var(--rose-baby) 0%, var(--rose-vibrant) 100%);
+    --g-card: linear-gradient(170deg, var(--rose-ivory) 0%, {{ settings.rose_blush | color_mix: settings.rose_baby, 70 }} 100%);
+    --logo-paint: url(#vl-grad-rose);
+    --logo-solid: var(--rose-berry);
+    --shadow-card: 0 28px 50px -28px {{ settings.rose_berry | color_modify: 'alpha', 0.45 }}, 0 0 0 1px var(--c-line);
+    color-scheme: light;
+  }
+</style>

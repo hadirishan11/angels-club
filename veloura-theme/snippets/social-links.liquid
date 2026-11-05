@@ -1,0 +1,11 @@
+{%- liquid
+  assign networks = 'instagram,tiktok,facebook,pinterest,youtube' | split: ','
+-%}
+<ul class="footer__social" role="list">
+  {%- for n in networks -%}
+    {%- assign key = 'social_' | append: n -%}
+    {%- if settings[key] != blank -%}
+      <li><a class="icon-btn" href="{{ settings[key] }}" target="_blank" rel="noopener" aria-label="{% case n %}{% when 'instagram' %}{{ 'general.social.instagram' | t }}{% when 'tiktok' %}{{ 'general.social.tiktok' | t }}{% when 'facebook' %}{{ 'general.social.facebook' | t }}{% when 'pinterest' %}{{ 'general.social.pinterest' | t }}{% else %}{{ 'general.social.youtube' | t }}{% endcase %} ({{ 'accessibility.new_window' | t }})">{% render 'icon', name: n %}</a></li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

@@ -1,0 +1,18 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "brand": { "type": "brand", "settings": { "text": "<p>Iconic scents. Miniature luxury. A Canadian boutique of curated miniature designer fragrances.</p>", "contact": "<p>hello@[your-domain].ca</p>" } },
+        "shop": { "type": "menu", "settings": { "heading": "Shop", "menu": "main-menu" } },
+        "help": { "type": "menu", "settings": { "heading": "Client care", "menu": "footer" } },
+        "care": { "type": "text", "settings": { "heading": "Our promise", "text": "<p>Authentic designer fragrances, presented in miniature. Every order is packed by hand in our signature Veloura packaging.</p>" } }
+      },
+      "block_order": ["brand", "shop", "help", "care"],
+      "settings": { "show_country": true, "show_language": true, "show_payment_icons": true }
+    }
+  },
+  "order": ["footer"]
+}

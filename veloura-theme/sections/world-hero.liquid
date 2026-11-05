@@ -1,0 +1,75 @@
+{%- liquid
+  assign world = section.settings.world
+  if world == 'auto'
+    assign world_attr = 'auto'
+  else
+    assign world_attr = world
+  endif
+  assign link = section.settings.link
+  if link == blank
+    if world == 'rose'
+      assign link = settings.rose_collection.url
+    else
+      assign link = settings.noir_collection.url
+    endif
+  endif
+-%}
+<section class="world-hero world-hero--{{ world }}" style="--hero-min-h: {{ section.settings.height }}svh">
+  <div class="world-hero__bg" aria-hidden="true"></div>
+  {%- if settings.enable_particles -%}<div class="world-hero__atmo" data-atmosphere="{{ world_attr }}" aria-hidden="true"></div>{%- endif -%}
+  <div class="container world-hero__inner">
+    <div class="world-hero__content">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      {%- if section.settings.show_logo -%}
+        {%- if world == 'auto' -%}
+          {% render 'logo', variant: 'wordmark', tone: 'theme', class: 'world-hero__logo' %}
+        {%- else -%}
+          {% render 'logo', variant: 'wordmark', tone: world, class: 'world-hero__logo' %}
+        {%- endif -%}
+      {%- endif -%}
+      <h2 class="h-display world-hero__title" data-split>{{ section.settings.heading }}</h2>
+      {%- if section.settings.subtitle != blank -%}<p class="lede world-hero__sub" data-reveal>{{ section.settings.subtitle }}</p>{%- endif -%}
+      {%- if section.settings.cta != blank and link != blank -%}
+        <div data-reveal><a class="btn btn--primary" href="{{ link }}">{{ section.settings.cta }} {% render 'icon', name: 'arrow' %}</a></div>
+      {%- endif -%}
+    </div>
+
+    <div class="world-hero__stage v3d" data-reveal="scale"
+      {% if section.settings.enable_3d and section.settings.image == blank %}data-v3d="display" data-v3d-world="{{ world_attr }}"{% endif %}>
+      <div class="world-hero__podium-glow" aria-hidden="true"></div>
+      <div class="v3d__fallback world-hero__art" data-parallax="0.06">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'eager', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 55vw, 100vw', alt: section.settings.image.alt | default: section.settings.heading }}
+        {%- elsif world == 'auto' -%}
+          <img class="world-art world-art--noir" src="{{ 'veloura-display-noir.webp' | asset_url }}" width="1200" height="977" alt="" loading="eager" decoding="async">
+          <img class="world-art world-art--rose" src="{{ 'veloura-display-rose.webp' | asset_url }}" width="1200" height="983" alt="" loading="lazy" decoding="async">
+        {%- else -%}
+          <img src="{{ 'veloura-display-' | append: world | append: '.webp' | asset_url }}" width="1200" height="980" alt="" loading="eager" decoding="async">
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "World hero",
+  "class": "section-world-hero",
+  "settings": [
+    { "type": "select", "id": "world", "label": "World", "options": [ { "value": "auto", "label": "Follow shopper's choice" }, { "value": "noir", "label": "Noir" }, { "value": "rose", "label": "Rosé" } ], "default": "auto" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Veloura" },
+    { "type": "checkbox", "id": "show_logo", "label": "Show logo", "default": false },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Art of Presence" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Iconic fragrances. Bold impressions. Luxury in every detail." },
+    { "type": "text", "id": "cta", "label": "Button label", "default": "Explore Noir" },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Image (optional)", "info": "Replaces the rendered podium display." },
+    { "type": "checkbox", "id": "enable_3d", "label": "Interactive 3D podium", "default": true },
+    { "type": "range", "id": "height", "label": "Minimum height", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 85 }
+  ],
+  "presets": [
+    { "name": "World hero — Noir", "settings": { "world": "noir", "heading": "The Art of Presence", "subtitle": "Iconic fragrances. Bold impressions. Luxury in every detail.", "cta": "Explore Noir" } },
+    { "name": "World hero — Rosé", "settings": { "world": "rose", "heading": "A Little Luxury, A Lot of Love", "subtitle": "Fall in love with iconic fragrances in their most irresistible sizes.", "cta": "Explore Rosé" } }
+  ]
+}
+{% endschema %}

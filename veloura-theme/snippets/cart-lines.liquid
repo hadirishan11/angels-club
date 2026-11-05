@@ -1,0 +1,37 @@
+{%- comment -%} Shared cart line items. Params: context ('drawer' | 'page') {%- endcomment -%}
+<ul class="cart-lines" role="list">
+  {%- for item in cart.items -%}
+    <li class="cart-line" data-cart-line="{{ forloop.index }}" data-key="{{ item.key }}">
+      <a class="cart-line__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+        {%- if item.image -%}{{ item.image | image_url: width: 220 | image_tag: loading: 'lazy', alt: '' }}{%- else -%}{% render 'placeholder-bottle' %}{%- endif -%}
+      </a>
+      <div class="cart-line__info">
+        {%- if item.vendor != blank -%}<span class="card__vendor">{{ item.vendor }}</span>{%- endif -%}
+        <a class="cart-line__title" href="{{ item.url }}">{{ item.product.title }}</a>
+        {%- unless item.product.has_only_default_variant -%}<span class="muted cart-line__variant">{{ item.variant.title }}</span>{%- endunless -%}
+        {%- for p in item.properties -%}{%- assign first_char = p.first | slice: 0 -%}{%- unless first_char == '_' or p.last == blank -%}<span class="muted cart-line__variant">{{ p.first }}: {{ p.last }}</span>{%- endunless -%}{%- endfor -%}
+        {%- for d in item.line_level_discount_allocations -%}<span class="badge">{{ d.discount_application.title }} (−{{ d.amount | money }})</span>{%- endfor -%}
+        <div class="cart-line__row">
+          <div class="qty qty--small">
+            {%- if context == 'page' -%}
+              <button type="button" data-qty-btn="minus" aria-label="{{ 'products.product.decrease' | t: product: item.product.title | escape }}">{% render 'icon', name: 'minus' %}</button>
+              <label class="visually-hidden" for="Updates-{{ item.key | handle }}">{{ 'products.product.quantity' | t }}</label>
+              <input id="Updates-{{ item.key | handle }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
+              <button type="button" data-qty-btn="plus" aria-label="{{ 'products.product.increase' | t: product: item.product.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+            {%- else -%}
+              <button type="button" data-cart-qty-btn="minus" aria-label="{{ 'products.product.decrease' | t: product: item.product.title | escape }}">{% render 'icon', name: 'minus' %}</button>
+              <label class="visually-hidden" for="Drawer-qty-{{ forloop.index }}">{{ 'products.product.quantity' | t }}</label>
+              <input id="Drawer-qty-{{ forloop.index }}" type="number" value="{{ item.quantity }}" min="0" inputmode="numeric" data-cart-qty>
+              <button type="button" data-cart-qty-btn="plus" aria-label="{{ 'products.product.increase' | t: product: item.product.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+            {%- endif -%}
+          </div>
+          <div class="cart-line__price">
+            {%- if item.original_line_price > item.final_line_price -%}<s class="muted">{{ item.original_line_price | money }}</s>{%- endif -%}
+            <span>{{ item.final_line_price | money }}</span>
+          </div>
+        </div>
+        <a class="cart-line__remove link-underline" href="{{ item.url_to_remove }}" data-cart-remove aria-label="{{ 'cart.general.remove' | t: title: item.product.title | escape }}">{{ 'cart.general.remove_short' | t }}</a>
+      </div>
+    </li>
+  {%- endfor -%}
+</ul>

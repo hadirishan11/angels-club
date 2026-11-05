@@ -1,0 +1,109 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Veloura",
+    "theme_version": "1.0.0",
+    "theme_author": "Veloura",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com"
+  },
+  {
+    "name": "Brand & worlds",
+    "settings": [
+      { "type": "paragraph", "content": "VELOURA has two shopping worlds — Noir (masculine) and Rosé (feminine) — sharing one cart and checkout. The vector logo recolours automatically for each world." },
+      { "type": "image_picker", "id": "logo", "label": "Custom logo image (optional)", "info": "Leave empty to use the built-in VELOURA vector logo, which recolours per world." },
+      { "type": "range", "id": "logo_width", "label": "Header logo width", "min": 100, "max": 260, "step": 5, "unit": "px", "default": 170 },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "32 × 32px PNG. Defaults to the VELOURA monogram." },
+      { "type": "select", "id": "default_world", "label": "Default world", "options": [ { "value": "noir", "label": "Veloura Noir" }, { "value": "rose", "label": "Veloura Rosé" } ], "default": "noir" },
+      { "type": "checkbox", "id": "remember_world", "label": "Remember the shopper's chosen world", "default": true, "info": "Stored only in the shopper's browser (localStorage). Not used for tracking." },
+      { "type": "collection", "id": "noir_collection", "label": "Veloura Noir collection" },
+      { "type": "collection", "id": "rose_collection", "label": "Veloura Rosé collection" },
+      { "type": "collection", "id": "discovery_collection", "label": "Discovery sets collection" },
+      { "type": "collection", "id": "gift_collection", "label": "Gift sets collection" },
+      { "type": "paragraph", "content": "Products are shown in a world automatically when tagged \"noir\" or \"rose\", or when the metafield veloura.world is set to noir or rose." }
+    ]
+  },
+  {
+    "name": "Colours — Noir",
+    "settings": [
+      { "type": "color", "id": "noir_bg", "label": "Background (Jet Black)", "default": "#0B0B0D" },
+      { "type": "color", "id": "noir_surface", "label": "Surface (Charcoal)", "default": "#323438" },
+      { "type": "color", "id": "noir_muted", "label": "Muted text (Metallic Silver)", "default": "#A9AAAC" },
+      { "type": "color", "id": "noir_accent", "label": "Accent (Champagne Gold)", "default": "#B99B6B" },
+      { "type": "color", "id": "noir_text", "label": "Text (Soft White)", "default": "#F5F2EA" }
+    ]
+  },
+  {
+    "name": "Colours — Rosé",
+    "settings": [
+      { "type": "color", "id": "rose_berry", "label": "Deep Berry Pink", "default": "#981F50" },
+      { "type": "color", "id": "rose_vibrant", "label": "Vibrant Pink", "default": "#F05291" },
+      { "type": "color", "id": "rose_baby", "label": "Baby Pink", "default": "#F3A6C5" },
+      { "type": "color", "id": "rose_blush", "label": "Soft Blush (page background)", "default": "#FAD5E2" },
+      { "type": "color", "id": "rose_ivory", "label": "Pink Ivory (cards)", "default": "#FFF0F5" },
+      { "type": "color", "id": "rose_gold", "label": "Rose Gold (metallic details)", "default": "#C98B7B" },
+      { "type": "color", "id": "rose_text", "label": "Body text", "default": "#4A0A26", "info": "Keep dark for readable contrast on pink." }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "checkbox", "id": "use_brand_fonts", "label": "Use VELOURA brand fonts (Cinzel + Montserrat)", "default": true, "info": "Bundled with the theme (SIL Open Font License). Untick to use the font pickers below." },
+      { "type": "font_picker", "id": "type_heading_font", "label": "Heading font", "default": "playfair_display_n4" },
+      { "type": "font_picker", "id": "type_body_font", "label": "Body font", "default": "montserrat_n4" },
+      { "type": "range", "id": "heading_scale", "label": "Heading size", "min": 80, "max": 130, "step": 5, "unit": "%", "default": 100 },
+      { "type": "range", "id": "heading_tracking", "label": "Heading letter spacing", "min": 0, "max": 30, "step": 1, "unit": "%", "default": 14 }
+    ]
+  },
+  {
+    "name": "Animation & 3D",
+    "settings": [
+      { "type": "select", "id": "motion_level", "label": "Animation level", "options": [ { "value": "full", "label": "Cinematic" }, { "value": "subtle", "label": "Subtle" }, { "value": "off", "label": "Off" } ], "default": "full", "info": "Shoppers who enable 'reduce motion' on their device always get minimal motion." },
+      { "type": "checkbox", "id": "enable_3d", "label": "Enable interactive 3D (WebGL)", "default": true, "info": "Loaded lazily. Static images are always shown first and when WebGL is unavailable." },
+      { "type": "checkbox", "id": "enable_particles", "label": "Enable atmosphere (smoke / petals / sparkles)", "default": true },
+      { "type": "checkbox", "id": "enable_tilt", "label": "Enable 3D tilt on product cards", "default": true },
+      { "type": "checkbox", "id": "enable_world_transition", "label": "Cinematic world switch transition", "default": true }
+    ]
+  },
+  {
+    "name": "Products",
+    "settings": [
+      { "type": "checkbox", "id": "show_vendor", "label": "Show brand on product cards", "default": true },
+      { "type": "checkbox", "id": "show_secondary_image", "label": "Show second image on hover", "default": true },
+      { "type": "checkbox", "id": "show_size_badge", "label": "Show bottle size on cards", "default": true, "info": "Uses the metafield veloura.bottle_size." },
+      { "type": "select", "id": "card_ratio", "label": "Product image ratio", "options": [ { "value": "portrait", "label": "Portrait (4:5)" }, { "value": "square", "label": "Square" } ], "default": "portrait" }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      { "type": "select", "id": "cart_type", "label": "Cart type", "options": [ { "value": "drawer", "label": "Drawer" }, { "value": "page", "label": "Page" } ], "default": "drawer" },
+      { "type": "checkbox", "id": "cart_note", "label": "Enable gift note / order note", "default": true },
+      { "type": "number", "id": "free_shipping_threshold", "label": "Free shipping progress bar threshold (CAD)", "info": "Display only. Set to 0 to hide. Must match a free-shipping rate you configure in Settings › Shipping and delivery.", "default": 0 }
+    ]
+  },
+  {
+    "name": "Mobile",
+    "settings": [
+      { "type": "checkbox", "id": "mobile_tabbar", "label": "Show app-style bottom navigation on mobile", "default": true },
+      { "type": "checkbox", "id": "sticky_atc", "label": "Sticky add-to-cart bar on product pages (mobile)", "default": true }
+    ]
+  },
+  {
+    "name": "Search",
+    "settings": [
+      { "type": "checkbox", "id": "predictive_search", "label": "Enable predictive search", "default": true }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_instagram", "label": "Instagram URL" },
+      { "type": "text", "id": "social_tiktok", "label": "TikTok URL" },
+      { "type": "text", "id": "social_facebook", "label": "Facebook URL" },
+      { "type": "text", "id": "social_pinterest", "label": "Pinterest URL" },
+      { "type": "text", "id": "social_youtube", "label": "YouTube URL" },
+      { "type": "image_picker", "id": "share_image", "label": "Default social sharing image", "info": "1200 × 628px. Used when a page has no image of its own." }
+    ]
+  }
+]

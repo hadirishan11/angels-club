@@ -1,0 +1,57 @@
+{{ 'veloura-collection.css' | asset_url | stylesheet_tag }}
+{%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
+<section class="section section--tight search-page">
+  <div class="container">
+    <div class="section-header text-center">
+      <p class="eyebrow eyebrow--lines">{{ 'general.search.title' | t }}</p>
+      <h1 class="h1">{%- if search.performed -%}{{ 'general.search.results_for' | t: terms: search.terms }}{%- else -%}{{ 'general.search.title' | t }}{%- endif -%}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form search-page__form">
+        <label class="visually-hidden" for="SearchPageInput">{{ 'general.search.title' | t }}</label>
+        <input class="input" id="SearchPageInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button class="icon-btn" type="submit" aria-label="{{ 'general.search.submit' | t }}">{% render 'icon', name: 'search' %}</button>
+      </form>
+    </div>
+
+    {%- if search.performed -%}
+      {%- paginate search.results by 24 -%}
+        <div class="toolbar">
+          {%- if search.filters.size > 0 -%}<button class="btn btn--outline btn--small" type="button" data-open-drawer="FacetsDrawer" aria-haspopup="dialog">{{ 'collections.general.filters' | t }}</button>{%- endif -%}
+          <p class="toolbar__count muted" role="status">{{ 'general.search.results_count' | t: count: search.results_count }}</p>
+          <form class="toolbar__sort" data-auto-submit>
+            <input type="hidden" name="q" value="{{ search.terms | escape }}"><input type="hidden" name="options[prefix]" value="last">
+            {%- for f in search.filters -%}{%- for v in f.active_values -%}<input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">{%- endfor -%}{%- endfor -%}
+            <label for="SearchSort" class="visually-hidden">{{ 'collections.general.sort_by' | t }}</label>
+            <select class="select" id="SearchSort" name="sort_by">
+              {%- for option in search.sort_options -%}<option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>{%- endfor -%}
+            </select>
+          </form>
+        </div>
+        {%- if search.results_count > 0 -%}
+          <ul class="grid grid--4" role="list" data-reveal-group>
+            {%- for item in search.results -%}
+              <li>
+                {%- if item.object_type == 'product' -%}
+                  {% render 'product-card', card_product: item, index: forloop.index0 %}
+                {%- else -%}
+                  <a class="card search-card" href="{{ item.url }}" data-reveal>
+                    <span class="card__body"><span class="card__vendor">{{ item.object_type }}</span><span class="card__title">{{ item.title }}</span><span class="muted">{{ item.content | strip_html | truncatewords: 18 }}</span></span>
+                  </a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {%- else -%}
+          <div class="empty-state">{% render 'icon', name: 'search' %}<p class="lede" style="margin-inline:auto">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+            <a class="btn btn--primary" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a></div>
+        {%- endif -%}
+      {%- endpaginate -%}
+      {% render 'facets-drawer', results: search, sort_by: sort_by, terms: search.terms %}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Search results", "class": "section-main-search", "settings": [] }
+{% endschema %}

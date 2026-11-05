@@ -1,0 +1,52 @@
+{%- liquid
+  assign c = section.settings.collection
+  assign limit = section.settings.limit
+-%}
+<section class="section featured-products">
+  <div class="container">
+    <div class="section-header section-header--split">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h1" data-split style="margin:0">{{ section.settings.heading }}</h2>
+      </div>
+      <div class="carousel__controls">
+        {%- if c != blank -%}<a class="btn btn--ghost link-underline" href="{{ c.url }}">{{ 'general.view_all' | t }}</a>{%- endif -%}
+        <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">{% render 'icon', name: 'arrow' %}</button>
+        <button class="carousel__btn" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">{% render 'icon', name: 'arrow' %}</button>
+      </div>
+    </div>
+    <div class="carousel" data-carousel>
+      <ul class="carousel__track" role="list" data-reveal-group>
+        {%- if c != blank and c.products_count > 0 -%}
+          {%- for product in c.products limit: limit -%}
+            <li>{% render 'product-card', card_product: product, index: forloop.index0 %}</li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <li>
+              <article class="card" data-reveal>
+                <div class="card__media">{% render 'placeholder-bottle', shape: 'square' %}</div>
+                <div class="card__body"><span class="card__vendor">Brand</span><h3 class="card__title">Example fragrance</h3><div class="card__meta"><span class="price">{{ 3500 | money }}</span><span class="card__size">10 ml</span></div></div>
+              </article>
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+      <div class="carousel__progress" aria-hidden="true"><span></span></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Best sellers carousel",
+  "class": "section-featured-products",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Most loved" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best sellers" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Tip: create a 'Best sellers' collection sorted by Best selling so it reflects real sales." },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 4, "max": 16, "step": 1, "default": 10 }
+  ],
+  "presets": [{ "name": "Best sellers carousel" }]
+}
+{% endschema %}

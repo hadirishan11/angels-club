@@ -1,0 +1,46 @@
+<dialog class="drawer cart-drawer" id="CartDrawer" aria-label="{{ 'cart.general.title' | t }}">
+  <div class="drawer__panel" data-cart-drawer-inner>
+    <div class="drawer__head">
+      <h2>{{ 'cart.general.title' | t }}{% if cart.item_count > 0 %} <span class="muted">({{ cart.item_count }})</span>{% endif %}</h2>
+      <button class="icon-btn drawer__close" type="button" data-close-drawer aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    {%- if cart.item_count > 0 -%}
+      <div class="drawer__body">
+        {% render 'free-shipping' %}
+        {% render 'cart-lines', context: 'drawer' %}
+        {%- if settings.cart_note -%}
+          <details class="cart-note">
+            <summary>{% render 'icon', name: 'gift' %} {{ 'cart.general.note' | t }}</summary>
+            <label class="visually-hidden" for="CartDrawerNote">{{ 'cart.general.note' | t }}</label>
+            <textarea class="textarea" id="CartDrawerNote" name="note" data-cart-note maxlength="500">{{ cart.note }}</textarea>
+          </details>
+        {%- endif -%}
+      </div>
+      <div class="drawer__foot">
+        {%- for d in cart.cart_level_discount_applications -%}
+          <p class="cart-total__row"><span>{{ 'cart.general.discount' | t }}: {{ d.title }}</span><span>−{{ d.total_allocated_amount | money }}</span></p>
+        {%- endfor -%}
+        <p class="cart-total__row cart-total__row--main"><span>{{ 'cart.general.subtotal' | t }}</span><span>{{ cart.total_price | money_with_currency }}</span></p>
+        <p class="muted cart-total__note">{{ 'cart.general.taxes_and_shipping' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post">
+          <button class="btn btn--primary btn--full" type="submit" name="checkout">{% render 'icon', name: 'lock' %} {{ 'cart.general.checkout' | t }}</button>
+        </form>
+        {%- if additional_checkout_buttons -%}<div class="cart-drawer__express">{{ content_for_additional_checkout_buttons }}</div>{%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="drawer__body empty-state cart-drawer__empty">
+        {% render 'icon', name: 'bag' %}
+        <p class="h3">{{ 'cart.general.empty' | t }}</p>
+        <p class="muted">{{ 'cart.general.empty_text' | t }}</p>
+        <div class="cart-drawer__worlds">
+          <a class="btn btn--primary" href="{{ settings.noir_collection.url | default: routes.all_products_collection_url }}" data-world-link="noir">{{ 'general.world.noir_full' | t }}</a>
+          <a class="btn btn--outline" href="{{ settings.rose_collection.url | default: routes.all_products_collection_url }}" data-world-link="rose">{{ 'general.world.rose_full' | t }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</dialog>
+
+{% schema %}
+{ "name": "Cart drawer", "class": "section-cart-drawer", "settings": [] }
+{% endschema %}

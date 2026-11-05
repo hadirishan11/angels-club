@@ -1,0 +1,60 @@
+{%- comment -%}
+  Product card with 3D tilt, glossy sheen, secondary image and quick add.
+  Params: card_product, index, section_id, sizes
+{%- endcomment -%}
+{%- liquid
+  assign p = card_product
+  assign ratio_class = ''
+  if settings.card_ratio == 'square'
+    assign ratio_class = ' card--square'
+  endif
+  assign size = p.metafields.veloura.bottle_size.value | default: p.metafields.veloura.bottle_size
+  assign variant = p.selected_or_first_available_variant
+  assign ptags = p.tags | join: ',' | downcase
+  assign shape = 'square'
+  if ptags contains 'rose'
+    assign shape = 'faceted'
+  endif
+  assign shape = p.metafields.veloura.bottle_shape.value | default: shape
+  assign img_sizes = sizes | default: '(min-width: 1100px) 22vw, (min-width: 750px) 30vw, 60vw'
+-%}
+<article class="card{{ ratio_class }}" data-tilt data-reveal style="--reveal-i: {{ index | default: 0 | modulo: 8 }}">
+  <div class="card__media">
+    {%- if p.featured_media -%}
+      {{ p.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 750, 900', sizes: img_sizes, class: 'card__img card__img--1', alt: p.featured_media.alt | default: p.title, data-fly-source: '' }}
+      {%- if settings.show_secondary_image and p.media.size > 1 -%}
+        {{ p.media[1] | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 750, 900', sizes: img_sizes, class: 'card__img card__img--2', alt: '' }}
+      {%- endif -%}
+    {%- else -%}
+      {% render 'placeholder-bottle', shape: shape, label: p.title %}
+    {%- endif -%}
+    <div class="card__badges">
+      {%- if p.available == false -%}
+        <span class="badge badge--muted">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif p.compare_at_price > p.price -%}
+        <span class="badge">{{ 'products.product.sale' | t }}</span>
+      {%- endif -%}
+    </div>
+    {%- if p.available -%}
+      <div class="card__quick">
+        {%- if p.has_only_default_variant -%}
+          {%- form 'product', p, data-product-form: '', data-no-drawer: '', class: 'card__form' -%}
+            <input type="hidden" name="id" value="{{ variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="quick-add" aria-label="{{ 'products.product.quick_add' | t: title: p.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+          {%- endform -%}
+        {%- else -%}
+          <a class="quick-add" href="{{ p.url }}" aria-label="{{ 'products.product.choose_options' | t }}: {{ p.title | escape }}">{% render 'icon', name: 'arrow' %}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+  <div class="card__body">
+    {%- if settings.show_vendor and p.vendor != blank -%}<span class="card__vendor">{{ p.vendor }}</span>{%- endif -%}
+    <h3 class="card__title"><a href="{{ p.url }}">{{ p.title }}</a></h3>
+    <div class="card__meta">
+      {% render 'price', product: p, show_from: true %}
+      {%- if settings.show_size_badge and size != blank -%}<span class="card__size">{{ size }}</span>{%- endif -%}
+    </div>
+  </div>
+</article>

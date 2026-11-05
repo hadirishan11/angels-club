@@ -1,0 +1,56 @@
+<section class="section miniature">
+  <div class="container miniature__grid">
+    <div class="miniature__visual" data-reveal="left">
+      <div class="miniature__frame">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '400, 700, 1000, 1200', sizes: '(min-width: 990px) 45vw, 92vw', alt: section.settings.image.alt | default: section.settings.heading, data-parallax: '0.08' }}
+        {%- else -%}
+          <img class="world-art world-art--noir" src="{{ 'veloura-scale-noir.webp' | asset_url }}" width="1000" height="793" alt="{{ section.settings.art_alt | escape }}" loading="lazy" decoding="async" data-parallax="0.08">
+          <img class="world-art world-art--rose" src="{{ 'veloura-scale-rose.webp' | asset_url }}" width="1000" height="795" alt="{{ section.settings.art_alt | escape }}" loading="lazy" decoding="async" data-parallax="0.08">
+        {%- endif -%}
+      </div>
+      {%- if section.settings.badge != blank -%}<span class="miniature__badge">{{ section.settings.badge }}</span>{%- endif -%}
+    </div>
+    <div class="miniature__text">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1" data-split>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}<div class="lede rte" data-reveal>{{ section.settings.text }}</div>{%- endif -%}
+      <ol class="reasons" role="list" data-reveal-group>
+        {%- for block in section.blocks -%}
+          <li class="reason" data-reveal {{ block.shopify_attributes }}>
+            <span class="reason__num" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            <div><h3 class="reason__title">{{ block.settings.title }}</h3><p class="muted">{{ block.settings.text }}</p></div>
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Miniature luxury",
+  "class": "section-miniature",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Miniature luxury" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why discover in miniature" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "image_picker", "id": "image", "label": "Image (optional)" },
+    { "type": "text", "id": "art_alt", "label": "Built-in image alt text", "default": "A full-size bottle beside its miniature edition" },
+    { "type": "text", "id": "badge", "label": "Badge", "default": "Mini format" }
+  ],
+  "blocks": [
+    { "type": "reason", "name": "Reason", "settings": [
+      { "type": "text", "id": "title", "label": "Title", "default": "Try before you commit" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Live with a fragrance for days, not seconds on a paper strip." }
+    ] }
+  ],
+  "max_blocks": 5,
+  "presets": [{ "name": "Miniature luxury", "blocks": [
+    { "type": "reason", "settings": { "title": "Try before you commit", "text": "Live with a fragrance for days, not seconds on a paper strip." } },
+    { "type": "reason", "settings": { "title": "A wardrobe of scents", "text": "Change your fragrance with your mood, the season or the occasion." } },
+    { "type": "reason", "settings": { "title": "Made to travel", "text": "Pocket- and purse-sized bottles that go wherever you do." } },
+    { "type": "reason", "settings": { "title": "The perfect gift", "text": "Iconic names at a thoughtful size, beautifully presented." } }
+  ] }]
+}
+{% endschema %}

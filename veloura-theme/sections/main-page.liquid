@@ -1,0 +1,13 @@
+<section class="section section--tight main-page">
+  <div class="container container--narrow">
+    <div class="section-header text-center">
+      <p class="eyebrow eyebrow--lines">{{ shop.name }}</p>
+      <h1 class="h1" data-split>{{ page.title }}</h1>
+    </div>
+    <div class="rte" style="margin-inline:auto" data-reveal>{{ page.content }}</div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Page content", "class": "section-main-page", "settings": [] }
+{% endschema %}

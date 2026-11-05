@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "hero": {
+      "type": "world-hero",
+      "settings": {
+        "world": "rose",
+        "eyebrow": "Veloura Rosé",
+        "show_logo": false,
+        "heading": "A Little Luxury, A Lot of Love",
+        "subtitle": "Fall in love with iconic fragrances in their most irresistible sizes.",
+        "cta": "",
+        "enable_3d": true,
+        "height": 80
+      }
+    },
+    "grid": {
+      "type": "main-collection",
+      "settings": {
+        "per_page": 24
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "grid"
+  ]
+}

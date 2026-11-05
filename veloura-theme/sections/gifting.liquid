@@ -1,0 +1,72 @@
+<section class="section gifting">
+  <div class="container">
+    <div class="section-header text-center">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow eyebrow--lines" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1" data-split>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}<div class="lede rte" data-reveal>{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    <div class="gifting__stage" data-reveal-group>
+      <figure class="gift gift--noir" data-reveal="left" data-tilt>
+        <div class="gift__img">
+          {%- if section.settings.noir_image != blank -%}
+            {{ section.settings.noir_image | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '400, 700, 1100', sizes: '(min-width: 750px) 45vw, 92vw', alt: section.settings.noir_image.alt | default: section.settings.noir_caption }}
+          {%- else -%}
+            <img src="{{ 'veloura-gift-noir.webp' | asset_url }}" width="1100" height="783" alt="{{ section.settings.noir_caption | escape }}" loading="lazy" decoding="async">
+          {%- endif -%}
+        </div>
+        <figcaption>{{ section.settings.noir_caption }}</figcaption>
+      </figure>
+      <figure class="gift gift--rose" data-reveal="right" data-tilt>
+        <div class="gift__img">
+          {%- if section.settings.rose_image != blank -%}
+            {{ section.settings.rose_image | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '400, 700, 1100', sizes: '(min-width: 750px) 45vw, 92vw', alt: section.settings.rose_image.alt | default: section.settings.rose_caption }}
+          {%- else -%}
+            <img src="{{ 'veloura-gift-rose.webp' | asset_url }}" width="1100" height="786" alt="{{ section.settings.rose_caption | escape }}" loading="lazy" decoding="async">
+          {%- endif -%}
+        </div>
+        <figcaption>{{ section.settings.rose_caption }}</figcaption>
+      </figure>
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <ul class="gifting__features" role="list" data-reveal-group>
+        {%- for block in section.blocks -%}
+          <li data-reveal {{ block.shopify_attributes }}>{% render 'icon', name: block.settings.icon %}<span><strong>{{ block.settings.title }}</strong><br><span class="muted">{{ block.settings.text }}</span></span></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if section.settings.cta != blank -%}
+      <div class="text-center" style="margin-top:40px" data-reveal><a class="btn btn--primary" href="{{ section.settings.link | default: settings.gift_collection.url | default: routes.all_products_collection_url }}">{{ section.settings.cta }} {% render 'icon', name: 'gift' %}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Gifting experience",
+  "class": "section-gifting",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The gifting experience" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Unboxing, perfected" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Every Veloura order arrives in our signature packaging — black and champagne gold for Noir, blush and rose for Rosé.</p>" },
+    { "type": "image_picker", "id": "noir_image", "label": "Noir packaging photo", "info": "Replace the rendered illustration with photography of your real packaging." },
+    { "type": "text", "id": "noir_caption", "label": "Noir caption", "default": "Veloura Noir gift box" },
+    { "type": "image_picker", "id": "rose_image", "label": "Rosé packaging photo" },
+    { "type": "text", "id": "rose_caption", "label": "Rosé caption", "default": "Veloura Rosé gift box" },
+    { "type": "text", "id": "cta", "label": "Button label", "default": "Shop gift sets" },
+    { "type": "url", "id": "link", "label": "Button link" }
+  ],
+  "blocks": [
+    { "type": "feature", "name": "Feature", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "options": [ { "value": "gift", "label": "Gift" }, { "value": "sparkle", "label": "Sparkle" }, { "value": "truck", "label": "Delivery" }, { "value": "bottle", "label": "Bottle" } ], "default": "gift" },
+      { "type": "text", "id": "title", "label": "Title", "default": "Signature packaging" },
+      { "type": "text", "id": "text", "label": "Text", "default": "Presented in a Veloura box." }
+    ] }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "Gifting experience", "blocks": [
+    { "type": "feature", "settings": { "icon": "gift", "title": "Signature packaging", "text": "Every order is presented in a Veloura box." } },
+    { "type": "feature", "settings": { "icon": "sparkle", "title": "Gift message", "text": "Add a personal note at checkout." } },
+    { "type": "feature", "settings": { "icon": "truck", "title": "Shipped across Canada", "text": "See our shipping information for details." } }
+  ] }]
+}
+{% endschema %}

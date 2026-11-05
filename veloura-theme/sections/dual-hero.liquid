@@ -1,0 +1,86 @@
+{%- liquid
+  assign noir_url = section.settings.noir_link | default: settings.noir_collection.url | default: routes.all_products_collection_url
+  assign rose_url = section.settings.rose_link | default: settings.rose_collection.url | default: routes.all_products_collection_url
+-%}
+<section class="dual-hero" data-dual-hero aria-label="{{ section.settings.tagline | escape }}" style="--dual-min-h: {{ section.settings.height }}svh">
+  <div class="dual-hero__brand">
+    {% render 'logo', variant: 'full', tone: 'signature', class: 'vl-logo--animated dual-hero__logo' %}
+    {%- if section.settings.tagline != blank -%}<p class="dual-hero__tagline">{{ section.settings.tagline }}</p>{%- endif -%}
+  </div>
+
+  {%- for w in (1..2) -%}
+    {%- liquid
+      if w == 1
+        assign world = 'noir'
+        assign url = noir_url
+        assign img = section.settings.noir_image
+        assign fallback = 'veloura-display-noir.webp'
+        assign heading = section.settings.noir_heading
+        assign sub = section.settings.noir_subtitle
+        assign cta = section.settings.noir_cta
+        assign name = 'NOIR'
+        assign tag_key = 'general.world.noir_tagline'
+      else
+        assign world = 'rose'
+        assign url = rose_url
+        assign img = section.settings.rose_image
+        assign fallback = 'veloura-display-rose.webp'
+        assign heading = section.settings.rose_heading
+        assign sub = section.settings.rose_subtitle
+        assign cta = section.settings.rose_cta
+        assign name = 'ROSÉ'
+        assign tag_key = 'general.world.rose_tagline'
+      endif
+    -%}
+    <div class="dual-panel dual-panel--{{ world }}" data-dual-panel="{{ world }}">
+      <div class="dual-panel__bg" aria-hidden="true"></div>
+      <div class="dual-panel__glow" aria-hidden="true"></div>
+      {%- if settings.enable_particles -%}<div class="dual-panel__atmo" data-atmosphere="{{ world }}" aria-hidden="true"></div>{%- endif -%}
+
+      <div class="dual-panel__display v3d"{% if section.settings.live_3d and img == blank %} data-v3d="display" data-v3d-world="{{ world }}" data-v3d-interactive="false" data-v3d-min-width="990"{% endif %}>
+        <div class="v3d__fallback dual-panel__art">
+          {%- if img != blank -%}
+            {{ img | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: img.alt | default: heading }}
+          {%- else -%}
+            <img src="{{ fallback | asset_url }}" width="1200" height="980" alt="" loading="eager" fetchpriority="high" decoding="async">
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="dual-panel__content">
+        <p class="dual-panel__world"><span class="dual-panel__veloura">VELOURA</span> <span class="dual-panel__name">{{ name }}</span></p>
+        <p class="dual-panel__sub-eyebrow">{{ tag_key | t }}</p>
+        <h2 class="dual-panel__heading">{{ heading }}</h2>
+        {%- if sub != blank -%}<p class="dual-panel__text">{{ sub }}</p>{%- endif -%}
+        <a class="btn btn--primary dual-panel__cta dual-panel__cta--{{ world }}" href="{{ url }}" data-enter-world="{{ world }}">
+          {{ cta }} {% render 'icon', name: 'arrow' %}
+        </a>
+      </div>
+    </div>
+  {%- endfor -%}
+</section>
+
+{% schema %}
+{
+  "name": "Dual-world hero",
+  "class": "section-dual-hero",
+  "settings": [
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Iconic Scents. Miniature Luxury." },
+    { "type": "range", "id": "height", "label": "Height", "min": 70, "max": 100, "step": 5, "unit": "vh", "default": 100 },
+    { "type": "checkbox", "id": "live_3d", "label": "Live 3D displays on desktop", "default": true, "info": "Uses WebGL on large screens. Phones and unsupported browsers show the rendered images." },
+    { "type": "header", "content": "Veloura Noir" },
+    { "type": "text", "id": "noir_heading", "label": "Heading", "default": "The Art of Presence" },
+    { "type": "text", "id": "noir_subtitle", "label": "Subtitle", "default": "Iconic fragrances. Bold impressions. Luxury in every detail." },
+    { "type": "text", "id": "noir_cta", "label": "Button label", "default": "Explore Noir" },
+    { "type": "url", "id": "noir_link", "label": "Link", "info": "Defaults to the Noir collection in Theme settings." },
+    { "type": "image_picker", "id": "noir_image", "label": "Display image (optional)", "info": "Replaces the built-in rendered display. Transparent PNG/WebP works best." },
+    { "type": "header", "content": "Veloura Rosé" },
+    { "type": "text", "id": "rose_heading", "label": "Heading", "default": "A Little Luxury, A Lot of Love" },
+    { "type": "text", "id": "rose_subtitle", "label": "Subtitle", "default": "Fall in love with iconic fragrances in their most irresistible sizes." },
+    { "type": "text", "id": "rose_cta", "label": "Button label", "default": "Explore Rosé" },
+    { "type": "url", "id": "rose_link", "label": "Link", "info": "Defaults to the Rosé collection in Theme settings." },
+    { "type": "image_picker", "id": "rose_image", "label": "Display image (optional)" }
+  ],
+  "presets": [{ "name": "Dual-world hero" }]
+}
+{% endschema %}

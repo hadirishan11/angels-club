@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "show_logo": true,
+        "eyebrow": "Client care",
+        "heading": "Contact us"
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "eyebrow": "Write to us",
+        "heading": "We'd love to hear from you",
+        "text": "<p>Questions about a fragrance, an order or a gift? Write to us and our team will reply within [X] business days.</p><p>Email: hello@[your-domain].ca<br>[Business address, if you wish to display one]</p>"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "form"
+  ]
+}

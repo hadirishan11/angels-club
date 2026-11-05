@@ -1,0 +1,36 @@
+<section class="section image-text">
+  <div class="container image-text__grid{% if section.settings.reverse %} image-text__grid--reverse{% endif %}">
+    <div class="image-text__media" data-reveal="{% if section.settings.reverse %}right{% else %}left{% endif %}">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '400, 700, 1000, 1400', sizes: '(min-width: 990px) 50vw, 92vw', alt: section.settings.image.alt | default: section.settings.heading }}
+      {%- else -%}
+        <img class="world-art world-art--noir" src="{{ section.settings.builtin | append: '-noir.webp' | asset_url }}" alt="" loading="lazy" decoding="async" width="1100" height="800">
+        <img class="world-art world-art--rose" src="{{ section.settings.builtin | append: '-rose.webp' | asset_url }}" alt="" loading="lazy" decoding="async" width="1100" height="800">
+      {%- endif -%}
+    </div>
+    <div class="image-text__text">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1" data-split>{{ section.settings.heading }}</h2>
+      <div class="rte lede" data-reveal>{{ section.settings.text }}</div>
+      {%- if section.settings.cta != blank -%}<a class="btn btn--outline" href="{{ section.settings.link }}" data-reveal>{{ section.settings.cta }} {% render 'icon', name: 'arrow' %}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "class": "section-image-text",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "builtin", "label": "Built-in artwork (when no image)", "options": [ { "value": "veloura-scale", "label": "Mini vs full size" }, { "value": "veloura-gift", "label": "Gift box" }, { "value": "veloura-discovery", "label": "Discovery case" }, { "value": "veloura-display", "label": "Podium display" } ], "default": "veloura-display" },
+    { "type": "checkbox", "id": "reverse", "label": "Image on right", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our story" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Image with text" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Pair text with an image to tell your story.</p>" },
+    { "type": "text", "id": "cta", "label": "Button label" },
+    { "type": "url", "id": "link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Image with text" }]
+}
+{% endschema %}

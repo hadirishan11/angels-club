@@ -1,0 +1,38 @@
+<section class="section section--tight cart-page" data-cart-section="{{ section.id }}">
+  <div class="container">
+    <div class="section-header text-center"><p class="eyebrow eyebrow--lines">{{ shop.name }}</p><h1 class="h1">{{ 'cart.general.title' | t }}</h1></div>
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart-page__grid" data-cart-page-form>
+        <div class="cart-page__lines">
+          {% render 'free-shipping' %}
+          {% render 'cart-lines', context: 'page' %}
+          <noscript><button class="btn btn--outline btn--small" type="submit" name="update">{{ 'cart.general.update' | t }}</button></noscript>
+        </div>
+        <aside class="cart-page__summary card-surface">
+          {%- if settings.cart_note -%}
+            <div class="field"><label for="CartNote">{{ 'cart.general.note' | t }}</label><textarea class="textarea" id="CartNote" name="note" maxlength="500">{{ cart.note }}</textarea></div>
+          {%- endif -%}
+          {%- for d in cart.cart_level_discount_applications -%}
+            <p class="cart-total__row"><span>{{ 'cart.general.discount' | t }}: {{ d.title }}</span><span>−{{ d.total_allocated_amount | money }}</span></p>
+          {%- endfor -%}
+          <p class="cart-total__row cart-total__row--main"><span>{{ 'cart.general.subtotal' | t }}</span><span>{{ cart.total_price | money_with_currency }}</span></p>
+          <p class="muted cart-total__note">{{ 'cart.general.taxes_and_shipping' | t }}</p>
+          <button class="btn btn--primary btn--full" type="submit" name="checkout">{% render 'icon', name: 'lock' %} {{ 'cart.general.checkout' | t }}</button>
+          {%- if additional_checkout_buttons -%}<div class="cart-drawer__express">{{ content_for_additional_checkout_buttons }}</div>{%- endif -%}
+          <p class="muted" style="font-size:.78rem;margin-top:14px">{{ 'cart.general.secure' | t }}</p>
+        </aside>
+      </form>
+    {%- else -%}
+      <div class="empty-state">
+        {% render 'icon', name: 'bag' %}
+        <p class="h3">{{ 'cart.general.empty' | t }}</p>
+        <p class="lede" style="margin-inline:auto">{{ 'cart.general.empty_text' | t }}</p>
+        <a class="btn btn--primary" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Cart", "class": "section-main-cart", "settings": [] }
+{% endschema %}

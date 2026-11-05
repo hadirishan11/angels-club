@@ -1,0 +1,13 @@
+<section class="section section--tight account-page">
+  <div class="container account-auth"><div class="card-surface account-auth__panel">
+    <h1 class="h2 text-center">{{ 'customer.activate.title' | t }}</h1>
+    <p class="muted text-center">{{ 'customer.activate.text' | t }}</p>
+    {%- form 'activate_customer_password' -%}
+      {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="field"><label for="ActPass">{{ 'customer.activate.password' | t }}</label><input class="input" type="password" id="ActPass" name="customer[password]" autocomplete="new-password"></div>
+      <div class="field"><label for="ActConfirm">{{ 'customer.activate.confirm' | t }}</label><input class="input" type="password" id="ActConfirm" name="customer[password_confirmation]" autocomplete="new-password"></div>
+      <button class="btn btn--primary btn--full" type="submit">{{ 'customer.activate.submit' | t }}</button>
+      <button class="btn btn--ghost btn--full" type="submit" name="decline">{{ 'customer.activate.decline' | t }}</button>
+    {%- endform -%}
+  </div></div>
+</section>

@@ -1,0 +1,36 @@
+<section class="section section--tight order-tracking">
+  <div class="container order-tracking__grid">
+    {%- for block in section.blocks -%}
+      <div class="order-step card-surface" data-reveal {{ block.shopify_attributes }}>
+        <span class="order-step__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+        <h2 class="h3">{{ block.settings.title }}</h2>
+        <div class="rte muted">{{ block.settings.text }}</div>
+        {%- if block.settings.button_type == 'account' and shop.customer_accounts_enabled -%}
+          <a class="btn btn--primary btn--small" href="{{ routes.account_url }}">{{ block.settings.button_label }}</a>
+        {%- elsif block.settings.button_type == 'contact' -%}
+          <a class="btn btn--outline btn--small" href="{{ block.settings.link | default: '/pages/contact' }}">{{ block.settings.button_label }}</a>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Order tracking",
+  "class": "section-order-tracking",
+  "settings": [
+    { "type": "paragraph", "content": "Shopify sends every customer an order status link by email. Signed-in customers can also see orders in their account. A tracking-number lookup without signing in requires a third-party app." }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title", "default": "Check your email" },
+      { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Your order confirmation and shipping confirmation emails contain a link to your live order status page.</p>" },
+      { "type": "select", "id": "button_type", "label": "Button", "options": [ { "value": "none", "label": "None" }, { "value": "account", "label": "Customer account" }, { "value": "contact", "label": "Contact page" } ], "default": "none" },
+      { "type": "text", "id": "button_label", "label": "Button label", "default": "Sign in to your account" },
+      { "type": "url", "id": "link", "label": "Contact link" }
+    ] }
+  ],
+  "presets": [{ "name": "Order tracking" }]
+}
+{% endschema %}

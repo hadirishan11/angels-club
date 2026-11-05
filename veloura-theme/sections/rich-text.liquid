@@ -1,0 +1,37 @@
+<section class="section{% if section.settings.band %} section--band{% endif %} rich-text">
+  <div class="container container--narrow{% if section.settings.center %} text-center{% endif %}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'eyebrow' -%}<p class="eyebrow{% if section.settings.center %} eyebrow--lines{% endif %}" data-reveal {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {%- when 'heading' -%}<h2 class="{{ block.settings.size }}" data-split {{ block.shopify_attributes }}>{{ block.settings.heading }}</h2>
+        {%- when 'text' -%}<div class="rte lede" data-reveal {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- when 'button' -%}<div data-reveal {{ block.shopify_attributes }} style="margin-top:24px"><a class="btn {{ block.settings.style }}" href="{{ block.settings.link }}">{{ block.settings.label }}</a></div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "class": "section-rich-text",
+  "settings": [
+    { "type": "checkbox", "id": "center", "label": "Centre content", "default": true },
+    { "type": "checkbox", "id": "band", "label": "Accent background band", "default": false }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Eyebrow", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Veloura" }] },
+    { "type": "heading", "name": "Heading", "settings": [
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Talk about your brand" },
+      { "type": "select", "id": "size", "label": "Size", "options": [ { "value": "h2", "label": "Medium" }, { "value": "h1", "label": "Large" }, { "value": "h-display", "label": "Display" } ], "default": "h1" }
+    ] },
+    { "type": "text", "name": "Text", "settings": [{ "type": "richtext", "id": "text", "label": "Text", "default": "<p>Share information about your brand with your customers.</p>" }] },
+    { "type": "button", "name": "Button", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Explore" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "style", "label": "Style", "options": [ { "value": "btn--primary", "label": "Primary" }, { "value": "btn--outline", "label": "Outline" } ], "default": "btn--primary" }
+    ] }
+  ],
+  "presets": [{ "name": "Rich text", "blocks": [{ "type": "eyebrow" }, { "type": "heading" }, { "type": "text" }] }]
+}
+{% endschema %}

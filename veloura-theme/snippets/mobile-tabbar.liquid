@@ -1,0 +1,10 @@
+<nav class="tabbar" aria-label="{{ 'general.header.menu' | t }}">
+  <a href="{{ routes.root_url }}"{% if request.page_type == 'index' %} aria-current="page"{% endif %}>{% render 'icon', name: 'home' %}{{ 'general.header.home' | t }}</a>
+  <a href="{{ settings.noir_collection.url | default: routes.all_products_collection_url }}" data-world-link="noir"><span class="tabbar__dot tabbar__dot--noir" aria-hidden="true"></span>{{ 'general.world.noir_name' | t }}</a>
+  <a href="{{ settings.rose_collection.url | default: routes.all_products_collection_url }}" data-world-link="rose"><span class="tabbar__dot tabbar__dot--rose" aria-hidden="true"></span>{{ 'general.world.rose_name' | t }}</a>
+  <button type="button" data-open-drawer="SearchDrawer" aria-haspopup="dialog">{% render 'icon', name: 'search' %}{{ 'general.header.search' | t }}</button>
+  <a href="{{ routes.cart_url }}" data-open-drawer="CartDrawer" data-cart-icon aria-haspopup="dialog">
+    {% render 'icon', name: 'bag' %}{{ 'general.header.cart' | t }}
+    <span class="cart-count" data-cart-count data-count="{{ cart.item_count }}" aria-hidden="true">{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span>
+  </a>
+</nav>

@@ -1,0 +1,18 @@
+<article class="section section--tight">
+  <div class="container container--narrow">
+    <header class="section-header text-center">
+      <p class="eyebrow eyebrow--lines">{{ article.published_at | time_tag: format: 'date' }}</p>
+      <h1 class="h1" data-split>{{ article.title }}</h1>
+    </header>
+    {%- if article.image -%}<div class="article__image">{{ article.image | image_url: width: 1600 | image_tag: loading: 'eager', widths: '600, 1000, 1600', sizes: '(min-width: 900px) 880px, 100vw', alt: article.image.alt | default: article.title }}</div>{%- endif -%}
+    <div class="rte" style="margin-inline:auto">{{ article.content }}</div>
+    <p style="margin-top:40px"><a class="btn btn--outline btn--small" href="{{ blog.url }}">{{ blog.title }}</a></p>
+  </div>
+</article>
+<script type="application/ld+json">
+  { "@context": "https://schema.org", "@type": "Article", "headline": {{ article.title | json }}, "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }}, "author": { "@type": "Person", "name": {{ article.author | json }} }{% if article.image %}, "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }}{% endif %} }
+</script>
+
+{% schema %}
+{ "name": "Blog post", "class": "section-main-article", "settings": [] }
+{% endschema %}

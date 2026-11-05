@@ -1,0 +1,49 @@
+{%- comment -%} Native Shopify storefront filtering. Params: results (collection or search), sort_by, terms (search only) {%- endcomment -%}
+<dialog class="drawer drawer--left facets" id="FacetsDrawer" aria-label="{{ 'collections.general.filters' | t }}">
+  <form class="drawer__panel" data-auto-submit>
+    {%- if terms -%}<input type="hidden" name="q" value="{{ terms | escape }}"><input type="hidden" name="options[prefix]" value="last">{%- endif -%}
+    <input type="hidden" name="sort_by" value="{{ sort_by }}">
+    <div class="drawer__head">
+      <h2>{{ 'collections.general.filters' | t }}</h2>
+      <button class="icon-btn drawer__close" type="button" data-close-drawer aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="drawer__body">
+      {%- for filter in results.filters -%}
+        <details class="facet" {% if forloop.index <= 3 or filter.active_values.size > 0 %}open{% endif %}>
+          <summary><span>{{ filter.label }}</span>{% render 'icon', name: 'chevron' %}</summary>
+          <div class="facet__body">
+            {%- case filter.type -%}
+              {%- when 'list', 'boolean' -%}
+                <ul role="list" class="facet__list">
+                  {%- for value in filter.values -%}
+                    <li>
+                      <label class="checkbox{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                        <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                        <span>{{ value.label }}</span> <span class="muted">({{ value.count }})</span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- when 'price_range' -%}
+                {%- assign max_price = filter.range_max | money_without_currency | remove: ',' -%}
+                <div class="facet__price">
+                  <div class="field"><label for="Price-min-{{ forloop.index }}">{{ 'collections.general.price_from' | t }} ({{ cart.currency.symbol }})</label>
+                    <input class="input" id="Price-min-{{ forloop.index }}" type="number" name="{{ filter.min_value.param_name }}" min="0" max="{{ max_price }}" placeholder="0" {% if filter.min_value.value %}value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"{% endif %}></div>
+                  <div class="field"><label for="Price-max-{{ forloop.index }}">{{ 'collections.general.price_to' | t }} ({{ cart.currency.symbol }})</label>
+                    <input class="input" id="Price-max-{{ forloop.index }}" type="number" name="{{ filter.max_value.param_name }}" min="0" max="{{ max_price }}" placeholder="{{ max_price }}" {% if filter.max_value.value %}value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"{% endif %}></div>
+                </div>
+                {%- assign range_max_money = filter.range_max | money -%}
+                <p class="muted" style="font-size:.8rem">{{ 'collections.general.price_max' | t: price: range_max_money }}</p>
+            {%- endcase -%}
+          </div>
+        </details>
+      {%- else -%}
+        <p class="muted">{{ 'collections.general.filters' | t }}: Search &amp; Discovery</p>
+      {%- endfor -%}
+    </div>
+    <div class="drawer__foot facets__foot">
+      <a class="btn btn--outline btn--small" href="{% if terms %}{{ routes.search_url }}?q={{ terms | url_encode }}{% else %}{{ results.url }}{% endif %}">{{ 'collections.general.clear_all' | t }}</a>
+      <button class="btn btn--primary btn--small" type="submit">{{ 'collections.general.show_results' | t }}</button>
+    </div>
+  </form>
+</dialog>

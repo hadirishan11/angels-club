@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "show_logo": true,
+        "eyebrow": "Client care",
+        "heading": "Track your order"
+      }
+    },
+    "steps": {
+      "type": "order-tracking",
+      "blocks": {
+        "a": {
+          "type": "step",
+          "settings": {
+            "title": "Check your email",
+            "text": "<p>Your shipping confirmation email contains your tracking number and a link to your live order status page.</p>",
+            "button_type": "none",
+            "button_label": ""
+          }
+        },
+        "b": {
+          "type": "step",
+          "settings": {
+            "title": "Sign in to your account",
+            "text": "<p>If you checked out with your account, you can view every order and its status at any time.</p>",
+            "button_type": "account",
+            "button_label": "Sign in"
+          }
+        },
+        "c": {
+          "type": "step",
+          "settings": {
+            "title": "Need help?",
+            "text": "<p>Can't find your confirmation? Contact us with your order number and the email used at checkout.</p>",
+            "button_type": "contact",
+            "button_label": "Contact us",
+            "link": "/pages/contact"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "steps"
+  ]
+}

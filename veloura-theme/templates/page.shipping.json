@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "show_logo": true,
+        "eyebrow": "Client care",
+        "heading": "Shipping information"
+      }
+    },
+    "content": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "s1": {
+          "type": "question",
+          "settings": {
+            "question": "Where do you ship?",
+            "answer": "<p>[e.g. All Canadian provinces and territories.]</p>"
+          }
+        },
+        "s2": {
+          "type": "question",
+          "settings": {
+            "question": "Shipping rates",
+            "answer": "<p>Rates are calculated at checkout based on your address. [Describe any free-shipping threshold you have configured in Shopify.]</p>"
+          }
+        },
+        "s3": {
+          "type": "question",
+          "settings": {
+            "question": "Processing time",
+            "answer": "<p>[e.g. Orders are prepared within X business days.]</p>"
+          }
+        },
+        "s4": {
+          "type": "question",
+          "settings": {
+            "question": "Delivery estimates",
+            "answer": "<p>[e.g. Most orders arrive within X–Y business days after dispatch. Remote areas may take longer.]</p>"
+          }
+        },
+        "s5": {
+          "type": "question",
+          "settings": {
+            "question": "Fragrance & dangerous goods",
+            "answer": "<p>Perfumes contain alcohol and can be classified as dangerous goods (flammable liquids). We ship them in line with carrier rules, which may require ground service and limit some destinations.</p>"
+          }
+        },
+        "s6": {
+          "type": "question",
+          "settings": {
+            "question": "Duties & taxes",
+            "answer": "<p>Canadian sales taxes (GST/HST/PST/QST) are calculated at checkout based on your province.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shipping details",
+        "single": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "faq",
+    "content"
+  ]
+}

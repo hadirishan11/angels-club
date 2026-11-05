@@ -1,0 +1,52 @@
+<section class="section brand-grid">
+  <div class="container">
+    <div class="section-header text-center">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow eyebrow--lines" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1" data-split>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}<p class="lede" data-reveal>{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    {%- comment -%} shop.vendors lists brands of products currently available in the online store {%- endcomment -%}
+    {%- if shop.vendors.size > 0 -%}
+      <ul class="brands" role="list" data-reveal-group>
+        {%- for vendor in shop.vendors limit: section.settings.limit -%}
+          {%- assign logo_img = nil -%}
+          {%- for b in section.blocks -%}{%- if b.settings.vendor == vendor and b.settings.image != blank -%}{%- assign logo_img = b.settings.image -%}{%- endif -%}{%- endfor -%}
+          <li data-reveal>
+            <a class="brand-tile" href="{{ vendor | url_for_vendor }}" data-tilt>
+              {%- if logo_img -%}
+                {{ logo_img | image_url: width: 400 | image_tag: loading: 'lazy', alt: vendor, class: 'brand-tile__logo' }}
+              {%- else -%}
+                <span class="brand-tile__name">{{ vendor }}</span>
+              {%- endif -%}
+              <span class="brand-tile__cta">{{ 'general.explore' | t }} {% render 'icon', name: 'arrow' %}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="text-center muted">{{ section.settings.empty_text }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by brand",
+  "class": "section-brand-grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The houses" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by brand" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Brands appear automatically from the fragrances in stock." },
+    { "type": "range", "id": "limit", "label": "Maximum brands", "min": 4, "max": 48, "step": 4, "default": 16 },
+    { "type": "text", "id": "empty_text", "label": "Message when no products", "default": "Brands will appear here once fragrances are added." },
+    { "type": "paragraph", "content": "Add a 'Brand logo' block only for brands whose logo you are licensed to use. Otherwise the brand name is set in the heading font." }
+  ],
+  "blocks": [
+    { "type": "logo", "name": "Brand logo", "settings": [
+      { "type": "text", "id": "vendor", "label": "Vendor name (must match exactly)" },
+      { "type": "image_picker", "id": "image", "label": "Logo" }
+    ] }
+  ],
+  "presets": [{ "name": "Shop by brand" }]
+}
+{% endschema %}

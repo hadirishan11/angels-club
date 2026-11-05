@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "banner": {
+      "type": "collection-banner",
+      "settings": {
+        "eyebrow": "Discovery & gift sets",
+        "show_description": true,
+        "show_image": false
+      }
+    },
+    "grid": {
+      "type": "main-collection",
+      "settings": {
+        "per_page": 24
+      }
+    },
+    "gifting": {
+      "type": "gifting",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "gift",
+            "title": "Signature packaging",
+            "text": "Every order is presented in a Veloura box."
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Gift message",
+            "text": "Add a personal note in your bag before checkout."
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2"
+      ],
+      "settings": {
+        "eyebrow": "The gifting experience",
+        "heading": "Unboxing, perfected",
+        "cta": ""
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "grid",
+    "gifting"
+  ]
+}

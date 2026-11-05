@@ -1,0 +1,24 @@
+<section class="collection-banner{% if section.settings.show_image and collection.image %} collection-banner--image{% endif %}">
+  {%- if section.settings.show_image and collection.image -%}
+    <div class="collection-banner__media" aria-hidden="true">{{ collection.image | image_url: width: 1800 | image_tag: loading: 'eager', widths: '600, 1000, 1400, 1800', sizes: '100vw', alt: '' }}</div>
+  {%- endif -%}
+  {%- if settings.enable_particles -%}<div class="collection-banner__atmo" data-atmosphere="auto" aria-hidden="true"></div>{%- endif -%}
+  <div class="container collection-banner__inner text-center">
+    <p class="eyebrow eyebrow--lines">{{ section.settings.eyebrow | default: shop.name }}</p>
+    <h1 class="h-display" data-split>{{ collection.title | default: section.settings.fallback_title }}</h1>
+    {%- if section.settings.show_description and collection.description != blank -%}<div class="lede rte" data-reveal>{{ collection.description }}</div>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection banner",
+  "class": "section-collection-banner",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Veloura" },
+    { "type": "text", "id": "fallback_title", "label": "Title when no collection", "default": "All perfumes" },
+    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
+    { "type": "checkbox", "id": "show_image", "label": "Show collection image", "default": false }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,12 @@
+<div class="custom-liquid{% if section.settings.padded %} section{% endif %}"><div class="container">{{ section.settings.custom_liquid }}</div></div>
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "settings": [
+    { "type": "liquid", "id": "custom_liquid", "label": "Liquid code", "info": "Add app snippets or other Liquid code." },
+    { "type": "checkbox", "id": "padded", "label": "Add section spacing", "default": true }
+  ],
+  "presets": [{ "name": "Custom Liquid" }]
+}
+{% endschema %}

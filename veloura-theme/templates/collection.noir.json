@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "hero": {
+      "type": "world-hero",
+      "settings": {
+        "world": "noir",
+        "eyebrow": "Veloura Noir",
+        "show_logo": false,
+        "heading": "The Art of Presence",
+        "subtitle": "Iconic fragrances. Bold impressions. Luxury in every detail.",
+        "cta": "",
+        "enable_3d": true,
+        "height": 80
+      }
+    },
+    "grid": {
+      "type": "main-collection",
+      "settings": {
+        "per_page": 24
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "grid"
+  ]
+}

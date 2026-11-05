@@ -1,0 +1,99 @@
+{%- comment -%}
+  Collection grid with Shopify native filtering (Search & Discovery app) and sorting.
+  Filters available depend on what you enable in the Search & Discovery app:
+  Availability, Price, Vendor (brand), Product type, Variant option "Size",
+  and product metafields such as veloura.fragrance_family.
+{%- endcomment -%}
+{{ 'veloura-collection.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+-%}
+<section class="section section--tight collection">
+  <div class="container">
+    {%- paginate collection.products by section.settings.per_page -%}
+      <div class="toolbar">
+        <button class="btn btn--outline btn--small toolbar__filter-btn" type="button" data-open-drawer="FacetsDrawer" aria-haspopup="dialog">
+          {%- liquid
+            assign active = 0
+            for f in collection.filters
+              assign active = active | plus: f.active_values.size
+              if f.type == 'price_range'
+                if f.min_value.value != nil or f.max_value.value != nil
+                  assign active = active | plus: 1
+                endif
+              endif
+            endfor
+          -%}
+          {{ 'collections.general.filters' | t }}{% if active > 0 %} ({{ active }}){% endif %}
+        </button>
+        <p class="toolbar__count muted" role="status">{{ 'collections.general.products_count' | t: count: collection.products_count }}</p>
+        <form class="toolbar__sort" data-auto-submit>
+          {%- for f in collection.filters -%}
+            {%- for v in f.active_values -%}<input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">{%- endfor -%}
+            {%- if f.type == 'price_range' -%}
+              {%- if f.min_value.value -%}<input type="hidden" name="{{ f.min_value.param_name }}" value="{{ f.min_value.value }}">{%- endif -%}
+              {%- if f.max_value.value -%}<input type="hidden" name="{{ f.max_value.param_name }}" value="{{ f.max_value.value }}">{%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+          <label for="SortBy" class="visually-hidden">{{ 'collections.general.sort_by' | t }}</label>
+          <select class="select" id="SortBy" name="sort_by">
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+          <noscript><button class="btn btn--small" type="submit">{{ 'collections.general.apply' | t }}</button></noscript>
+        </form>
+      </div>
+
+      {%- comment -%} Active filter chips {%- endcomment -%}
+      {%- capture chips -%}
+        {%- for f in collection.filters -%}
+          {%- for v in f.active_values -%}
+            <a class="chip" href="{{ v.url_to_remove }}" aria-label="{{ 'collections.general.remove_filter' | t: filter: v.label | escape }}">{{ v.label }} {% render 'icon', name: 'close' %}</a>
+          {%- endfor -%}
+          {%- if f.type == 'price_range' -%}
+            {%- if f.min_value.value != nil or f.max_value.value != nil -%}
+              <a class="chip" href="{{ f.url_to_remove }}">{% if f.min_value.value %}{{ f.min_value.value | money }}{% else %}{{ 0 | money }}{% endif %} – {% if f.max_value.value %}{{ f.max_value.value | money }}{% else %}{{ f.range_max | money }}{% endif %} {% render 'icon', name: 'close' %}</a>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if chips != blank -%}
+        <div class="chips">{{ chips }}<a class="chip chip--clear" href="{{ collection.url }}?sort_by={{ sort_by }}">{{ 'collections.general.clear_all' | t }}</a></div>
+      {%- endif -%}
+
+      {%- if collection.products.size > 0 -%}
+        <ul class="grid grid--4 collection__grid" role="list" data-reveal-group>
+          {%- for product in collection.products -%}
+            <li>{% render 'product-card', card_product: product, index: forloop.index0 %}</li>
+          {%- endfor -%}
+        </ul>
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="empty-state">
+          {% render 'icon', name: 'bottle' %}
+          {%- if chips != blank -%}
+            <p class="lede" style="margin-inline:auto">{{ 'collections.general.empty' | t }}</p>
+            <a class="btn btn--outline" href="{{ collection.url }}">{{ 'collections.general.clear_all' | t }}</a>
+          {%- else -%}
+            <p class="lede" style="margin-inline:auto">{{ 'collections.general.empty_collection' | t }}</p>
+            <a class="btn btn--primary" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% render 'facets-drawer', results: collection, sort_by: sort_by %}
+
+{% schema %}
+{
+  "name": "Product grid",
+  "class": "section-main-collection",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "paragraph", "content": "Configure filters (brand, fragrance family, size, price, availability) in the Shopify Search & Discovery app." }
+  ]
+}
+{% endschema %}

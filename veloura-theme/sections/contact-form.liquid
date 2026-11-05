@@ -1,0 +1,37 @@
+<section class="section contact">
+  <div class="container contact__grid">
+    <div class="contact__intro">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1" data-split>{{ section.settings.heading }}</h2>
+      <div class="rte lede">{{ section.settings.text }}</div>
+    </div>
+    <div class="contact__form card-surface">
+      {%- form 'contact', id: 'ContactForm' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="form-message form-message--success" role="status" tabindex="-1" autofocus>{{ 'contact.form.success' | t }}</p>
+        {%- elsif form.errors -%}
+          <div class="form-message form-message--error" role="alert"><strong>{{ 'contact.form.error_heading' | t }}</strong> {{ form.errors | default_errors }}</div>
+        {%- endif -%}
+        <div class="field"><label for="ContactName">{{ 'contact.form.name' | t }}</label><input class="input" id="ContactName" name="contact[name]" autocomplete="name" value="{{ form.name }}"></div>
+        <div class="field"><label for="ContactEmail">{{ 'contact.form.email' | t }} *</label><input class="input" id="ContactEmail" type="email" name="contact[email]" required autocomplete="email" value="{{ form.email }}"></div>
+        <div class="field"><label for="ContactPhone">{{ 'contact.form.phone' | t }}</label><input class="input" id="ContactPhone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}"></div>
+        <div class="field"><label for="ContactOrder">{{ 'contact.form.order' | t }}</label><input class="input" id="ContactOrder" name="contact[order]" value="{{ form.order }}"></div>
+        <div class="field"><label for="ContactBody">{{ 'contact.form.message' | t }} *</label><textarea class="textarea" id="ContactBody" name="contact[body]" required>{{ form.body }}</textarea></div>
+        <button class="btn btn--primary btn--full" type="submit">{{ 'contact.form.send' | t }}</button>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "class": "section-contact",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Contact" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We'd love to hear from you" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Questions about a fragrance, an order or a gift? Write to us and our team will reply within [X] business days.</p><p>Email: hello@[your-domain].ca</p>" }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "show_logo": true,
+        "eyebrow": "About Veloura",
+        "heading": "Iconic scents. Miniature luxury.",
+        "text": "<p>[Your founding story — who you are, why you started Veloura, and what you look for in a fragrance.]</p>"
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "settings": {
+        "builtin": "veloura-scale",
+        "reverse": false,
+        "eyebrow": "Our story",
+        "heading": "Luxury, thoughtfully sized",
+        "text": "<p>Veloura was created for people who love fragrance and want to explore it freely. We curate miniature editions of designer fragrances so you can discover, travel with and gift the scents you love.</p><p>[Add details about sourcing and authenticity that you can verify — e.g. authorised distributors.]</p>",
+        "cta": "Shop all perfumes",
+        "link": "/collections/all"
+      }
+    },
+    "worlds": {
+      "type": "collection-cards",
+      "settings": {
+        "eyebrow": "Two worlds",
+        "heading": "Noir & Rosé"
+      }
+    },
+    "gifting": {
+      "type": "image-with-text",
+      "settings": {
+        "builtin": "veloura-gift",
+        "reverse": true,
+        "eyebrow": "Presentation",
+        "heading": "Every detail considered",
+        "text": "<p>Each order is packed by hand in our signature packaging — black and champagne gold for Noir, blush and rose for Rosé.</p>"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "story",
+    "worlds",
+    "gifting"
+  ]
+}
