@@ -105,7 +105,7 @@ function renderBag() {
           <button class="line__rm" type="button" data-rm="${esc(l.key)}">Remove</button>
         </div></li>`;
     }).join('')}</ul>
-    <details style="margin-top:18px"><summary style="cursor:pointer;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase">${icon('gift', '')} Add a gift message</summary>
+    <details style="margin-top:18px"><summary class="gift-toggle">${icon('gift')} Add a gift message</summary>
       <label class="visually-hidden" for="giftNote">Gift message</label><textarea class="textarea" id="giftNote" maxlength="300" style="margin-top:10px">${esc(bag.note)}</textarea></details>
     </div>
     <div class="drawer__foot"><div class="total"><span>Subtotal</span><span>${money(bag.subtotal())}</span></div><p class="muted" style="font-size:.8rem">Shipping and taxes calculated at checkout.</p><a class="btn btn--block" href="#checkout">${icon('lock')} Checkout</a></div>`;

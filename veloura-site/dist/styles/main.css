@@ -544,3 +544,10 @@ html:not([data-motion='reduced']) .twinkle .vl-star { animation: twinkle 4.5s ea
 
 /* world-specific copy */
 html[data-world='noir'] [data-w='rose'], html[data-world='rose'] [data-w='noir'] { display: none; }
+
+/* fixes from QA */
+html[data-world='rose'] .quiz .sum { --c-heading: #981f50; --c-soft: #7d3456; color: #4a0a26; background: rgba(255, 240, 245, 0.92); }
+.gift-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; list-style: none; }
+.gift-toggle::-webkit-details-marker { display: none; }
+.gift-toggle .i { width: 18px; height: 18px; color: var(--c-accent); }
+@media (max-width: 899px) { .scroll-cue { display: none; } }
