@@ -76,7 +76,7 @@ export const products = [
     family: 'Floral', notes: { top: ['Mandarin', 'Petitgrain'], heart: ['Orange blossom', 'Jasmine'], base: ['Honey', 'White musk'] },
     mood: ['fresh', 'romantic'], time: 'day', intensity: 3, season: ['spring', 'summer'],
     description: 'Sunlit orange blossom and jasmine with a honeyed glow.',
-    bottle: { shape: 'flask', cap: 'cylinder', glass: '#ffe6d6', liquid: '#f4b183', metal: 'gold' } },
+    bottle: { shape: 'flask', cap: 'cylinder', glass: '#ffe6d6', liquid: '#f4b183', metal: 'rosegold' } },
   { id: 'musc-blanc', world: 'rose', name: 'Musc Blanc', house: 'Atelier Démo', size: '10 ml', concentration: 'Eau de Toilette', price: 2800,
     family: 'Musk', notes: { top: ['Aldehydes', 'Bergamot'], heart: ['Cotton flower', 'Lily of the valley'], base: ['White musk', 'Ambrette'] },
     mood: ['calm', 'fresh'], time: 'both', intensity: 1, season: ['spring', 'summer', 'autumn', 'winter'],
