@@ -77,7 +77,7 @@ export function mountStory(canvas, opts = {}) {
   const mistGeo = new THREE.BufferGeometry();
   const mPos = new Float32Array(MIST * 3), mVel = new Float32Array(MIST * 3), mLife = new Float32Array(MIST);
   mistGeo.setAttribute('position', new THREE.BufferAttribute(mPos, 3));
-  const mistMat = new THREE.PointsMaterial({ size: 0.35, map: radialTexture(64), transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xffffff });
+  const mistMat = new THREE.PointsMaterial({ size: 0.6, map: radialTexture(64), transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xffffff });
   const mist = new THREE.Points(mistGeo, mistMat); mist.frustumCulled = false;
   scene.add(mist);
   let mistCursor = 0;
@@ -118,16 +118,16 @@ export function mountStory(canvas, opts = {}) {
     ['noir', 'rose'].forEach((w) => {
       const b = sig[w];
       const isActive = w === active;
-      const homeX = sideOf(w) * (wide ? Math.min(4.2, 2.2 + aspect * 0.9) : 2.1);
+      const homeX = sideOf(w) * (wide ? Math.min(5.2, 1.6 + aspect * 1.6) : 2.0);
       const hoverBoost = (cur.hover * sideOf(w)) > 0 ? cur.hover * sideOf(w) : 0;
       const hoverDim = (cur.hover * sideOf(w)) < 0 ? -cur.hover * sideOf(w) : 0;
       let x, y, z, s, ry, cap = 0;
       const sway = Math.sin(t * 0.6 + (w === 'noir' ? 0 : 2)) * 0.25;
       const bob = Math.sin(t * 0.9 + (w === 'noir' ? 1 : 0)) * 0.12;
-      const homeS = (wide ? 0.95 : 0.62) * (1 + hoverBoost * 0.1 - hoverDim * 0.06);
+      const homeS = (wide ? 0.66 : 0.5) * (1 + hoverBoost * 0.12 - hoverDim * 0.06);
       if (isActive) {
         x = key(p, [[0, homeX], [1, X], [2.6, X], [3.1, X + (wide ? 0.6 : 0.9)], [3.7, X + (wide ? 0.6 : 0.9)]]);
-        y = key(p, [[0, -3.3 + Y0 * 0.4], [1, -3.4 + Y0], [2.6, -3.6 + Y0], [3.1, -1.6 + Y0], [3.7, -1.6 + Y0]]) + bob;
+        y = key(p, [[0, wide ? -4.1 : -3.2], [1, -3.4 + Y0], [2.6, -3.6 + Y0], [3.1, -1.6 + Y0], [3.7, -1.6 + Y0]]) + bob;
         z = key(p, [[0, hoverBoost * 1.4], [1, 0.5], [3.7, 0.5]]);
         s = key(p, [[0, homeS], [1, 1.02 * zoom], [2.6, 1.02 * zoom], [3.1, 0.46 * zoom], [3.7, 0.46 * zoom]]);
         ry = (p < 0.4 ? -0.4 * sideOf(w) + sway : 0) + key(p, [[0.4, 0], [1.6, Math.PI * 2], [2.6, Math.PI * 2 + 0.3]]) + (p > 0.4 ? sway * 0.5 : 0);
@@ -144,7 +144,7 @@ export function mountStory(canvas, opts = {}) {
         b.visible = true;
       } else {
         x = key(p, [[0, homeX], [0.7, homeX * 3.5]]);
-        y = -3.3 + Y0 * 0.4 + bob;
+        y = (wide ? -4.1 : -3.2) + bob;
         z = hoverBoost * 1.4;
         s = key(p, [[0, homeS], [0.7, homeS * 0.7]]);
         ry = -0.4 * sideOf(w) + sway;
@@ -165,7 +165,7 @@ export function mountStory(canvas, opts = {}) {
       g.position.set(X - (wide ? 2.6 : 0.6), -5.2 + Y0, -2.4);
       g.scale.setScalar(1.5 * zoom);
       g.rotation.y = -0.35 + sway * 0.3;
-      g.traverse((o) => { if (o.material && o.material.transparent) o.material.opacity = (o.material.userData.baseOpacity ??= o.material.opacity) * go; });
+      g.traverse((o) => { if (o.material && o.material.transparent) o.material.opacity = Math.min(0.5, (o.material.userData.baseOpacity ??= o.material.opacity) * 2.2) * go; });
 
       // case
       const c = cases[w];

@@ -21,7 +21,7 @@ const frag = /* glsl */ `
     float f = fbm(p*1.3 + 2.4*r);
     vec3 col = mix(lin(vec3(0.035,0.035,0.042)), lin(vec3(0.15,0.15,0.165)), smoothstep(0.25, 0.95, f));
     float vein = smoothstep(0.012, 0.0, abs(f - 0.6)) + 0.4*smoothstep(0.02, 0.0, abs(r.x - 0.55));
-    col += lin(vec3(0.78, 0.66, 0.48)) * vein * 0.05;
+    col += lin(vec3(0.78, 0.68, 0.52)) * vein * 0.022;
     col += lin(vec3(0.8, 0.68, 0.5)) * 0.05 * smoothstep(1.3, 0.0, length(p - vec2(0.55 + uMouse.x*0.2, 0.55)));
     return col;
   }
