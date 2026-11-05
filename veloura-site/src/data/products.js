@@ -58,7 +58,7 @@ export const products = [
     mood: ['bold', 'romantic', 'warm'], time: 'night', intensity: 4, season: ['autumn', 'winter'],
     description: 'The intense edition of Valentino Born in Roma Donna, in the 10 ml Go Spray — the signature studded glass in a slim travel size that slips into any bag.',
     photos: ['img/products/born-in-roma-intense.webp', 'img/products/born-in-roma-intense-box.webp'],
-    bottle: { shape: 'studded', cap: 'cylinder', capColor: '#0c0c0d', capScale: 0.88, capHeight: 1.15, glass: '#f6e3e7', liquid: '#7d0b20', metal: 'gunmetal', fill: 0.96 } },
+    bottle: { shape: 'studded', cap: 'stepped', capColor: '#0c0c0d', capScale: 0.9, capHeight: 1.15, glass: '#f8eef0', liquid: '#560716', metal: 'gunmetal', fill: 0.96 } },
   { id: 'rose-velours', world: 'rose', name: 'Rose Velours', house: 'Atelier Démo', size: '10 ml', concentration: 'Eau de Parfum', price: 3800,
     family: 'Floral', notes: { top: ['Lychee', 'Pink pepper'], heart: ['Damask rose', 'Peony'], base: ['Velvet musk', 'Cashmere wood'] },
     mood: ['romantic', 'confident'], time: 'both', intensity: 3, season: ['spring', 'autumn'],

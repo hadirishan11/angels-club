@@ -189,8 +189,8 @@ export function buildBottle(spec = {}, quality = 'high', opts = {}) {
   let H, frontZ;
 
   if (s.shape === 'studded') {
-    const R = 0.6, A = 0.17; H = 6.6;
-    body.add(new THREE.Mesh(studdedGeometry(R, A, H, 11, 8), glass));
+    const R = 0.58, A = 0.22; H = 6.6;
+    body.add(new THREE.Mesh(studdedGeometry(R, A, H, 10, 8), glass));
     if (!opts.ghost) {
       const lh = (H - 0.7) * s.fill;
       const lg = new THREE.CylinderGeometry(R - 0.06, R - 0.06, lh, 32); lg.translate(0, 0.42 + lh / 2, 0);
@@ -261,6 +261,10 @@ export function buildBottle(spec = {}, quality = 'high', opts = {}) {
       cap.scale.set(1, 1.08, 1); cap.position.y = 1.0;
       const band = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.7, 0.18, 40), metal); band.position.y = 0.06;
       capPivot.add(band);
+      break;
+    }
+    case 'stepped': {
+      cap = new THREE.Mesh(smoothLathe([[0, 0], [0.84, 0], [0.86, 0.04], [0.86, 0.72], [0.74, 0.78], [0.72, 1.6], [0.66, 1.68], [0, 1.7]], 64, 40), capMat);
       break;
     }
     case 'cylinder': {
