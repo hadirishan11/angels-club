@@ -223,6 +223,34 @@ export function buildBottle(spec = {}, quality = 'high', opts = {}) {
     frontZ = 1.95 * def.zScale;
   }
 
+  // brand wordmark running up the glass (for real catalogue products, as on the actual bottle)
+  if (s.wordmark && !opts.ghost) {
+    const wm = s.wordmark;
+    const c = document.createElement('canvas'); c.width = 2048; c.height = 256;
+    const g = c.getContext('2d');
+    g.clearRect(0, 0, c.width, c.height);
+    g.font = `${wm.weight || 400} 190px ${wm.font || "'Bodoni 72', Didot, 'Times New Roman', Georgia, serif"}`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    if (g.letterSpacing !== undefined) g.letterSpacing = `${wm.tracking ?? 18}px`;
+    g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = 6; g.shadowOffsetY = 3;
+    g.fillStyle = wm.color || '#f2d2d9';
+    g.fillText(wm.text, c.width / 2, c.height / 2 + 6);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+    const mat = new THREE.MeshPhysicalMaterial({ map: tex, transparent: true, alphaTest: 0.04, roughness: 0.35, metalness: 0.25, clearcoat: 1, envMapIntensity: 1.2, depthWrite: false, side: THREE.DoubleSide });
+    // curved strip on the front of the body; text reads bottom-to-top like the real bottle
+    const r = (s.shape === 'studded' ? 0.58 + 0.22 : 1.5) + 0.012;
+    const len = H * (wm.length || 0.8), arc = (wm.arc || 0.34);
+    const strip = new THREE.CylinderGeometry(r, r, len, 48, 1, true, -arc / 2, arc);
+    // remap UVs so the texture runs along the height (rotated 90°)
+    const uv = strip.attributes.uv;
+    for (let i = 0; i < uv.count; i++) { const u = uv.getX(i), v = uv.getY(i); uv.setXY(i, v, 1 - u); }
+    const m = new THREE.Mesh(strip, mat);
+    m.position.y = H * (wm.center || 0.5);
+    m.rotation.y = wm.rotate || 0;
+    m.renderOrder = 2;
+    body.add(m);
+  }
+
   // neck, dip tube, collar, actuator
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.5, 0.32, 40), glass);
   neck.position.y = H + 0.14;
