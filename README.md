@@ -5,7 +5,7 @@ One luxury brand, two shopping worlds — **VELOURA NOIR** (masculine) and **VEL
 
 | | |
 |---|---|
-| Theme package | `dist/veloura-theme.zip` (upload this to Shopify) |
+| Theme package | `dist/veloura-theme-v2.zip` (upload this to Shopify) |
 | Theme source | `veloura-theme/` |
 | Platform | Shopify Online Store 2.0 (JSON templates, section groups, app blocks) |
 | Dependencies | None at runtime. Three.js r170 is bundled for optional 3D; no jQuery, no GSAP, no external CDNs |
@@ -15,10 +15,18 @@ One luxury brand, two shopping worlds — **VELOURA NOIR** (masculine) and **VEL
 
 ---
 
+## What's new in v2
+- **Scroll story (3D)** homepage section: split Noir/Rosé hero → signature bottle → cap lift & mist → miniature vs full size → discovery case unboxing.
+- **High-fidelity 3D product viewer** driven by the JSON metafield `veloura.bottle_json` (studded, crystal, flask, pillar and column bottles; brand wordmark on the glass). Opens first in the product gallery.
+- **Scent finder** (`page.scent-finder` template) and **Build a discovery set** (`page.build-a-set` template) using your real Shopify products and cart.
+- **Born in Roma Donna Intense** ready to import: `shopify-import/`.
+
+After uploading, create two pages, *Scent finder* (template `page.scent-finder`) and *Build a set* (template `page.build-a-set`), and add them to your menu.
+
 ## 1. Install
 
 1. Shopify admin → **Online Store → Themes → Add theme → Upload zip file**.
-2. Select `dist/veloura-theme.zip`. (The zip contains `layout/`, `templates/`, `sections/`, `snippets/`, `assets/`, `config/`, `locales/` at its root, as Shopify requires.)
+2. Select `dist/veloura-theme-v2.zip`. (The zip contains `layout/`, `templates/`, `sections/`, `snippets/`, `assets/`, `config/`, `locales/` at its root, as Shopify requires.)
 3. Click **Customize** on the uploaded theme to configure it (steps below), then **Publish** once you're ready.
 
 > Tip: keep your current theme published while you set up Veloura; preview with **Actions → Preview**.

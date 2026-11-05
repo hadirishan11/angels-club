@@ -239,7 +239,9 @@ export function mountViewer(container, spec, world, opts = {}) {
   pivot.add(bottle);
   scene.add(pivot);
   const sh = contactShadow(5.5, world === 'rose' ? 0.3 : 0.55); sh.position.y = bottle.position.y - 0.02; scene.add(sh);
-  camera.position.set(0, 1.0, 22); camera.lookAt(0, 0, 0);
+  // pull the camera back for tall bottles (e.g. slim travel sprays) so they always fit the frame
+  const camZ = Math.max(22, bottle.userData.height * 2.75);
+  camera.position.set(0, 1.0, camZ); camera.lookAt(0, 0, 0);
   const ro = observeSize(container, stage);
 
   let rotY = -0.5, target = -0.5, vel = 0, tilt = 0, tTilt = 0, dragging = false, lastX = 0, lastY = 0, idle = 0, capT = 0, capTarget = 0, t = 0;
