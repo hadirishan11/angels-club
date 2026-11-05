@@ -86,7 +86,9 @@ engine.registerTag('form', class extends Tag {
     stream.on('tag:endform', () => stream.stop()).on('template', (t) => this.tpls.push(t)).on('end', () => { throw new Error('form not closed'); });
     stream.start();
   }
-  * render(ctx, emitter) { ctx.push({ form: { errors: null, posted_successfully: false } }); emitter.write('<form method="post">'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); }
+  * render(ctx, emitter) { ctx.push({ form: { errors: null, posted_successfully: false } });
+    const attrs = [...String(this.args).matchAll(/([\w-]+):\s*'([^']*)'/g)].map(([, k, v]) => (v === '' ? k : `${k}="${v}"`)).join(' ');
+    emitter.write(`<form method="post" action="/cart/add" ${attrs}>`); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); }
 });
 engine.registerTag('paginate', class extends Tag {
   constructor(t, r, l) { super(t, r, l); this.tpls = []; const s = l.parser.parseStream(r); s.on('tag:endpaginate', () => s.stop()).on('template', (x) => this.tpls.push(x)); s.start(); }
@@ -103,11 +105,18 @@ async function renderSection(type, data, ctxBase, id) {
   const schema = schemaMatch ? JSON.parse(schemaMatch[1]) : { settings: [] };
   const s = {}; (schema.settings || []).forEach((x) => { if (x.id && 'default' in x) s[x.id] = x.default; });
   Object.assign(s, data.settings || {});
+  const menus = {
+    'main-menu': { title: 'Main menu', links: [{ title: 'Noir', url: '#collection-noir', links: [] }, { title: 'Rosé', url: '#collection-rose', links: [] }, { title: 'All perfumes', url: '#all', links: [] }, { title: 'Discovery sets', url: '#all', links: [] }] },
+    footer: { title: 'Footer', links: [{ title: 'FAQ', url: '#', links: [] }, { title: 'Shipping information', url: '#', links: [] }, { title: 'Order tracking', url: '#', links: [] }, { title: 'Contact', url: '#', links: [] }] },
+  };
+  if (typeof s.menu === 'string') s.menu = menus[s.menu];
   if (type === 'featured-products' && !s.collection) s.collection = bestsellers;
   const blocks = (data.block_order || []).map((bid) => {
     const b = data.blocks[bid]; const bs = (schema.blocks || []).find((x) => x.type === b.type) || {};
     const bset = {}; (bs.settings || []).forEach((x) => { if (x.id && 'default' in x) bset[x.id] = x.default; });
-    return { id: bid, type: b.type, settings: { ...bset, ...(b.settings || {}) }, shopify_attributes: '' };
+    const merged = { ...bset, ...(b.settings || {}) };
+    if (typeof merged.menu === 'string') merged.menu = { 'main-menu': { links: [{ title: 'Noir', url: '#collection-noir' }, { title: 'Rosé', url: '#collection-rose' }, { title: 'All perfumes', url: '#all' }] }, footer: { links: [{ title: 'FAQ', url: '#' }, { title: 'Shipping information', url: '#' }, { title: 'Contact', url: '#' }] } }[merged.menu];
+    return { id: bid, type: b.type, settings: merged, shopify_attributes: '' };
   });
   const html = await engine.parseAndRender(src.replace(/\{% schema %\}[\s\S]*?\{% endschema %\}/, ''), { ...ctxBase, section: { id, settings: s, blocks } }, { globals: ctxBase });
   return `<div id="shopify-section-${id}" class="shopify-section ${schema.class || ''}">${html}</div>`;
