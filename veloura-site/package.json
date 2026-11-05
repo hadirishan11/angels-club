@@ -1,0 +1,21 @@
+{
+  "name": "veloura-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "cd dist && python3 -m http.server 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "type": "module",
+  "private": true
+}
