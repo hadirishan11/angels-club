@@ -551,3 +551,12 @@ html[data-world='rose'] .quiz .sum { --c-heading: #981f50; --c-soft: #7d3456; co
 .gift-toggle::-webkit-details-marker { display: none; }
 .gift-toggle .i { width: 18px; height: 18px; color: var(--c-accent); }
 @media (max-width: 899px) { .scroll-cue { display: none; } }
+
+/* real-product photo gallery + key notes */
+.viewer__photo { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; object-fit: cover; background: var(--c-surface-2); }
+.viewer-tabs { display: flex; gap: 10px; margin-top: 12px; }
+.viewer-tab { width: 72px; height: 88px; padding: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--c-line); background: var(--c-surface-2); display: grid; place-items: center; gap: 2px; color: var(--c-heading); font-size: 0.62rem; letter-spacing: 0.2em; opacity: 0.7; transition: all 0.25s; }
+.viewer-tab img { width: 100%; height: 100%; object-fit: cover; }
+.viewer-tab[aria-selected='true'], .viewer-tab:hover { opacity: 1; border-color: var(--c-accent); box-shadow: 0 0 0 1px var(--c-accent); }
+.key-notes { display: flex; flex-wrap: wrap; gap: 8px; }
+.key-notes span { padding: 10px 18px; border-radius: 999px; background: color-mix(in srgb, var(--c-accent) 10%, transparent); border: 1px solid var(--c-line); font-family: var(--f-display); font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--c-heading); }

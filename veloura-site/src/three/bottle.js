@@ -108,6 +108,38 @@ export function sanitizeNormals(g) {
   g.attributes.normal.needsUpdate = true;
 }
 
+/**
+ * Studded column ("rockstud" style): a tall cylinder whose surface is a grid of
+ * four-sided pyramids. Built triangle by triangle so every facet is crisp.
+ */
+function studdedGeometry(R, A, H, rows, cols, base = 0.35) {
+  const pos = [];
+  const pt = (r, a, y) => [Math.cos(a) * r, y, Math.sin(a) * r];
+  const tri = (a, b, c) => pos.push(...a, ...b, ...c);
+  const h = (H - base) / rows;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      const a0 = (j / cols) * Math.PI * 2, a1 = ((j + 1) / cols) * Math.PI * 2, am = (a0 + a1) / 2;
+      const y0 = base + i * h, y1 = y0 + h, ym = (y0 + y1) / 2;
+      const p00 = pt(R, a0, y0), p10 = pt(R, a1, y0), p01 = pt(R, a0, y1), p11 = pt(R, a1, y1), apex = pt(R + A, am, ym);
+      tri(p00, apex, p10); tri(p10, apex, p11); tri(p11, apex, p01); tri(p01, apex, p00);
+    }
+  }
+  // clear glass base band and closed ends
+  const seg = cols * 4;
+  for (let j = 0; j < seg; j++) {
+    const a0 = (j / seg) * Math.PI * 2, a1 = ((j + 1) / seg) * Math.PI * 2;
+    const b0 = pt(R, a0, 0), b1 = pt(R, a1, 0), t0 = pt(R, a0, base), t1 = pt(R, a1, base);
+    tri(b0, t0, b1); tri(b1, t0, t1);
+    tri([0, 0, 0], b0, b1);
+    tri([0, H, 0], pt(R, a1, H), pt(R, a0, H));
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return g;
+}
+
 let emblemGeometry = null;
 function getEmblemGeometry() {
   if (emblemGeometry) return emblemGeometry;
@@ -156,7 +188,16 @@ export function buildBottle(spec = {}, quality = 'high', opts = {}) {
   const metal = metalMaterial(s.metal);
   let H, frontZ;
 
-  if (s.shape === 'column') {
+  if (s.shape === 'studded') {
+    const R = 0.6, A = 0.17; H = 6.6;
+    body.add(new THREE.Mesh(studdedGeometry(R, A, H, 11, 8), glass));
+    if (!opts.ghost) {
+      const lh = (H - 0.7) * s.fill;
+      const lg = new THREE.CylinderGeometry(R - 0.06, R - 0.06, lh, 32); lg.translate(0, 0.42 + lh / 2, 0);
+      body.add(new THREE.Mesh(lg, liquid));
+    }
+    frontZ = R + A;
+  } else if (s.shape === 'column') {
     const W = 3.0, D = 2.0; H = 4.4;
     const g = new RoundedBoxGeometry(W, H, D, 8, 0.4); g.translate(0, H / 2, 0);
     body.add(new THREE.Mesh(g, glass));
@@ -232,6 +273,7 @@ export function buildBottle(spec = {}, quality = 'high', opts = {}) {
     }
   }
   if (opts.ghost) { capMat = capMat.clone(); capMat.transparent = true; capMat.opacity = 0.2; capMat.depthWrite = false; cap.material = capMat; }
+  if (s.capScale) cap.scale.set(s.capScale, s.capScale * (s.capHeight || 1), s.capScale);
   capPivot.add(cap);
   root.add(capPivot);
 

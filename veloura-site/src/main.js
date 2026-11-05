@@ -2,9 +2,9 @@
  * VELOURA — standalone storefront (single-page app, hash routing).
  * Pages swap with the View Transitions API; product cards morph into the product stage.
  */
-import { products, byId, DEMO_NOTICE } from './data/products.js';
+import { products, byId, DEMO_NOTICE, allNotes } from './data/products.js';
 import { world, bag, on, emit, money } from './state.js';
-import { icon, esc, img, drawer, toast, announce, flyToBag, initTilt, reduced } from './ui.js';
+import { icon, esc, img, priceText, drawer, toast, announce, flyToBag, initTilt, reduced } from './ui.js';
 import { LOGO } from './logo.js';
 import home from './views/home.js';
 import collection from './views/collection.js';
@@ -119,8 +119,8 @@ sInput.addEventListener('input', () => {
   const q = sInput.value.trim().toLowerCase();
   const out = document.getElementById('searchResults');
   if (q.length < 2) { out.innerHTML = ''; return; }
-  const hits = products.filter((p) => [p.name, p.family, p.house, p.world === 'noir' ? 'noir' : 'rose rosé', ...p.notes.top, ...p.notes.heart, ...p.notes.base].join(' ').toLowerCase().includes(q)).slice(0, 8);
-  out.innerHTML = hits.length ? hits.map((p) => `<a class="search-hit" role="listitem" href="#product-${p.id}"><img src="${img(p)}" alt=""><span><small>${p.world === 'noir' ? 'Noir' : 'Rosé'} · ${esc(p.family)}</small>${esc(p.name)}<br><span class="muted price" style="font-size:.85rem">${money(p.price)}</span></span></a>`).join('')
+  const hits = products.filter((p) => [p.name, p.family, p.house, p.world === 'noir' ? 'noir' : 'rose rosé', ...allNotes(p)].join(' ').toLowerCase().includes(q)).slice(0, 8);
+  out.innerHTML = hits.length ? hits.map((p) => `<a class="search-hit" role="listitem" href="#product-${p.id}"><img src="${img(p)}" alt=""><span><small>${p.world === 'noir' ? 'Noir' : 'Rosé'} · ${esc(p.family)}</small>${esc(p.name)}<br><span class="muted price" style="font-size:.85rem">${priceText(p)}</span></span></a>`).join('')
     : `<p class="muted">No miniatures match “${esc(sInput.value)}”. Try a note such as vanilla, rose or cedar.</p>`;
 });
 
@@ -134,7 +134,9 @@ document.addEventListener('click', (e) => {
   if (wb) { world.set(wb.dataset.worldBtn, wb); return; }
   const add = e.target.closest('[data-add]');
   if (add) {
-    const p = byId(add.dataset.add); bag.addProduct(p.id);
+    const p = byId(add.dataset.add);
+    if (typeof p.price !== 'number') return;
+    bag.addProduct(p.id);
     flyToBag(add.closest('.card')?.querySelector('img') || add, img(p));
     toast(`${p.name} added to your bag`); announce(`${p.name} added to your bag`);
     return;

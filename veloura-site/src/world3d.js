@@ -60,7 +60,7 @@ export function mountStory(canvas, opts = {}) {
   ['noir', 'rose'].forEach((w) => {
     scene.add(sig[w], ghost[w], cases[w]);
     // four companions in the case; the signature bottle lands in the centre slot
-    const picks = byWorld(w).slice(0, 4);
+    const picks = byWorld(w).filter((p) => p.bottle.shape !== 'studded').slice(0, 4);
     const slotIdx = [0, 1, 3, 4];
     picks.forEach((p, i) => {
       const b = buildBottle(p.bottle, stage.quality);
@@ -317,7 +317,7 @@ export function mountTray(container, world, size) {
         const have = slots[i];
         if (have && (!want || have.id !== want.id)) { c.remove(have.obj); disposeObject(have.obj); slots[i] = null; }
         if (want && !slots[i]) {
-          const obj = buildBottle(want.bottle, stage.quality); obj.scale.setScalar(CASE.mini);
+          const obj = buildBottle(want.bottle, stage.quality); obj.scale.setScalar(CASE.mini * Math.min(1, 6.4 / obj.userData.height));
           c.add(obj); slots[i] = { id: want.id, obj, t: 0 };
         }
       }

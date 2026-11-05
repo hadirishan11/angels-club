@@ -1,4 +1,5 @@
-import { products, SET_PRICES } from '../data/products.js';
+import { products as allProducts, SET_PRICES, buyable } from '../data/products.js';
+const products = allProducts.filter(buyable);
 import { bag, money, world } from '../state.js';
 import { icon, esc, img, toast, announce } from '../ui.js';
 

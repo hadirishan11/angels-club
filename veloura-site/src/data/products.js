@@ -52,6 +52,13 @@ export const products = [
     bottle: { shape: 'flask', cap: 'block', glass: '#b8bcc4', liquid: '#8f8a96', metal: 'silver', capColor: '#202126' } },
 
   // ----- ROSÉ -----
+  // Real catalogue item supplied by the store owner. Price and notes to be confirmed before launch.
+  { id: 'born-in-roma-intense', world: 'rose', name: 'Born in Roma Donna Intense', house: 'Valentino', size: '10 ml', concentration: 'Eau de Parfum Intense', format: 'Go Spray (travel spray)', price: null,
+    family: 'Oriental / Amber', keyNotes: ['Vanilla', 'Jasmine', 'Amber'],
+    mood: ['bold', 'romantic', 'warm'], time: 'night', intensity: 4, season: ['autumn', 'winter'],
+    description: 'The intense edition of Valentino Born in Roma Donna, in the 10 ml Go Spray — the signature studded glass in a slim travel size that slips into any bag.',
+    photos: ['img/products/born-in-roma-intense.webp', 'img/products/born-in-roma-intense-box.webp'],
+    bottle: { shape: 'studded', cap: 'cylinder', capColor: '#0c0c0d', capScale: 0.88, capHeight: 1.15, glass: '#f6e3e7', liquid: '#7d0b20', metal: 'gunmetal', fill: 0.96 } },
   { id: 'rose-velours', world: 'rose', name: 'Rose Velours', house: 'Atelier Démo', size: '10 ml', concentration: 'Eau de Parfum', price: 3800,
     family: 'Floral', notes: { top: ['Lychee', 'Pink pepper'], heart: ['Damask rose', 'Peony'], base: ['Velvet musk', 'Cashmere wood'] },
     mood: ['romantic', 'confident'], time: 'both', intensity: 3, season: ['spring', 'autumn'],
@@ -95,6 +102,10 @@ export const products = [
 ];
 
 export const SET_PRICES = { 3: 7900, 5: 11900 }; // demo pricing (CAD cents)
+
+export const isDemo = (p) => p.house === 'Atelier Démo';
+export const buyable = (p) => typeof p.price === 'number';
+export const allNotes = (p) => p.keyNotes || [...p.notes.top, ...p.notes.heart, ...p.notes.base];
 
 export const FAMILIES = [...new Set(products.map((p) => p.family))];
 

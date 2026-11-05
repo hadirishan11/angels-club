@@ -1,6 +1,6 @@
-import { byId, products, DEMO_NOTICE } from '../data/products.js';
+import { byId, products, DEMO_NOTICE, isDemo, buyable } from '../data/products.js';
 import { bag, money } from '../state.js';
-import { card, icon, esc, img, reveal, rail, load3D, reduced, flyToBag, toast, announce } from '../ui.js';
+import { card, icon, esc, img, priceText, reveal, rail, load3D, reduced, flyToBag, toast, announce } from '../ui.js';
 
 const meter = (n) => `<span class="meter" aria-label="Intensity ${n} of 5">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
 
@@ -17,29 +17,35 @@ export default (id) => {
         <div class="wrap product__grid">
           <div class="product__stage">
             <div class="viewer" tabindex="0" role="img" aria-label="${esc(p.name)}: interactive 3D bottle. Drag, swipe or use the arrow keys to rotate." style="view-transition-name: product-hero">
-              <img src="${img(p)}" alt="${esc(p.name)} — illustrative bottle" width="800" height="1000">
+              <img src="${img(p)}" alt="${esc(p.name)}${p.photos ? '' : ' — illustrative bottle'}" width="800" height="1000">
+              ${p.photos ? `<img class="viewer__photo" id="photo" alt="" hidden>` : ''}
               <div class="viewer__tools">
                 <span class="pill">${icon('rotate')} Drag to rotate</span>
                 <button class="pill" type="button" id="capBtn" aria-pressed="false">${icon('sparkle')} Lift the cap</button>
               </div>
             </div>
+            ${p.photos ? `<div class="viewer-tabs" role="tablist" aria-label="Product views">
+              <button type="button" role="tab" class="viewer-tab" data-view="3d" aria-selected="true">${icon('rotate')}<span>3D</span></button>
+              ${p.photos.map((ph, i) => `<button type="button" role="tab" class="viewer-tab" data-view="${i}" aria-selected="false"><img src="${ph}" alt="Photo ${i + 1}"></button>`).join('')}
+            </div>` : ''}
           </div>
           <div class="product__info">
             <span class="product__house">${esc(p.house)} · ${p.world === 'noir' ? 'Veloura Noir' : 'Veloura Rosé'}</span>
             <h1 class="product__name">${esc(p.name)}</h1>
-            <p class="product__sub">${esc(p.concentration)} · ${esc(p.size)} miniature</p>
-            <div class="product__price price">${money(p.price)}</div>
+            <p class="product__sub">${esc(p.concentration)} · ${esc(p.size)}${p.format ? ` · ${esc(p.format)}` : ' miniature'}</p>
+            <div class="product__price price">${priceText(p)}</div>
             <p class="muted" style="margin:0">${esc(p.description)}</p>
             <div class="buy-row">
               <div class="qty"><button type="button" data-q="-1" aria-label="Decrease quantity">${icon('minus')}</button><output id="qty" aria-live="polite">1</output><button type="button" data-q="1" aria-label="Increase quantity">${icon('plus')}</button></div>
-              <button class="btn" type="button" id="addBtn">${icon('bag')} Add to bag</button>
+              <button class="btn" type="button" id="addBtn" ${buyable(p) ? '' : 'disabled aria-disabled="true"'}>${icon('bag')} ${buyable(p) ? 'Add to bag' : 'Coming soon'}</button>
             </div>
-            <a class="btn btn--ghost" href="#build-a-set" id="toSet">${icon('gift')} Add to a discovery set</a>
+            ${buyable(p) ? `<a class="btn btn--ghost" href="#build-a-set" id="toSet">${icon('gift')} Add to a discovery set</a>` : ''}
             <div class="notes">
-              <h2>Fragrance notes</h2>
+              <h2>${p.keyNotes ? 'Key notes' : 'Fragrance notes'}</h2>
+              ${p.keyNotes ? `<div class="key-notes">${p.keyNotes.map((n) => `<span>${esc(n)}</span>`).join('')}</div>` : `
               <div class="tier"><span>Top</span><span>${p.notes.top.map(esc).join(', ')}</span></div>
               <div class="tier"><span>Heart</span><span>${p.notes.heart.map(esc).join(', ')}</span></div>
-              <div class="tier"><span>Base</span><span>${p.notes.base.map(esc).join(', ')}</span></div>
+              <div class="tier"><span>Base</span><span>${p.notes.base.map(esc).join(', ')}</span></div>`}
             </div>
             <dl class="facts">
               <div><dt>Family</dt><dd>${esc(p.family)}</dd></div>
@@ -52,7 +58,7 @@ export default (id) => {
               <details class="acc"><summary>Shipping ${icon('plus')}</summary><div class="acc__body">Shipping across Canada. Fragrances contain alcohol and ship by ground where carriers require it. Rates and delivery times are shown at checkout.</div></details>
               <details class="acc"><summary>Returns ${icon('plus')}</summary><div class="acc__body">Unopened items can be returned within [X] days. For hygiene reasons opened fragrances can't be returned unless damaged.</div></details>
             </div>
-            <p class="demo-note">${DEMO_NOTICE} The 3D bottle is an illustration, not a photo of the product.</p>
+            <p class="demo-note">${isDemo(p) ? `${DEMO_NOTICE} The 3D bottle is an illustration, not a photo of the product.` : 'The 3D view is a model of the bottle shape; brand markings appear in the photos.'}</p>
           </div>
         </div>
       </section>
@@ -62,7 +68,7 @@ export default (id) => {
           <div class="rail">${related.map((r, i) => card(r, i)).join('')}</div>
         </div>
       </section>
-      <div class="sticky-buy" id="stickyBuy" aria-hidden="true"><div><b>${esc(p.name)}</b><span class="price muted">${money(p.price)}</span></div><button class="btn btn--sm" type="button" data-add="${p.id}">Add to bag</button></div>`;
+      <div class="sticky-buy" id="stickyBuy" aria-hidden="true"><div><b>${esc(p.name)}</b><span class="price muted">${priceText(p)}</span></div>${buyable(p) ? `<button class="btn btn--sm" type="button" data-add="${p.id}">Add to bag</button>` : ''}</div>`;
     },
     async mount(root) {
       reveal(root); rail(root);
@@ -71,11 +77,12 @@ export default (id) => {
       root.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => { qty = Math.max(1, Math.min(10, qty + +b.dataset.q)); qEl.textContent = qty; }));
       const add = root.querySelector('#addBtn');
       add.addEventListener('click', () => {
+        if (!buyable(p)) return;
         bag.addProduct(p.id, qty);
         flyToBag(root.querySelector('.viewer'), img(p));
         toast(`${p.name} added to your bag`); announce(`${p.name} added to your bag`);
       });
-      root.querySelector('#toSet').addEventListener('click', () => { try { sessionStorage.setItem('veloura-preselect', p.id); } catch (e) { /* ignore */ } });
+      root.querySelector('#toSet')?.addEventListener('click', () => { try { sessionStorage.setItem('veloura-preselect', p.id); } catch (e) { /* ignore */ } });
       const sticky = root.querySelector('#stickyBuy');
       const io = new IntersectionObserver(([e]) => { const show = !e.isIntersecting && e.boundingClientRect.top < 0; sticky.classList.toggle('show', show); sticky.setAttribute('aria-hidden', String(!show)); });
       io.observe(add);
@@ -89,6 +96,14 @@ export default (id) => {
         try { viewer = mod.mountViewer(viewerEl, p.bottle, p.world, { reducedMotion: reduced() }); } catch (e) { console.warn(e); }
       }
       if (!viewer) capBtn.hidden = true;
+      // photo / 3D switcher
+      const photo = root.querySelector('#photo');
+      root.querySelectorAll('[data-view]').forEach((t) => t.addEventListener('click', () => {
+        root.querySelectorAll('[data-view]').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+        const v = t.dataset.view;
+        if (v === '3d') { photo.hidden = true; } else { photo.src = p.photos[+v]; photo.alt = `${p.name} — photo ${+v + 1}`; photo.hidden = false; }
+        viewerEl.querySelector('.viewer__tools').hidden = v !== '3d';
+      }));
       return () => { alive = false; io.disconnect(); viewer?.dispose(); };
     },
   };

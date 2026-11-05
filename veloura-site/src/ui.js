@@ -1,9 +1,11 @@
 /** Shared UI helpers: icons, product cards, toast, fly-to-bag, drawers, reveals, tilt. */
 import { money } from './state.js';
+import { buyable } from './data/products.js';
 
 export const icon = (name, cls = '') => `<svg class="i i-${name} ${cls}" aria-hidden="true" focusable="false"><use href="#i-${name}"></use></svg>`;
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-export const img = (p) => `img/products/${p.id}.webp`;
+export const img = (p) => (p.photos ? p.photos[0] : `img/products/${p.id}.webp`);
+export const priceText = (p) => (buyable(p) ? money(p.price) : 'Price to be confirmed');
 export const cut = (p) => `img/cut/${p.id}.webp`;
 export const reduced = () => document.documentElement.dataset.motion === 'reduced';
 
@@ -11,14 +13,14 @@ export function card(p, i = 0) {
   return `<article class="card rv" data-tilt style="--d:${i % 8}">
     <div class="card__media">
       <span class="card__world card__world--${p.world}">${p.world === 'noir' ? 'Noir' : 'Rosé'}</span>
-      <img src="${img(p)}" alt="${esc(p.name)} — illustrative bottle" loading="lazy" decoding="async" width="800" height="1000" data-vt-img="${p.id}">
+      <img src="${img(p)}" alt="${esc(p.name)}${p.photos ? '' : ' — illustrative bottle'}" loading="lazy" decoding="async" width="800" height="1000" data-vt-img="${p.id}">
     </div>
-    <button class="card__add" type="button" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">${icon('plus')}</button>
+    ${buyable(p) ? `<button class="card__add" type="button" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">${icon('plus')}</button>` : ''}
     <div class="card__body">
       <span class="card__house">${esc(p.house)}</span>
       <h3 class="card__name"><a href="#product-${p.id}" data-product-link="${p.id}">${esc(p.name)}</a></h3>
       <span class="card__family">${esc(p.family)} · ${esc(p.concentration)}</span>
-      <div class="card__meta"><span class="price">${money(p.price)}</span><span class="card__size">${esc(p.size)}</span></div>
+      <div class="card__meta"><span class="price">${priceText(p)}</span><span class="card__size">${esc(p.size)}</span></div>
     </div>
   </article>`;
 }

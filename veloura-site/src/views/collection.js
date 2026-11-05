@@ -1,4 +1,4 @@
-import { products, byWorld, FAMILIES } from '../data/products.js';
+import { products, byWorld, FAMILIES, allNotes } from '../data/products.js';
 import { card, icon, cut, esc, reveal } from '../ui.js';
 
 const COPY = {
@@ -60,8 +60,9 @@ export default (scope) => ({
       const q = st.q.trim().toLowerCase();
       let list = base.filter((p) => (!st.fam || p.family === st.fam) && (!st.wf || p.world === st.wf)
         && (!st.when || p.time === st.when || p.time === 'both')
-        && (!q || [p.name, p.family, p.house, ...p.notes.top, ...p.notes.heart, ...p.notes.base].join(' ').toLowerCase().includes(q)));
-      const sorts = { 'price-asc': (a, b) => a.price - b.price, 'price-desc': (a, b) => b.price - a.price, intensity: (a, b) => b.intensity - a.intensity, name: (a, b) => a.name.localeCompare(b.name) };
+        && (!q || [p.name, p.family, p.house, ...allNotes(p)].join(' ').toLowerCase().includes(q)));
+      const pv = (p, d) => (typeof p.price === 'number' ? p.price : d);
+      const sorts = { 'price-asc': (a, b) => pv(a, 1e9) - pv(b, 1e9), 'price-desc': (a, b) => pv(b, -1) - pv(a, -1), intensity: (a, b) => b.intensity - a.intensity, name: (a, b) => a.name.localeCompare(b.name) };
       if (sorts[st.sort]) list = list.slice().sort(sorts[st.sort]);
       grid.innerHTML = list.map((p, i) => card(p, i)).join('');
       count.textContent = `${list.length} ${list.length === 1 ? 'miniature' : 'miniatures'}`;
