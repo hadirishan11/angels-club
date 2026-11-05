@@ -17,6 +17,15 @@ Use the namespace and key exactly as shown (`veloura.<key>`). All are optional �
 | Glass colour (3D) | `veloura.glass_color` | Color | 3D bottle glass tint |
 | Cap style (3D) | `veloura.cap_style` | Single line text (choices: `block`, `cylinder`, `gem`, `dome`) | 3D bottle cap |
 
+| Key notes | `veloura.key_notes` | Single line text (comma separated, e.g. `Vanilla, Jasmine, Amber`) | Shown as note chips when you don't have a full top/heart/base pyramid |
+| Time | `veloura.time` | Single line text (choices: `day`, `night`, `both`) | Scent finder |
+| Intensity | `veloura.intensity` | Integer (1–5) | Scent finder |
+| Mood | `veloura.mood` | Single line text — *List of values* (`fresh`, `warm`, `mysterious`, `romantic`, `playful`, `confident`, `bold`, `calm`) | Scent finder. Tags like `mood:romantic` also work |
+| Bottle 3D model | `veloura.bottle_json` | **JSON** | The high-fidelity 3D bottle on the product page and in the set builder. See `shopify-import/born-in-roma-intense.csv` for a full example (studded Valentino Go Spray with the VALENTINO wordmark) |
+
+### bottle_json fields
+`shape` (`column`, `flask`, `crystal`, `pillar`, `studded`), `cap` (`block`, `cylinder`, `stepped`, `gem`, `pearl`), `glass`, `liquid`, `capColor` (hex colours), `metal` (`gold`, `rosegold`, `silver`, `gunmetal`), `fill` (0–1), `capScale`, `capHeight`, and optional `wordmark` `{ "text", "color", "weight", "length", "arc", "center" }` for the brand name on the glass.
+
 You can also create a **collection** metafield `veloura.world` (`noir` / `rose`) to lock any collection to a world.
 
 ## Variants for sizes

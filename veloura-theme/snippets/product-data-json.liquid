@@ -1,0 +1,60 @@
+{%- comment -%}
+  Outputs a JSON array describing products for the scent finder / set builder.
+  Params: products (array), limit
+  Data sources (all optional): tags noir/rose, metafields veloura.world, fragrance_family,
+  top_notes, heart_notes, base_notes, key_notes, mood (list), time (day/night/both), intensity (1–5), bottle_json.
+{%- endcomment -%}
+[
+{%- for p in products limit: limit -%}
+  {%- liquid
+    assign mf = p.metafields.veloura
+    assign v = p.selected_or_first_available_variant
+    assign ptags = p.tags | join: ',' | downcase
+    assign pw = mf.world.value | default: ''
+    if pw == ''
+      if ptags contains 'rose' or ptags contains 'rosé'
+        assign pw = 'rose'
+      elsif ptags contains 'noir'
+        assign pw = 'noir'
+      endif
+    endif
+    assign moods = ''
+    if mf.mood != blank
+      assign moods = mf.mood | metafield_text | downcase
+    endif
+    for t in p.tags
+      assign tl = t | downcase
+      if tl contains 'mood:'
+        assign moods = moods | append: ',' | append: tl
+      endif
+    endfor
+    assign moods = moods | remove: 'mood:' | remove: ' '
+    capture notes
+      echo mf.key_notes | metafield_text
+      echo ' '
+      echo mf.top_notes | metafield_text
+      echo ' '
+      echo mf.heart_notes | metafield_text
+      echo ' '
+      echo mf.base_notes | metafield_text
+    endcapture
+    assign family = mf.fragrance_family | metafield_text | default: p.type
+  -%}
+  {
+    "variant": {{ v.id | json }},
+    "available": {{ p.available | json }},
+    "title": {{ p.title | json }},
+    "vendor": {{ p.vendor | json }},
+    "url": {{ p.url | json }},
+    "price": {{ v.price | json }},
+    "image": {% if p.featured_media %}{{ p.featured_media | image_url: width: 400 | json }}{% else %}null{% endif %},
+    "world": {{ pw | json }},
+    "family": {{ family | json }},
+    "notes": {{ notes | strip | json }},
+    "mood": {{ moods | split: ',' | json }},
+    "time": {{ mf.time.value | default: '' | json }},
+    "intensity": {{ mf.intensity.value | default: 0 | json }},
+    "bottle": {% if mf.bottle_json != blank %}{{ mf.bottle_json.value | json }}{% else %}null{% endif %}
+  }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

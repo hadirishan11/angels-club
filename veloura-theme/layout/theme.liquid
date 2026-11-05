@@ -106,7 +106,8 @@
         },
         assets: {
           three: {{ 'three.module.min.js' | asset_url | json }},
-          v3d: {{ 'veloura-3d.js' | asset_url | json }}
+          v3d: {{ 'veloura-3d.js' | asset_url | json }},
+          world3d: {{ 'veloura-world3d.js' | asset_url | json }}
         },
         settings: {
           cartType: {{ settings.cart_type | json }},
@@ -134,6 +135,7 @@
       };
     </script>
     <script src="{{ 'veloura.js' | asset_url }}" defer></script>
+    <script src="{{ 'veloura-v2.js' | asset_url }}" defer></script>
 
     {{ content_for_header }}
   </head>

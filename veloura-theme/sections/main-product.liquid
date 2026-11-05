@@ -19,11 +19,41 @@
   assign cap_style = mf.cap_style.value | default: ''
   assign product_form_id = 'ProductForm-' | append: section.id
 -%}
-{%- capture bottle_json -%}{"shape":{{ bottle_shape | json }},"liquid":{{ liquid_color | json }},"glass":{{ glass_color | json }},"cap":{{ cap_style | json }}}{%- endcapture -%}
+{%- if mf.bottle_json != blank -%}
+  {%- capture bottle_json -%}{{ mf.bottle_json.value | json }}{%- endcapture -%}
+  {%- assign has_model = true -%}
+{%- else -%}
+  {%- capture bottle_json -%}{"shape":{{ bottle_shape | json }},"liquid":{{ liquid_color | json }},"glass":{{ glass_color | json }},"cap":{{ cap_style | json }}}{%- endcapture -%}
+  {%- assign has_model = false -%}
+  {%- if bottle_shape != blank -%}{%- assign has_model = true -%}{%- endif -%}
+{%- endif -%}
 {%- assign show_viewer = false -%}
 {%- if section.settings.viewer == 'always' -%}{%- assign show_viewer = true -%}{%- endif -%}
 {%- if section.settings.viewer == 'no_images' and product.media.size == 0 -%}{%- assign show_viewer = true -%}{%- endif -%}
-{%- if section.settings.viewer == 'metafield' and bottle_shape != blank -%}{%- assign show_viewer = true -%}{%- endif -%}
+{%- if section.settings.viewer == 'metafield' and has_model -%}{%- assign show_viewer = true -%}{%- endif -%}
+{%- if section.settings.viewer == 'never' -%}{%- assign show_viewer = false -%}{%- endif -%}
+{%- assign viewer_first = false -%}
+{%- if show_viewer and mf.bottle_json != blank and section.settings.viewer_first -%}{%- assign viewer_first = true -%}{%- endif -%}
+{%- capture viewer_slide -%}
+  <li class="gallery__slide gallery__slide--viewer" data-media-id="viewer" aria-label="{{ 'products.product.view_3d' | t }}">
+    <div class="viewer viewer--v2" {% if settings.enable_3d %}data-v2-viewer data-world="{{ pworld }}" tabindex="0" role="img" aria-label="{{ 'accessibility.viewer_label' | t }}"{% endif %}>
+      <script type="application/json">{{ bottle_json }}</script>
+      <div class="viewer__halo" aria-hidden="true"></div>
+      <div class="v3d__fallback viewer__fallback">
+        {%- if product.featured_media and viewer_first -%}
+          {{ product.featured_media | image_url: width: 1000 | image_tag: loading: 'eager', alt: product.title, class: 'viewer__photo-fallback' }}
+        {%- else -%}
+          {% render 'placeholder-bottle', shape: bottle_shape, label: product.title %}
+        {%- endif -%}
+      </div>
+      <div class="viewer__stage" data-stage></div>
+      <div class="viewer__tools">
+        <span class="v3d__pill">{% render 'icon', name: 'rotate' %}{{ 'accessibility.rotate_hint' | t }}</span>
+        <button class="v3d__pill" type="button" data-cap-toggle aria-pressed="false">{% render 'icon', name: 'sparkle' %}{{ 'products.product.lift_cap' | t }}</button>
+      </div>
+    </div>
+  </li>
+{%- endcapture -%}
 {%- assign slide_count = product.media.size -%}
 {%- if show_viewer or product.media.size == 0 -%}{%- assign slide_count = slide_count | plus: 1 -%}{%- endif -%}
 
@@ -35,6 +65,7 @@
     <div class="product__gallery">
       <div class="gallery">
         <ul class="gallery__track" data-gallery-track role="list" tabindex="0" aria-label="{{ product.title | escape }}">
+          {%- if viewer_first -%}{{ viewer_slide }}{%- endif -%}
           {%- for media in product.media -%}
             <li class="gallery__slide gallery__slide--{{ media.media_type }}" data-media-id="{{ media.id }}" aria-label="{{ 'accessibility.slide' | t: index: forloop.index, count: slide_count }}">
               {%- case media.media_type -%}
@@ -55,31 +86,27 @@
               {%- endcase -%}
             </li>
           {%- endfor -%}
-          {%- if show_viewer or product.media.size == 0 -%}
-            <li class="gallery__slide gallery__slide--viewer" data-media-id="viewer" aria-label="{{ 'products.product.view_3d' | t }}">
-              <div class="viewer v3d" {% if settings.enable_3d %}data-v3d="viewer" data-v3d-world="{{ pworld }}" data-v3d-bottle="{{ bottle_json | escape }}" tabindex="0" role="img" aria-label="{{ 'accessibility.viewer_label' | t }}"{% endif %}>
-                <div class="viewer__halo" aria-hidden="true"></div>
-                <div class="v3d__fallback viewer__fallback">
-                  {% render 'placeholder-bottle', shape: bottle_shape, label: product.title %}
-                </div>
-                <span class="v3d__hint">{% render 'icon', name: 'rotate' %}{{ 'accessibility.rotate_hint' | t }}</span>
-              </div>
-            </li>
-          {%- endif -%}
+          {%- if show_viewer or product.media.size == 0 -%}{%- unless viewer_first -%}{{ viewer_slide }}{%- endunless -%}{%- endif -%}
         </ul>
         {%- if slide_count > 1 -%}
           <div class="gallery__dots" aria-hidden="true">
             {%- for i in (1..slide_count) -%}<button type="button" tabindex="-1" data-gallery-dot data-index="{{ forloop.index0 }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}"></button>{%- endfor -%}
           </div>
           <ul class="gallery__thumbs" role="list">
+            {%- assign offset = 0 -%}
+            {%- if viewer_first -%}
+              {%- assign offset = 1 -%}
+              <li><button type="button" class="gallery__thumb gallery__thumb--3d" data-gallery-thumb data-index="0" aria-current="true" aria-label="{{ 'products.product.view_3d' | t }}">3D</button></li>
+            {%- endif -%}
             {%- for media in product.media -%}
-              <li><button type="button" class="gallery__thumb" data-gallery-thumb data-index="{{ forloop.index0 }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="{{ 'products.product.media' | t: index: forloop.index }}">
+              {%- assign idx = forloop.index0 | plus: offset -%}
+              <li><button type="button" class="gallery__thumb" data-gallery-thumb data-index="{{ idx }}" aria-current="{% if idx == 0 %}true{% else %}false{% endif %}" aria-label="{{ 'products.product.media' | t: index: forloop.index }}">
                 {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
               </button></li>
             {%- endfor -%}
-            {%- if show_viewer or product.media.size == 0 -%}
+            {%- if show_viewer or product.media.size == 0 -%}{%- unless viewer_first -%}
               <li><button type="button" class="gallery__thumb gallery__thumb--3d" data-gallery-thumb data-index="{{ product.media.size }}" aria-label="{{ 'products.product.view_3d' | t }}">3D</button></li>
-            {%- endif -%}
+            {%- endunless -%}{%- endif -%}
           </ul>
         {%- endif -%}
       </div>
@@ -160,7 +187,16 @@
             </div>
 
           {%- when 'notes' -%}
-            {%- if mf.top_notes != blank or mf.heart_notes != blank or mf.base_notes != blank or mf.fragrance_family != blank -%}
+            {%- if mf.key_notes != blank -%}
+              <div class="notes" {{ block.shopify_attributes }}>
+                <h2 class="notes__title">{{ 'products.product.notes' | t }}</h2>
+                {%- if mf.fragrance_family != blank -%}<p class="notes__family"><span>{{ 'products.product.family' | t }}</span> {{ mf.fragrance_family | metafield_text }}</p>{%- endif -%}
+                <div class="key-notes">
+                  {%- assign kn = mf.key_notes | metafield_text | split: ',' -%}
+                  {%- for n in kn -%}<span>{{ n | strip }}</span>{%- endfor -%}
+                </div>
+              </div>
+            {%- elsif mf.top_notes != blank or mf.heart_notes != blank or mf.base_notes != blank or mf.fragrance_family != blank -%}
               <div class="notes" {{ block.shopify_attributes }}>
                 <h2 class="notes__title">{{ 'products.product.notes' | t }}</h2>
                 {%- if mf.fragrance_family != blank -%}<p class="notes__family"><span>{{ 'products.product.family' | t }}</span> {{ mf.fragrance_family | metafield_text }}</p>{%- endif -%}
@@ -262,7 +298,8 @@
       { "value": "no_images", "label": "Only when product has no images" },
       { "value": "always", "label": "Always (as last gallery slide)" },
       { "value": "never", "label": "Never" }
-    ], "default": "metafield", "info": "The viewer shows an illustrative, label-free Veloura bottle. Upload real 3D models (GLB) to product media to show the actual product in 3D." }
+    ], "default": "metafield", "info": "Shows the 3D bottle described by the metafield veloura.bottle_json (or the simpler bottle_shape metafields). You can also upload GLB models to product media." },
+    { "type": "checkbox", "id": "viewer_first", "label": "Show the 3D bottle first when a bottle_json model exists", "default": true }
   ],
   "blocks": [
     { "type": "@app" },

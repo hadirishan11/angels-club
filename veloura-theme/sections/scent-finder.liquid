@@ -1,0 +1,25 @@
+{%- assign source = section.settings.collection | default: collections.all -%}
+<section class="section quiz-section" data-scent-finder>
+  {%- if settings.enable_particles -%}<div class="quiz-section__atmo" data-atmosphere="auto" aria-hidden="true"></div>{%- endif -%}
+  <div class="container quiz__card">
+    {%- if section.settings.heading != blank -%}
+      <div class="quiz__intro"><p class="eyebrow">{{ section.settings.eyebrow }}</p><h1 class="h1">{{ section.settings.heading }}</h1>{%- if section.settings.text != blank -%}<div class="lede rte">{{ section.settings.text }}</div>{%- endif -%}</div>
+    {%- endif -%}
+    <div data-finder aria-live="polite"><noscript><p>Turn on JavaScript to use the scent finder.</p></noscript></div>
+  </div>
+  <script type="application/json" data-finder-products>{% render 'product-data-json', products: source.products, limit: 60 %}</script>
+</section>
+
+{% schema %}
+{
+  "name": "Scent finder quiz",
+  "class": "section-scent-finder",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Scent finder" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Find your signature in five questions" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Tell us your mood, your moments and the notes you love. We'll suggest three fragrances to try.</p>" },
+    { "type": "collection", "id": "collection", "label": "Products to recommend from", "info": "Defaults to all products. Results improve with metafields veloura.mood, veloura.time, veloura.intensity and veloura.fragrance_family (see docs/METAFIELDS.md)." }
+  ],
+  "presets": [{ "name": "Scent finder quiz" }]
+}
+{% endschema %}

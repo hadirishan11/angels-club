@@ -1,59 +1,8 @@
 {
   "sections": {
-    "hero": {
-      "type": "dual-hero",
-      "settings": {
-        "tagline": "Iconic Scents. Miniature Luxury.",
-        "height": 100,
-        "live_3d": true,
-        "noir_heading": "The Art of Presence",
-        "noir_subtitle": "Iconic fragrances. Bold impressions. Luxury in every detail.",
-        "noir_cta": "Explore Noir",
-        "rose_heading": "A Little Luxury, A Lot of Love",
-        "rose_subtitle": "Fall in love with iconic fragrances in their most irresistible sizes.",
-        "rose_cta": "Explore Rosé"
-      }
-    },
-    "discover": {
-      "type": "discover-veloura",
-      "blocks": {
-        "p1": {
-          "type": "pillar",
-          "settings": {
-            "icon": "bottle",
-            "title": "Curated icons",
-            "text": "Designer fragrances selected for their character and craft."
-          }
-        },
-        "p2": {
-          "type": "pillar",
-          "settings": {
-            "icon": "sparkle",
-            "title": "Discover more",
-            "text": "Smaller formats make it easy to explore new signatures."
-          }
-        },
-        "p3": {
-          "type": "pillar",
-          "settings": {
-            "icon": "gift",
-            "title": "Made to gift",
-            "text": "Every order is presented in Veloura packaging."
-          }
-        }
-      },
-      "block_order": [
-        "p1",
-        "p2",
-        "p3"
-      ],
-      "settings": {
-        "eyebrow": "Discover Veloura",
-        "heading": "Iconic scents, beautifully miniature",
-        "cta": "Shop all perfumes",
-        "enable_3d": true,
-        "caption": "Illustrative Veloura bottle — drag to explore"
-      }
+    "story": {
+      "type": "veloura-story",
+      "settings": {}
     },
     "worlds": {
       "type": "collection-cards",
@@ -68,50 +17,6 @@
         "eyebrow": "Most loved",
         "heading": "Best sellers",
         "limit": 10
-      }
-    },
-    "miniature": {
-      "type": "miniature-luxury",
-      "blocks": {
-        "r1": {
-          "type": "reason",
-          "settings": {
-            "title": "Try before you commit",
-            "text": "Live with a fragrance for days, not seconds on a paper strip."
-          }
-        },
-        "r2": {
-          "type": "reason",
-          "settings": {
-            "title": "A wardrobe of scents",
-            "text": "Change your fragrance with your mood, the season or the occasion."
-          }
-        },
-        "r3": {
-          "type": "reason",
-          "settings": {
-            "title": "Made to travel",
-            "text": "Pocket- and purse-sized bottles that go wherever you do."
-          }
-        },
-        "r4": {
-          "type": "reason",
-          "settings": {
-            "title": "The perfect gift",
-            "text": "Iconic names at a thoughtful size, beautifully presented."
-          }
-        }
-      },
-      "block_order": [
-        "r1",
-        "r2",
-        "r3",
-        "r4"
-      ],
-      "settings": {
-        "eyebrow": "Miniature luxury",
-        "heading": "Why discover in miniature",
-        "badge": "Mini format"
       }
     },
     "discovery": {
@@ -178,11 +83,9 @@
     }
   },
   "order": [
-    "hero",
-    "discover",
+    "story",
     "worlds",
     "bestsellers",
-    "miniature",
     "discovery",
     "brands",
     "gifting",

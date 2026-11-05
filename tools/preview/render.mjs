@@ -152,6 +152,9 @@ async function renderPage(templateName, extraCtx, outName) {
 await renderPage('index', {}, 'index.html');
 await renderPage('collection.noir', { collection: noir }, 'collection-noir.html');
 await renderPage('collection.rose', { collection: rose }, 'collection-rose.html');
-const p = { ...noirProducts[0], media: [img(demo('noir-01'), 'Demo')], metafields: { veloura: { ...noirProducts[0].metafields.veloura, bottle_shape: 'square' } } };
+const p = { ...roseProducts[0], title: 'Born in Roma Donna Intense', vendor: 'Valentino', media: [img(demo('rose-01'), 'Demo')], metafields: { veloura: { ...roseProducts[0].metafields.veloura, bottle_json: { value: { shape: 'studded', cap: 'stepped', capColor: '#0c0c0d', capScale: 0.9, capHeight: 1.15, glass: '#f8eef0', liquid: '#560716', metal: 'gunmetal', fill: 1, wordmark: { text: 'VALENTINO', color: '#f3d3da', weight: 600, length: 0.72, arc: 0.52, center: 0.47 } } } } } };
 await renderPage('product', { product: p, recommendations: { performed: true, products_count: 4, products: noirProducts } }, 'product.html');
 await renderPage('page.faq', { page: { title: 'FAQ', content: '' } }, 'faq.html');
+const allColl = mkCollection('all', 'All', all);
+await renderPage('page.scent-finder', { page: { title: 'Scent finder', content: '' }, collections: { all: allColl } }, 'finder.html');
+await renderPage('page.build-a-set', { page: { title: 'Build a set', content: '' }, collections: { all: allColl } }, 'builder.html');

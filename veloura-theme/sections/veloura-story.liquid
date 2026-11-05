@@ -1,0 +1,117 @@
+{%- liquid
+  assign noir_url = section.settings.noir_link | default: settings.noir_collection.url | default: routes.all_products_collection_url
+  assign rose_url = section.settings.rose_link | default: settings.rose_collection.url | default: routes.all_products_collection_url
+-%}
+<section class="vstory" data-veloura-story aria-label="{{ section.settings.tagline | escape }}">
+  <div class="vstory__sticky">
+    <div class="vstory__fallback" aria-hidden="true">
+      <div class="vstory__fb vstory__fb--noir"><img src="{{ 'veloura-display-noir.webp' | asset_url }}" alt="" loading="eager" width="1200" height="977"></div>
+      <div class="vstory__fb vstory__fb--rose"><img src="{{ 'veloura-display-rose.webp' | asset_url }}" alt="" loading="eager" width="1200" height="983"></div>
+    </div>
+    <canvas class="vstory__canvas" aria-hidden="true"></canvas>
+
+    <div class="vchapter vchapter--hero on" data-ch="0">
+      <div class="vchapter__inner">
+        <div class="vstory__brand">
+          {% render 'logo', variant: 'full', tone: 'signature', class: 'vl-logo--animated' %}
+          <p>{{ section.settings.tagline }}</p>
+        </div>
+        <div class="vstory__sides">
+          <div class="vstory__side vstory__side--noir" data-side="-1">
+            <span class="vstory__world">NOIR</span>
+            <small>{{ 'general.world.noir_tagline' | t }}</small>
+            <h2>{{ section.settings.noir_heading }}</h2>
+            <p>{{ section.settings.noir_subtitle }}</p>
+            <a class="btn vstory__btn--noir" href="{{ noir_url }}" data-enter-world="noir">{{ section.settings.noir_cta }} {% render 'icon', name: 'arrow' %}</a>
+          </div>
+          <div class="vstory__side vstory__side--rose" data-side="1">
+            <span class="vstory__world">ROSÉ</span>
+            <small>{{ 'general.world.rose_tagline' | t }}</small>
+            <h2>{{ section.settings.rose_heading }}</h2>
+            <p>{{ section.settings.rose_subtitle }}</p>
+            <a class="btn vstory__btn--rose" href="{{ rose_url }}" data-enter-world="rose">{{ section.settings.rose_cta }} {% render 'icon', name: 'arrow' %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vchapter" data-ch="1"><div class="vchapter__inner"><div class="vchapter__text">
+      <p class="eyebrow"><span data-w="noir">Veloura Noir</span><span data-w="rose">Veloura Rosé</span></p>
+      <h2 class="h-display"><span data-w="noir">{{ section.settings.noir_heading }}</span><span data-w="rose">{{ section.settings.rose_heading }}</span></h2>
+      <p class="lede"><span data-w="noir">{{ section.settings.noir_subtitle }}</span><span data-w="rose">{{ section.settings.rose_subtitle }}</span></p>
+    </div></div></div>
+
+    <div class="vchapter" data-ch="2"><div class="vchapter__inner"><div class="vchapter__text">
+      <p class="eyebrow">{{ section.settings.ch2_eyebrow }}</p>
+      <h2 class="h1">{{ section.settings.ch2_heading }}</h2>
+      <p>{{ section.settings.ch2_text }}</p>
+      <ul class="vstory__notes" role="list">
+        {%- assign noir_notes = section.settings.noir_notes | split: ',' -%}
+        {%- assign rose_notes = section.settings.rose_notes | split: ',' -%}
+        {%- for n in noir_notes -%}<li data-w="noir">{{ n | strip }}</li>{%- endfor -%}
+        {%- for n in rose_notes -%}<li data-w="rose">{{ n | strip }}</li>{%- endfor -%}
+      </ul>
+    </div></div></div>
+
+    <div class="vchapter" data-ch="3"><div class="vchapter__inner"><div class="vchapter__text">
+      <p class="eyebrow">{{ section.settings.ch3_eyebrow }}</p>
+      <h2 class="h1">{{ section.settings.ch3_heading }}</h2>
+      <p>{{ section.settings.ch3_text }}</p>
+      <a class="btn btn--outline" href="{{ section.settings.ch3_link | default: routes.all_products_collection_url }}">{{ section.settings.ch3_cta }} {% render 'icon', name: 'arrow' %}</a>
+    </div></div></div>
+
+    <div class="vchapter" data-ch="4"><div class="vchapter__inner"><div class="vchapter__text">
+      <p class="eyebrow">{{ section.settings.ch4_eyebrow }}</p>
+      <h2 class="h1">{{ section.settings.ch4_heading }}</h2>
+      <p>{{ section.settings.ch4_text }}</p>
+      <div class="vstory__ctas">
+        <a class="btn btn--primary" href="{{ section.settings.builder_link | default: '/pages/build-a-set' }}">{{ section.settings.builder_cta }} {% render 'icon', name: 'arrow' %}</a>
+        <a class="btn btn--outline" href="{{ section.settings.finder_link | default: '/pages/scent-finder' }}">{{ section.settings.finder_cta }}</a>
+      </div>
+    </div></div></div>
+
+    <div class="vstory__progress" aria-hidden="true">{%- for i in (0..4) -%}<i data-dot="{{ i }}"></i>{%- endfor -%}</div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Scroll story (3D)",
+  "class": "section-veloura-story",
+  "settings": [
+    { "type": "paragraph", "content": "A pinned, scroll-driven 3D story: split Noir/Rosé hero → signature bottle → cap lift & mist → miniature vs full size → discovery case unboxing. Phones and browsers without WebGL see the still images." },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Iconic Scents. Miniature Luxury." },
+    { "type": "header", "content": "Noir" },
+    { "type": "text", "id": "noir_heading", "label": "Heading", "default": "The Art of Presence" },
+    { "type": "text", "id": "noir_subtitle", "label": "Subtitle", "default": "Iconic fragrances. Bold impressions. Luxury in every detail." },
+    { "type": "text", "id": "noir_cta", "label": "Button label", "default": "Explore Noir" },
+    { "type": "url", "id": "noir_link", "label": "Button link" },
+    { "type": "text", "id": "noir_notes", "label": "Notes shown in chapter 2 (comma separated)", "default": "Bergamot, Vetiver, Smoked cedar, Ambergris" },
+    { "type": "header", "content": "Rosé" },
+    { "type": "text", "id": "rose_heading", "label": "Heading", "default": "A Little Luxury, A Lot of Love" },
+    { "type": "text", "id": "rose_subtitle", "label": "Subtitle", "default": "Fall in love with iconic fragrances in their most irresistible sizes." },
+    { "type": "text", "id": "rose_cta", "label": "Button label", "default": "Explore Rosé" },
+    { "type": "url", "id": "rose_link", "label": "Button link" },
+    { "type": "text", "id": "rose_notes", "label": "Notes shown in chapter 2 (comma separated)", "default": "Lychee, Damask rose, Peony, Velvet musk" },
+    { "type": "header", "content": "Chapter 2 — the ritual" },
+    { "type": "text", "id": "ch2_eyebrow", "label": "Eyebrow", "default": "The ritual" },
+    { "type": "text", "id": "ch2_heading", "label": "Heading", "default": "Lift. Spray. Discover." },
+    { "type": "textarea", "id": "ch2_text", "label": "Text", "default": "Every miniature carries the full composition — top, heart and base — in a size made for discovering, travelling and gifting." },
+    { "type": "header", "content": "Chapter 3 — miniature luxury" },
+    { "type": "text", "id": "ch3_eyebrow", "label": "Eyebrow", "default": "Miniature luxury" },
+    { "type": "text", "id": "ch3_heading", "label": "Heading", "default": "The same signature. A fraction of the size." },
+    { "type": "textarea", "id": "ch3_text", "label": "Text", "default": "Wear a fragrance for days, not seconds on a paper strip. Carry it everywhere. Change it with your mood." },
+    { "type": "text", "id": "ch3_cta", "label": "Button label", "default": "Shop all minis" },
+    { "type": "url", "id": "ch3_link", "label": "Button link" },
+    { "type": "header", "content": "Chapter 4 — discovery sets" },
+    { "type": "text", "id": "ch4_eyebrow", "label": "Eyebrow", "default": "Discovery sets" },
+    { "type": "text", "id": "ch4_heading", "label": "Heading", "default": "Build your own set" },
+    { "type": "textarea", "id": "ch4_text", "label": "Text", "default": "Choose three or five miniatures and receive them together in a signature Veloura case." },
+    { "type": "text", "id": "builder_cta", "label": "Set builder button label", "default": "Build a set" },
+    { "type": "url", "id": "builder_link", "label": "Set builder page", "info": "Defaults to /pages/build-a-set" },
+    { "type": "text", "id": "finder_cta", "label": "Scent finder button label", "default": "Take the scent quiz" },
+    { "type": "url", "id": "finder_link", "label": "Scent finder page", "info": "Defaults to /pages/scent-finder" }
+  ],
+  "presets": [{ "name": "Scroll story (3D)" }]
+}
+{% endschema %}
