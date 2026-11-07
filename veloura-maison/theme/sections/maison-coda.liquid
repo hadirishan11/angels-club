@@ -1,0 +1,23 @@
+{%- comment -%}
+  Maison coda — the hidden detail. A quiet line that only appears once the visitor
+  has scrolled to the very end of the page.
+{%- endcomment -%}
+<section class="m-coda" data-m-coda aria-live="polite">
+  <div class="container text-center">
+    <span class="m-coda__mist" aria-hidden="true"></span>
+    <p class="m-coda__eyebrow">{{ section.settings.eyebrow }}</p>
+    <p class="m-coda__line">{{ section.settings.line }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison — coda",
+  "class": "section-maison-coda",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Base notes" },
+    { "type": "text", "id": "line", "label": "Line", "default": "You've reached the base notes — <em>the part that lingers longest.</em>" }
+  ],
+  "presets": [{ "name": "Maison — coda" }]
+}
+{% endschema %}

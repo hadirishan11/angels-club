@@ -1,0 +1,71 @@
+{%- comment -%}
+  Maison manifesto — a statement whose words light up as you scroll, followed by key figures that count up.
+  Wrap words in *asterisks* in the statement to set them in italic foil.
+{%- endcomment -%}
+<section class="m-manifesto section" data-m-manifesto>
+  <div class="container">
+    <div class="m-manifesto__grid">
+      <div class="m-manifesto__aside">
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.signature != blank -%}
+          <p class="m-manifesto__signature" data-reveal>{{ section.settings.signature }}</p>
+        {%- endif -%}
+      </div>
+      <p class="m-manifesto__text" data-m-words>
+        {%- assign parts = section.settings.statement | split: '*' -%}
+        {%- for part in parts -%}
+          {%- assign is_em = forloop.index0 | modulo: 2 -%}
+          {%- assign words = part | split: ' ' -%}
+          {%- for w in words -%}
+            {%- if w != blank -%}
+              <span class="m-w{% if is_em == 1 %} m-w--em{% endif %}">{{ w | escape }}</span>{{ ' ' }}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      </p>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="m-figures" role="list" data-reveal-group>
+        {%- for block in section.blocks -%}
+          <li class="m-figure" data-reveal {{ block.shopify_attributes }}>
+            <span class="m-figure__value">
+              {%- if block.settings.prefix != blank -%}<span class="m-figure__affix">{{ block.settings.prefix }}</span>{%- endif -%}
+              <span data-m-count="{{ block.settings.value }}">{{ block.settings.value }}</span>
+              {%- if block.settings.suffix != blank -%}<span class="m-figure__affix">{{ block.settings.suffix }}</span>{%- endif -%}
+            </span>
+            <span class="m-figure__label">{{ block.settings.label }}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison — manifesto",
+  "class": "section-maison-manifesto",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Veloura philosophy" },
+    { "type": "textarea", "id": "statement", "label": "Statement", "info": "Wrap words in *asterisks* to set them in italic foil.", "default": "A great fragrance should be *lived in,* not judged on a paper strip. So we decant the world's most iconic scents into *miniature* atomisers — the full composition, the same signature, made to be worn, carried and *fallen for.*" },
+    { "type": "text", "id": "signature", "label": "Signature line", "default": "— Maison Veloura, Canada" }
+  ],
+  "blocks": [
+    { "type": "figure", "name": "Figure", "limit": 4, "settings": [
+      { "type": "text", "id": "prefix", "label": "Prefix" },
+      { "type": "number", "id": "value", "label": "Number", "default": 10 },
+      { "type": "text", "id": "suffix", "label": "Suffix", "default": " ml" },
+      { "type": "text", "id": "label", "label": "Label", "default": "Of the original eau de parfum" }
+    ] }
+  ],
+  "presets": [{
+    "name": "Maison — manifesto",
+    "blocks": [
+      { "type": "figure", "settings": { "value": 10, "suffix": " ml", "label": "Of the original eau de parfum" } },
+      { "type": "figure", "settings": { "value": 100, "suffix": "+", "label": "Sprays in every atomiser" } },
+      { "type": "figure", "settings": { "value": 100, "suffix": "%", "label": "Authentic designer fragrance" } }
+    ]
+  }]
+}
+{% endschema %}

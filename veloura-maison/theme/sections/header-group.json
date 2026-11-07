@@ -1,0 +1,9 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": { "type": "announcement-bar", "settings": { "text": "Authentic designer fragrances in 10 ml — hand-packed in Canada", "link": "" } },
+    "header": { "type": "header", "settings": { "menu": "main-menu", "show_world_switch": true, "overlay_home": true, "overlay_collections": true, "sticky": "smart" } }
+  },
+  "order": ["announcement", "header"]
+}

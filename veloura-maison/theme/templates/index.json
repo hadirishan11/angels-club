@@ -1,0 +1,120 @@
+{
+  "sections": {
+    "story": {
+      "type": "veloura-story",
+      "settings": {
+        "tagline": "Maison of miniature luxury",
+        "noir_heading": "The art of <em>presence</em>",
+        "noir_subtitle": "Woods, smoke and spice from the houses that defined them — in ten perfect millilitres.",
+        "rose_heading": "A little luxury, a lot of <em>love</em>",
+        "rose_subtitle": "Florals, gourmands and luminous musks, made to be carried, layered and adored.",
+        "ch2_heading": "Lift. Spray. <em>Discover.</em>",
+        "ch2_text": "Every atomiser carries the complete composition — top, heart and base — decanted by hand from the original bottle.",
+        "ch3_heading": "The same signature. <em>A fraction</em> of the size.",
+        "ch3_text": "Wear a fragrance for days, not seconds on a paper strip. Carry it everywhere. Change it with your mood.",
+        "ch4_heading": "Compose your <em>own</em> set",
+        "ch4_text": "Choose three or five miniatures and receive them together in a signature Veloura case — a wardrobe of scent."
+      }
+    },
+    "houses_ribbon": {
+      "type": "maison-marquee",
+      "settings": {
+        "eyebrow": "The houses we carry",
+        "caption": "Authentic designer fragrances, decanted by hand into 10 ml atomisers.",
+        "style": "foil",
+        "speed": 55,
+        "label": "Fragrance houses"
+      }
+    },
+    "manifesto": {
+      "type": "maison-manifesto",
+      "blocks": {
+        "f1": { "type": "figure", "settings": { "value": 10, "suffix": " ml", "label": "Of the original eau de parfum" } },
+        "f2": { "type": "figure", "settings": { "value": 100, "suffix": "+", "label": "Sprays in every atomiser" } },
+        "f3": { "type": "figure", "settings": { "value": 100, "suffix": "%", "label": "Authentic designer fragrance" } }
+      },
+      "block_order": ["f1", "f2", "f3"],
+      "settings": {
+        "eyebrow": "The Veloura philosophy",
+        "statement": "A great fragrance should be *lived in,* not judged on a paper strip. So we decant the world's most iconic scents into *miniature* atomisers — the full composition, the same signature, made to be worn, carried and *fallen for.*",
+        "signature": "— Maison Veloura, Canada"
+      }
+    },
+    "showcase": {
+      "type": "maison-showcase",
+      "settings": {
+        "eyebrow": "The collection",
+        "heading": "Most <em>coveted</em>",
+        "text": "The signatures our clients return to — each one decanted from the original bottle into a 10 ml atomiser.",
+        "limit": 5,
+        "cta": "View the collection"
+      }
+    },
+    "worlds": {
+      "type": "collection-cards",
+      "settings": {
+        "eyebrow": "Two worlds",
+        "heading": "Choose your <em>world</em>"
+      }
+    },
+    "discovery": {
+      "type": "discovery-sets",
+      "settings": {
+        "eyebrow": "Discovery sets",
+        "heading": "Find your <em>signature</em>",
+        "cta": "Shop discovery sets",
+        "show_products": true
+      }
+    },
+    "houses": {
+      "type": "maison-houses",
+      "settings": {
+        "eyebrow": "The houses",
+        "heading": "Shop by <em>maison</em>",
+        "text": "Every house in our cellar, listed as it should be — by name alone.",
+        "limit": 20,
+        "singular": "fragrance",
+        "plural": "fragrances"
+      }
+    },
+    "gifting": {
+      "type": "gifting",
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "icon": "gift", "title": "Signature packaging", "text": "Every order arrives in a Veloura box — champagne gold for Noir, rosé for Rosé." } },
+        "f2": { "type": "feature", "settings": { "icon": "sparkle", "title": "A handwritten note", "text": "Add a personal message in your bag before checkout." } },
+        "f3": { "type": "feature", "settings": { "icon": "truck", "title": "Shipped across Canada", "text": "Packed by hand and sent with care, coast to coast." } }
+      },
+      "block_order": ["f1", "f2", "f3"],
+      "settings": {
+        "eyebrow": "The gifting experience",
+        "heading": "Unboxing, <em>perfected</em>",
+        "cta": "Shop gift sets"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Join the Veloura <em>circle</em>"
+      }
+    },
+    "coda": {
+      "type": "maison-coda",
+      "settings": {
+        "eyebrow": "Base notes",
+        "line": "You've reached the base notes — <em>the part that lingers longest.</em>"
+      }
+    }
+  },
+  "order": [
+    "story",
+    "houses_ribbon",
+    "manifesto",
+    "showcase",
+    "worlds",
+    "discovery",
+    "houses",
+    "gifting",
+    "newsletter",
+    "coda"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "brand": { "type": "brand", "settings": { "text": "<p>A Canadian maison of miniature luxury — the world's most iconic fragrances, decanted by hand into 10 ml atomisers.</p>", "contact": "" } },
+        "shop": { "type": "menu", "settings": { "heading": "Shop", "menu": "main-menu" } },
+        "help": { "type": "menu", "settings": { "heading": "Client care", "menu": "footer" } },
+        "care": { "type": "text", "settings": { "heading": "Our promise", "text": "<p>Authentic designer fragrances, presented in miniature. Every order is packed by hand in our signature Veloura packaging.</p>" } }
+      },
+      "block_order": ["brand", "shop", "help", "care"],
+      "settings": { "show_country": true, "show_language": true, "show_payment_icons": true }
+    }
+  },
+  "order": ["footer"]
+}

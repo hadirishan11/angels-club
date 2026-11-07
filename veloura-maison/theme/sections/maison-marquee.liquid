@@ -1,0 +1,57 @@
+{%- comment -%}
+  Maison marquee — giant italic serif ribbon of fragrance houses.
+  Names come from the "Houses" setting, or automatically from the vendors in stock.
+{%- endcomment -%}
+{%- liquid
+  assign names = section.settings.names | split: ','
+  if section.settings.names == blank
+    assign names = shop.vendors
+  endif
+-%}
+<section class="m-marquee m-marquee--{{ section.settings.style }}" aria-label="{{ section.settings.label | escape }}" style="--m-marquee-speed: {{ section.settings.speed }}s">
+  {%- if section.settings.eyebrow != blank -%}
+    <p class="eyebrow eyebrow--lines m-marquee__eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>
+  {%- endif -%}
+  <div class="m-marquee__row" data-m-marquee>
+    {%- for pass in (1..2) -%}
+      <ul class="m-marquee__track" role="list"{% if pass == 2 %} aria-hidden="true"{% endif %}>
+        {%- for rep in (1..3) -%}
+          {%- for n in names -%}
+            {%- assign name = n | strip -%}
+            {%- if name != blank and name != 'My Store' and name != shop.name -%}
+              <li class="m-marquee__item">
+                <a href="{{ name | url_for_vendor }}" tabindex="{% if pass == 2 or rep > 1 %}-1{% else %}0{% endif %}">
+                  <em>{{ name }}</em>
+                </a>
+                <span class="m-marquee__star" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 1.5l1.9 8.6L22.5 12l-8.6 1.9L12 22.5l-1.9-8.6L1.5 12l8.6-1.9z" fill="currentColor"/></svg>
+                </span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    {%- endfor -%}
+  </div>
+  {%- if section.settings.caption != blank -%}
+    <p class="m-marquee__caption" data-reveal>{{ section.settings.caption }}</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Maison — houses ribbon",
+  "class": "section-maison-marquee",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The houses we carry" },
+    { "type": "text", "id": "names", "label": "Houses (comma separated)", "info": "Leave blank to list the brands in stock automatically." },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "Authentic designer fragrances, decanted by hand into 10 ml atomisers." },
+    { "type": "select", "id": "style", "label": "Style", "default": "foil", "options": [
+      { "value": "foil", "label": "Foil" }, { "value": "outline", "label": "Outline" }, { "value": "ink", "label": "Ink" }
+    ] },
+    { "type": "range", "id": "speed", "label": "Loop duration", "min": 20, "max": 120, "step": 5, "unit": "s", "default": 60 },
+    { "type": "text", "id": "label", "label": "Accessible label", "default": "Fragrance houses" }
+  ],
+  "presets": [{ "name": "Maison — houses ribbon" }]
+}
+{% endschema %}

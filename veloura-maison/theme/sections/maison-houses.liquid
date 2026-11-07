@@ -1,0 +1,63 @@
+{%- comment -%}
+  Maison houses — an editorial index of the brands in stock.
+  On devices with a pointer, a bottle from that house floats beside the cursor.
+{%- endcomment -%}
+<section class="m-houses section" data-m-houses>
+  <div class="container">
+    <div class="m-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h1 m-head__title" data-reveal>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p class="lede m-head__aside" data-reveal>{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+
+    <ol class="m-houses__list" role="list" data-reveal-group>
+      {%- assign n = 0 -%}
+      {%- for vendor in shop.vendors limit: section.settings.limit -%}
+        {%- if vendor == 'My Store' or vendor == shop.name -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign n = n | plus: 1
+          assign count = 0
+          assign img = nil
+          for p in collections.all.products limit: 100
+            if p.vendor == vendor
+              assign count = count | plus: 1
+              if img == nil and p.featured_media
+                assign img = p.featured_media
+              endif
+            endif
+          endfor
+        -%}
+        <li class="m-house" data-reveal>
+          <a class="m-house__link" href="{{ vendor | url_for_vendor }}"{% if img %} data-m-preview="{{ img | image_url: width: 520 }}"{% endif %}>
+            <span class="m-house__no">{{ n | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="m-house__name">{{ vendor }}</span>
+            {%- if img -%}
+              <span class="m-house__thumb" aria-hidden="true">{{ img | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}</span>
+            {%- endif -%}
+            <span class="m-house__count">{{ count }} {% if count == 1 %}{{ section.settings.singular }}{% else %}{{ section.settings.plural }}{% endif %}</span>
+            <span class="m-house__arrow" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+  <div class="m-houses__float" aria-hidden="true"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="260" height="320"></div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison — houses index",
+  "class": "section-maison-houses",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The houses" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by <em>maison</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Every house in our cellar, listed as it should be — by name alone." },
+    { "type": "range", "id": "limit", "label": "Maximum houses", "min": 4, "max": 40, "step": 1, "default": 20 },
+    { "type": "text", "id": "singular", "label": "Count label (one)", "default": "fragrance" },
+    { "type": "text", "id": "plural", "label": "Count label (many)", "default": "fragrances" }
+  ],
+  "presets": [{ "name": "Maison — houses index" }]
+}
+{% endschema %}

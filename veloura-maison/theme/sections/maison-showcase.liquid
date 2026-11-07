@@ -1,0 +1,93 @@
+{%- comment -%}
+  Maison showcase — a bento of fragrances on porcelain plinths with a cursor spotlight.
+  Uses the chosen collection, falling back to all products (never placeholders).
+{%- endcomment -%}
+{%- liquid
+  assign c = section.settings.collection
+  if c == blank or c.products_count == 0
+    assign c = collections.all
+  endif
+  assign limit = section.settings.limit
+-%}
+<section class="m-showcase section" data-m-spotlight-group>
+  <div class="container">
+    <div class="m-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h1 m-head__title" data-reveal>{{ section.settings.heading }}</h2>
+      </div>
+      <div class="m-head__aside" data-reveal>
+        {%- if section.settings.text != blank -%}<p class="lede">{{ section.settings.text }}</p>{%- endif -%}
+        <a class="btn btn--outline" href="{{ c.url | default: routes.all_products_collection_url }}">{{ section.settings.cta }} {% render 'icon', name: 'arrow' %}</a>
+      </div>
+    </div>
+
+    {%- if c.products_count > 0 -%}
+      <ul class="m-bento m-bento--{{ c.products.size | at_most: limit }}" role="list" data-reveal-group>
+        {%- for p in c.products limit: limit -%}
+          {%- liquid
+            assign v = p.selected_or_first_available_variant
+            assign ptags = p.tags | join: ',' | downcase
+            assign world = p.metafields.veloura.world.value | default: ''
+            if world == ''
+              if ptags contains 'rose' or ptags contains 'rosé'
+                assign world = 'rose'
+              elsif ptags contains 'noir'
+                assign world = 'noir'
+              endif
+            endif
+            assign img_w = 700
+            if forloop.first
+              assign img_w = 1200
+            endif
+          -%}
+          <li class="m-tile{% if forloop.first %} m-tile--hero{% endif %}{% if world != '' %} m-tile--{{ world }}{% endif %}" data-reveal data-m-spotlight>
+            <a class="m-tile__link" href="{{ p.url }}" aria-label="{{ p.vendor | escape }} {{ p.title | escape }}"></a>
+            <div class="m-tile__plinth">
+              {%- if p.featured_media -%}
+                {{ p.featured_media | image_url: width: img_w | image_tag: loading: 'lazy', widths: '360, 540, 720, 900, 1200', sizes: '(min-width: 1100px) 40vw, (min-width: 750px) 50vw, 100vw', class: 'm-tile__img', alt: p.featured_media.alt | default: p.title }}
+              {%- else -%}
+                {% render 'placeholder-bottle', shape: 'square', label: p.title %}
+              {%- endif -%}
+              <span class="m-tile__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            </div>
+            <div class="m-tile__body">
+              <div class="m-tile__names">
+                {%- if p.vendor != blank and p.vendor != 'My Store' -%}<p class="m-tile__vendor">{{ p.vendor }}</p>{%- endif -%}
+                <h3 class="m-tile__title">{{ p.title }}</h3>
+              </div>
+              <div class="m-tile__buy">
+                {% render 'price', product: p %}
+                {%- if p.available -%}
+                  {%- form 'product', p, data-product-form: '', data-no-drawer: '', class: 'm-tile__form' -%}
+                    <input type="hidden" name="id" value="{{ v.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="m-tile__add" aria-label="{{ 'products.product.quick_add' | t: title: p.title | escape }}">
+                      <span>{{ 'products.product.add_to_cart' | t }}</span>{% render 'icon', name: 'plus' %}
+                    </button>
+                  {%- endform -%}
+                {%- endif -%}
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison — showcase",
+  "class": "section-maison-showcase",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Most <em>coveted</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "The signatures our clients return to — each one decanted from the original bottle into a 10 ml atomiser." },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Falls back to all products." },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 3, "max": 9, "step": 1, "default": 5 },
+    { "type": "text", "id": "cta", "label": "Button label", "default": "View the collection" }
+  ],
+  "presets": [{ "name": "Maison — showcase" }]
+}
+{% endschema %}
