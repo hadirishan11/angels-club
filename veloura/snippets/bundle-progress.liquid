@@ -1,0 +1,69 @@
+{%- comment -%}
+  Bundle offer progress ("Buy 6 get 2 free", "Buy 12 get 5 free").
+  Counts cart quantities, skipping products tagged with the exclude tag (e.g. gift sets).
+  Display only: the matching discount must exist in Shopify → Discounts.
+{%- endcomment -%}
+{%- if settings.bundle_enabled -%}
+  {%- liquid
+    assign exclude = settings.bundle_exclude_tag | strip
+    assign count = 0
+    for item in cart.items
+      if exclude != blank and item.product.tags contains exclude
+        continue
+      endif
+      assign count = count | plus: item.quantity
+    endfor
+
+    assign t1 = settings.bundle_tier1_qty
+    assign f1 = settings.bundle_tier1_free
+    assign t2 = settings.bundle_tier2_qty
+    assign f2 = settings.bundle_tier2_free
+    assign unit = settings.bundle_unit | default: 'minis'
+
+    assign goal = t1
+    assign goal_free = f1
+    assign unlocked = 0
+    if count >= t1
+      assign unlocked = f1
+      if t2 > t1 and f2 > 0
+        assign goal = t2
+        assign goal_free = f2
+      endif
+    endif
+    if t2 > t1 and count >= t2
+      assign unlocked = f2
+    endif
+    assign remaining = goal | minus: count
+    assign scale = t1
+    if t2 > t1 and f2 > 0
+      assign scale = t2
+    endif
+    assign pct = count | times: 100.0 | divided_by: scale | at_most: 100 | round
+  -%}
+  <div class="bundle-progress">
+    <p class="bundle-progress__text mb-0">
+      {%- if remaining > 0 -%}
+        {%- if unlocked > 0 -%}
+          {{- 'cart.bundle.unlocked_more_html' | t: free: unlocked, unit: unit, remaining: remaining, next_free: goal_free -}}
+        {%- else -%}
+          {{- 'cart.bundle.remaining_html' | t: remaining: remaining, free: goal_free, unit: unit -}}
+        {%- endif -%}
+      {%- else -%}
+        {{- 'cart.bundle.unlocked_html' | t: free: unlocked, unit: unit -}}
+      {%- endif -%}
+    </p>
+    <div class="bundle-progress__steps" role="progressbar" aria-valuemin="0" aria-valuemax="{{ scale }}" aria-valuenow="{{ count | at_most: scale }}" aria-label="{{ 'cart.bundle.progress' | t }}">
+      <span class="bundle-progress__fill" style="--pct: {{ pct }}%;"></span>
+      {%- if t2 > t1 and f2 > 0 -%}
+        {%- assign mark = t1 | times: 100.0 | divided_by: t2 | round -%}
+        <span class="bundle-progress__mark{% if count >= t1 %} is-done{% endif %}" style="left: {{ mark }}%;" aria-hidden="true"><small>{{ t1 }} · +{{ f1 }}</small></span>
+        <span class="bundle-progress__mark{% if count >= t2 %} is-done{% endif %}" style="left: 100%;" aria-hidden="true"><small>{{ t2 }} · +{{ f2 }}</small></span>
+      {%- else -%}
+        <span class="bundle-progress__mark{% if count >= t1 %} is-done{% endif %}" style="left: 100%;" aria-hidden="true"><small>{{ t1 }} · +{{ f1 }}</small></span>
+      {%- endif -%}
+    </div>
+    {%- if settings.bundle_note != blank and unlocked > 0 -%}
+      <p class="bundle-progress__note mb-0">{{ settings.bundle_note }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

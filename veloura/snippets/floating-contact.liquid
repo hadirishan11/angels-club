@@ -1,0 +1,27 @@
+{%- comment -%}
+  Discreet floating contact. On product pages the WhatsApp message names the product.
+{%- endcomment -%}
+{%- if settings.contact_float -%}
+  {%- liquid
+    assign wa = settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')'
+    assign msg = settings.whatsapp_message
+    if request.page_type == 'product'
+      assign msg = msg | append: ' – ' | append: product.vendor | append: ' ' | append: product.title | append: ' (' | append: request.origin | append: product.url | append: ')'
+    endif
+  -%}
+  {%- if wa != blank or settings.contact_email != blank -%}
+    <div class="float-contact" data-float-contact>
+      {%- if wa != blank -%}
+        <a class="float-contact__btn" href="https://wa.me/{{ wa }}?text={{ msg | url_encode }}" target="_blank" rel="noopener" aria-label="{{ 'general.contact.whatsapp' | t }}">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-3.6A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 1.8 1.7 3.6 3.6 4.5l1.1-1.1 1.8.8-.4 1.5c-3.2.2-6.6-3.1-6.4-6.4l1.5-.4.8 1.8z"/></svg>
+          <span class="float-contact__label">{{ 'general.contact.whatsapp_short' | t }}</span>
+        </a>
+      {%- endif -%}
+      {%- if settings.contact_email != blank -%}
+        <a class="float-contact__btn float-contact__btn--ghost" href="mailto:{{ settings.contact_email }}" aria-label="{{ 'general.contact.email' | t }}">
+          {% render 'icon', name: 'mail' %}
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

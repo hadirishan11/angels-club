@@ -4,11 +4,17 @@
     {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold">{{ s.eyebrow }}</p>{%- endif -%}
     <h2>{{ s.heading }}</h2>
     {%- if s.text != blank -%}<div class="text-muted center-block" style="max-width: 32rem;">{{ s.text }}</div>{%- endif -%}
+    {%- if settings.first_order_code != blank and settings.first_order_text != blank -%}
+      <p class="private-list__incentive">{{ settings.first_order_text }}</p>
+    {%- endif -%}
 
     {%- form 'customer', id: 'PrivateListForm', class: 'private-list__form' -%}
       <input type="hidden" name="contact[tags]" value="newsletter,private-list">
       {%- if form.posted_successfully? -%}
         <p class="h4 mb-0" data-form-status role="status">{{ s.success }}</p>
+        {%- if settings.first_order_code != blank -%}
+          <p class="mt-3 mb-0">{{ 'newsletter.your_code' | t }} {% render 'copy-code', code: settings.first_order_code %}</p>
+        {%- endif -%}
       {%- else -%}
         <div class="form-inline">
           <label class="visually-hidden" for="PrivateListEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>

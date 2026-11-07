@@ -13,6 +13,7 @@
           </div>
         </div>
         <div class="cart-page__summary">
+          {% render 'bundle-progress' %}
           {% render 'free-shipping' %}
           <form action="{{ routes.cart_url }}" method="post" id="CartPageForm">
             {%- if settings.cart_show_note -%}

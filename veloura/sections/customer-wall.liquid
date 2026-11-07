@@ -1,0 +1,83 @@
+{%- assign s = section.settings -%}
+<section class="section scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}" aria-labelledby="WallHeading-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-header section-header--center reveal">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+      <{{ s.heading_tag }} id="WallHeading-{{ section.id }}" class="h2">{{ s.heading }}</{{ s.heading_tag }}>
+      {%- if s.text != blank -%}<div>{{ s.text }}</div>{%- endif -%}
+    </div>
+    <ul class="wall" role="list">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- assign wall_alt = b.image.alt | default: b.name -%}
+        <li class="wall__item reveal" style="--delay: {{ forloop.index0 | modulo: 4 | times: 90 }}ms;" {{ block.shopify_attributes }}>
+          <figure class="wall__card">
+            {%- if b.image != blank -%}
+              <div class="media" style="--ratio: {{ b.image.aspect_ratio | default: 0.8 }};">
+                {% render 'image', image: b.image, sizes: '(min-width: 990px) 25vw, 50vw', alt: wall_alt %}
+              </div>
+            {%- endif -%}
+            <figcaption class="wall__body">
+              {%- if b.stars > 0 -%}
+                <span class="stars"><span class="stars__icons" style="--pct: {{ b.stars | times: 20 }}%;" role="img" aria-label="{{ 'products.product.rating_label' | t: rating: b.stars, max: 5 }}"></span></span>
+              {%- endif -%}
+              {%- if b.quote != blank -%}<blockquote class="wall__quote">{{ b.quote }}</blockquote>{%- endif -%}
+              <span class="review__author">{{ b.name }}{% if b.location != blank %} · {{ b.location }}{% endif %}</span>
+              {%- if b.product != blank -%}
+                <a class="wall__product link-underline" href="{{ b.product.url }}">{{ b.product.title }}</a>
+              {%- endif -%}
+            </figcaption>
+          </figure>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if s.button_label != blank -%}
+      <div class="flex-center reveal" style="margin-top: var(--space-5);"><a class="btn btn--outline" href="{{ s.button_link | default: '/pages/customer-feedback' }}">{{ s.button_label }}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer wall",
+  "class": "section-customer-wall",
+  "max_blocks": 24,
+  "settings": [
+    { "type": "paragraph", "content": "Add real customer photos and words, with their permission. Nothing is shown until you add them." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Unboxed by you" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Customer feedback" },
+    { "type": "select", "id": "heading_tag", "label": "Heading tag (SEO)", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ], "default": "h2" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Read all feedback" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "stone"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "post",
+      "name": "Customer post",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Customer photo" },
+        { "type": "textarea", "id": "quote", "label": "What they said" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Customer name" },
+        { "type": "text", "id": "location", "label": "City (optional)" },
+        { "type": "range", "id": "stars", "label": "Stars", "min": 0, "max": 5, "step": 1, "default": 5 },
+        { "type": "product", "id": "product", "label": "Product they bought (optional)" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Customer wall" } ]
+}
+{% endschema %}

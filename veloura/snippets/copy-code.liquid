@@ -1,0 +1,5 @@
+{%- comment -%} A discount code with a copy button. Params: code {%- endcomment -%}
+<span class="copy-code">
+  <code class="copy-code__value">{{ code | escape }}</code>
+  <button type="button" class="copy-code__btn" data-copy="{{ code | escape }}" data-copied-label="{{ 'general.copy.copied' | t }}">{{ 'general.copy.copy' | t }}</button>
+</span>

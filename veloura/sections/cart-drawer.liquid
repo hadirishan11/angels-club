@@ -8,6 +8,7 @@
     <span data-cart-count-source="{{ cart.item_count }}" hidden></span>
     {%- if cart.item_count > 0 -%}
       <div class="drawer__body">
+        {% render 'bundle-progress' %}
         {% render 'free-shipping' %}
         <p class="form-message form-message--error" data-cart-error role="alert" hidden></p>
         <div class="cart-items">

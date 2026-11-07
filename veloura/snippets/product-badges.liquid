@@ -1,25 +1,58 @@
 {%- comment -%}
-  Exclusivity badges driven by inventory + metafields.
-  Params: product, variant (optional), limit (max badges, default 2)
+  Product labels, driven by inventory, price, tags and metafields. At most `limit` are shown,
+  in this order of importance: Sold out → Limited batch → Save X → Best seller → Few remaining → New.
+  Params: product, variant (optional), limit (default 2)
 {%- endcomment -%}
 {%- liquid
   assign target = variant | default: product.selected_or_first_available_variant
   assign limit = limit | default: 2
   assign shown = 0
+
   assign is_low = false
   if target.inventory_management == 'shopify' and target.inventory_policy == 'deny' and target.inventory_quantity > 0 and target.inventory_quantity <= settings.low_stock_threshold
     assign is_low = true
+  endif
+
+  assign is_limited = false
+  if product.metafields.veloura.limited_batch.value == true or product.tags contains 'limited'
+    assign is_limited = true
+  endif
+
+  assign on_sale = false
+  if settings.show_sale_badge and target.compare_at_price > target.price
+    assign on_sale = true
+    assign saving = target.compare_at_price | minus: target.price
+    assign saving_pct = saving | times: 100.0 | divided_by: target.compare_at_price | round
+  endif
+
+  assign is_best = false
+  if product.tags contains 'best-seller' or product.tags contains 'Best Seller' or product.tags contains 'bestseller'
+    assign is_best = true
   endif
 -%}
 <div class="badges" data-variant-update="badges">
   {%- if product.available == false -%}
     <span class="badge badge--soldout">{{ settings.label_sold_out }}</span>
-    {%- assign shown = shown | plus: 1 -%}
   {%- else -%}
-    {%- if product.metafields.veloura.limited_batch.value == true or product.tags contains 'limited' -%}{%- if shown < limit -%}
+    {%- if is_limited and shown < limit -%}
       <span class="badge badge--limited">{{ settings.label_limited }}</span>
       {%- assign shown = shown | plus: 1 -%}
-    {%- endif -%}{%- endif -%}
+    {%- endif -%}
+    {%- if on_sale and shown < limit -%}
+      <span class="badge badge--sale">
+        {%- if settings.sale_badge_format == 'amount' -%}
+          {%- assign saving_money = saving | money_without_trailing_zeros -%}
+          {{- 'products.product.save_amount' | t: amount: saving_money -}}
+        {%- else -%}
+          {{- 'products.product.save_percent' | t: percent: saving_pct -}}
+        {%- endif -%}
+      </span>
+      {%- assign shown = shown | plus: 1 -%}
+    {%- endif -%}
+    {%- if is_best and shown < limit -%}
+      <span class="badge badge--best">{{ settings.label_best_seller }}</span>
+      {%- assign shown = shown | plus: 1 -%}
+    {%- endif -%}
     {%- if is_low and shown < limit -%}
       <span class="badge badge--low">{{ settings.label_low_stock }}</span>
       {%- assign shown = shown | plus: 1 -%}

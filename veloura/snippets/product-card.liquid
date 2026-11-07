@@ -51,6 +51,11 @@
           {%- endif -%}
         </div>
       </a>
+      {%- if settings.card_show_quick_add and product.available and single_variant == false -%}
+        <div class="card__quick-overlay">
+          <a class="btn btn--sm" href="{{ product.url }}" tabindex="-1">{{ 'products.product.choose_options' | t }}</a>
+        </div>
+      {%- endif -%}
       {%- if settings.card_show_quick_add and product.available and single_variant -%}
         <div class="card__quick-overlay">
           {%- form 'product', product, data-product-form: '', class: 'card__quick', novalidate: 'novalidate' -%}
@@ -72,7 +77,9 @@
         {% render 'price', product: product, show_from: true, show_unit: settings.card_show_price_per_ml %}
         {%- if settings.card_show_quick_add -%}
           <div class="card__quick--mobile">
-            {%- if product.available and single_variant -%}
+            {%- if product.available and single_variant == false -%}
+              <a class="icon-btn" href="{{ product.url }}" aria-label="{{ 'products.product.choose_options_label' | t: title: product.title }}">{% render 'icon', name: 'plus' %}</a>
+            {%- elsif product.available and single_variant -%}
               {%- form 'product', product, data-product-form: '', class: 'card__quick', novalidate: 'novalidate' -%}
                 <input type="hidden" name="id" value="{{ variant.id }}">
                 <button type="submit" class="icon-btn" aria-label="{{ 'products.product.quick_add_label' | t: title: product.title }}">
@@ -86,22 +93,14 @@
     </div>
   </article>
 {%- else -%}
-  {%- liquid
-    assign names = 'Ambre Nocturne,Iris Lumière,Bois Fumé,Néroli Blanc,Cuir Velours,Rose Poudrée,Vétiver Gris,Figue Solaire' | split: ','
-    assign houses = 'Maison Exemple,Atelier Sample,Maison Exemple,Atelier Sample' | split: ','
-    assign notes = 'Amber, labdanum, smoked vanilla|Orris, violet, white musk|Cedar, birch tar, incense|Neroli, bergamot, clean musk|Suede, saffron, oud|Damask rose, powder, heliotrope|Vetiver, pepper, mineral|Fig leaf, coconut milk, sun' | split: '|'
-    assign n = idx | modulo: 8
-    assign h = idx | modulo: 4
-  -%}
-  <article class="card reveal" style="--delay: {{ delay }}ms;">
+  <article class="card card--placeholder">
     <div class="card__media-link">
       <div class="media">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
     </div>
     <div class="card__body">
-      <span class="card__house">{{ houses[h] }}</span>
-      <{{ heading_tag }} class="card__title">{{ names[n] }}</{{ heading_tag }}>
-      <p class="card__notes">{{ notes[n] }}</p>
-      <div class="card__footer"><div class="price">{{ 2400 | money }}</div></div>
+      <span class="card__house">{{ 'products.placeholder.brand' | t }}</span>
+      <{{ heading_tag }} class="card__title">{{ 'products.placeholder.name' | t }}</{{ heading_tag }}>
+      <p class="card__notes">{{ 'products.placeholder.hint' | t }}</p>
     </div>
   </article>
 {%- endif -%}

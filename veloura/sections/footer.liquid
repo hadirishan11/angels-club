@@ -20,6 +20,9 @@
                   <input type="hidden" name="contact[tags]" value="newsletter,private-list">
                   {%- if form.posted_successfully? -%}
                     <p class="form-message form-message--success" data-form-status role="status">{{ 'newsletter.success' | t }}</p>
+                    {%- if settings.first_order_code != blank -%}
+                      <p class="mt-2 mb-0">{{ 'newsletter.your_code' | t }} {% render 'copy-code', code: settings.first_order_code %}</p>
+                    {%- endif -%}
                   {%- else -%}
                     <div class="form-inline">
                       <label class="visually-hidden" for="FooterEmail">{{ 'newsletter.label' | t }}</label>

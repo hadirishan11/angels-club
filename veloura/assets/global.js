@@ -344,6 +344,21 @@
       .catch(() => {});
   });
 
+  /* Copy-to-clipboard for discount codes */
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-copy]');
+    if (!btn) return;
+    const done = () => {
+      const original = btn.textContent;
+      btn.textContent = btn.dataset.copiedLabel || 'Copied';
+      V.announce(btn.textContent);
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(btn.dataset.copy).then(done).catch(() => {});
+    }
+  });
+
   /* ------------------------------------------------------------------ */
   /* Lightweight scroller dots (product gallery etc.)                     */
   /* ------------------------------------------------------------------ */

@@ -5,12 +5,37 @@
     "announcement": {
       "type": "announcement-bar",
       "blocks": {
-        "msg-1": { "type": "message", "settings": { "text": "Complimentary shipping over $40", "link": "" } },
-        "msg-2": { "type": "message", "settings": { "text": "Decanted by hand from original bottles", "link": "" } },
-        "msg-3": { "type": "message", "settings": { "text": "Join the Private List for early access", "link": "" } }
+        "msg-1": {
+          "type": "message",
+          "settings": {
+            "text": "Buy 6 minis, get 2 free · Buy 12, get 5 free",
+            "link": ""
+          }
+        },
+        "msg-2": {
+          "type": "message",
+          "settings": {
+            "text": "Free shipping on orders over $40",
+            "link": ""
+          }
+        },
+        "msg-3": {
+          "type": "message",
+          "settings": {
+            "text": "Join the Private List for 10% off your first order",
+            "link": ""
+          }
+        }
       },
-      "block_order": ["msg-1", "msg-2", "msg-3"],
-      "settings": { "color_scheme": "ink", "speed": 5 }
+      "block_order": [
+        "msg-1",
+        "msg-2",
+        "msg-3"
+      ],
+      "settings": {
+        "color_scheme": "ink",
+        "speed": 5
+      }
     },
     "header": {
       "type": "header",
@@ -24,5 +49,8 @@
       }
     }
   },
-  "order": ["announcement", "header"]
+  "order": [
+    "announcement",
+    "header"
+  ]
 }

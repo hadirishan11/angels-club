@@ -1,0 +1,71 @@
+{%- liquid
+  assign s = section.settings
+  assign unit = settings.bundle_unit | default: 'minis'
+-%}
+<section class="section offer scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}">
+  <div class="page-width">
+    <div class="offer__grid">
+      <div class="offer__intro reveal">
+        {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold">{{ s.eyebrow }}</p>{%- endif -%}
+        <h2>{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<div class="text-muted">{{ s.text }}</div>{%- endif -%}
+        {%- if s.button_label != blank -%}
+          <a class="btn mt-4" href="{{ s.button_link | default: routes.all_products_collection_url }}">{{ s.button_label }}</a>
+        {%- endif -%}
+      </div>
+      <ul class="offer__tiers" role="list">
+        <li class="offer__tier reveal" style="--delay: 100ms;">
+          <span class="offer__buy">{{ 'sections.offer.buy' | t: count: settings.bundle_tier1_qty, unit: unit }}</span>
+          <span class="offer__free">+{{ settings.bundle_tier1_free }}</span>
+          <span class="offer__label">{{ 'sections.offer.free' | t: unit: unit }}</span>
+        </li>
+        {%- if settings.bundle_tier2_qty > settings.bundle_tier1_qty and settings.bundle_tier2_free > 0 -%}
+          <li class="offer__tier offer__tier--best reveal" style="--delay: 200ms;">
+            <span class="offer__buy">{{ 'sections.offer.buy' | t: count: settings.bundle_tier2_qty, unit: unit }}</span>
+            <span class="offer__free">+{{ settings.bundle_tier2_free }}</span>
+            <span class="offer__label">{{ 'sections.offer.free' | t: unit: unit }}</span>
+          </li>
+        {%- endif -%}
+      </ul>
+    </div>
+    {%- if s.fine_print != blank or settings.first_order_code != blank -%}
+      <div class="offer__foot reveal">
+        {%- if s.fine_print != blank -%}<p class="text-sm text-muted mb-0">{{ s.fine_print }}</p>{%- endif -%}
+        {%- if s.show_code and settings.first_order_code != blank -%}
+          <p class="text-sm mb-0">{{ 'sections.offer.first_order' | t }} {% render 'copy-code', code: settings.first_order_code %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bundle offer",
+  "class": "section-offer",
+  "settings": [
+    { "type": "paragraph", "content": "Quantities come from Theme settings → Offers & bundles, so the banner and the cart always agree." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "The more, the merrier" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Build your collection. We add the extras." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Mix any minis you like. Reach the first tier and we slip free minis into your box, chosen by our team.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Start your selection" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "fine_print", "label": "Fine print", "default": "Free minis are chosen at random. Gift sets and calendars are not included in the offer." },
+    { "type": "checkbox", "id": "show_code", "label": "Show first-order code", "default": false, "info": "Off keeps the code as a reward for joining your email list." },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ink"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "presets": [ { "name": "Bundle offer" } ]
+}
+{% endschema %}

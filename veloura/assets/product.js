@@ -24,6 +24,7 @@
       stickyIO = new IntersectionObserver(([entry]) => {
         const show = !entry.isIntersecting && entry.boundingClientRect.top < 0;
         sticky.classList.toggle('is-visible', show);
+        document.body.classList.toggle('has-sticky-atc', show);
         sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
         sticky.querySelectorAll('a, button').forEach((el) => { el.tabIndex = show ? 0 : -1; });
       });

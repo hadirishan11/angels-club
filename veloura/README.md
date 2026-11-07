@@ -122,12 +122,27 @@ Reviews: install a review app that writes Shopify's standard `reviews.rating` / 
 9. **Markets / currency:** the free-shipping threshold is in your store's base currency.
 10. **Customer accounts:** the theme uses Shopify's new customer accounts (Settings → Customer accounts). No legacy account templates are needed.
 
-### Sample products
-`../sample-data/products.csv` has 8 fictional placeholder fragrances plus a Discovery Set, created as **drafts**, with tags for Noir/Rosé, families, seasons, `new` and `limited`. Import via *Products → Import*. Delete them before launch.
-
 ---
 
-## 6. SEO built in
+## 6. Offers, bundles and merchandising
+
+The theme displays offers; **Shopify applies them**. Set these up in the admin so the cart and checkout agree.
+
+| Feature | Theme setting | What to do in Shopify |
+|---|---|---|
+| **Buy 6 get 2 free / Buy 12 get 5 free** | Theme settings → *Offers & bundles* (tiers, item name, exclude tag) | Discounts → *Buy X get Y* (automatic). If freebies are chosen by you at packing, use an automatic *amount off order* discount instead, or none, and add the free minis by hand when fulfilling. Tag sets and calendars `no-freebie` so they don't count. |
+| **"Save 29%" label** | *Offers & bundles → Savings label* | Set a *Compare-at price* on the variant. |
+| **"Best seller" label** | *Offers & bundles → Best-seller label* | Tag the product `best-seller`. |
+| **First-order code** | *Offers & bundles → First-order code* | Discounts → create the code (e.g. 10% off, once per customer). It is revealed after signing up to the Private List. |
+| **WhatsApp button** | Theme settings → *Contact button* | Enter your number in international format. On product pages the message includes the product. |
+| **Shop by brand** | *Shop by brand* section | Brand names must match product **Vendor**. Add logos optionally. |
+| **For her / For him / Unisex / Gift sets** | *Category tiles* section | Create those collections (tag- or type-based) and pick them in each tile. |
+| **Advent calendars, gift sets, best sellers** | *Featured scents* sections on the home page | Create the collections and select them in each section. |
+| **Customer feedback** | *Customer wall* section; page template `page.feedback` | Create a page "Customer feedback" with that template and add real customer photos (with permission). |
+
+Long menus (e.g. a *Brands* dropdown) automatically split into columns.
+
+## 7. SEO built in
 - One `<h1>` per page (hero on home, product name, collection title, page title). The logo is not an `h1`.
 - Canonical URLs, Open Graph and Twitter tags, `og:image` fallback (*Theme settings → Search & SEO*).
 - JSON-LD: Organization + WebSite with sitelinks search (home), Product with offers, GTIN/SKU, brand and aggregate rating (product), BreadcrumbList (product, collection, page, blog, article), FAQPage (FAQ section), Article (journal).
@@ -137,7 +152,7 @@ Reviews: install a review app that writes Shopify's standard `reviews.rating` / 
 - A Journal (blog) template with "Shop the story" products. Write buying guides there ("best amber fragrances for winter", "what is a perfume decant").
 - Semantic HTML, descriptive alt text fallbacks, fast LCP (hero preloaded at high priority, everything else lazy).
 
-## 7. Conversion features
+## 8. Conversion features
 - Price inside the add-to-bag button, price per ml, express checkout (Shop Pay / Apple Pay) on the product page and cart.
 - Sticky add-to-bag bar on mobile and desktop once the main button scrolls away.
 - Inventory-driven "Few remaining" / "Only 3 left in this batch" (threshold in *Theme settings → Scarcity labels*), plus "Limited batch".
@@ -146,7 +161,7 @@ Reviews: install a review app that writes Shopify's standard `reviews.rating` / 
 - Reassurance bar and perks next to the buy button (authenticity, glass atomiser, shipping, gift packaging).
 - Notify-me on sold-out variants and the Private List capture in the hero flow, footer and password page.
 
-## 8. Performance & accessibility
+## 9. Performance & accessibility
 - Responsive `srcset` images, lazy-loaded below the fold, `fetchpriority="high"` on the LCP image.
 - Deferred scripts; product and filter JS load only on those pages; recommendations load when scrolled near.
 - Skip link, focus-trapped drawers (Esc to close), visible focus rings, `aria-live` cart updates, labelled forms, AA contrast, `prefers-reduced-motion` respected.

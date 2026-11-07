@@ -1,0 +1,84 @@
+{%- assign s = section.settings -%}
+<section class="section brand-strip scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}" aria-labelledby="BrandHeading-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-header section-header--split reveal">
+      <div>
+        {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+        <h2 id="BrandHeading-{{ section.id }}" class="mb-0">{{ s.heading }}</h2>
+      </div>
+      {%- if s.view_all_link != blank -%}<a class="link" href="{{ s.view_all_link }}">{{ s.view_all_label }} {% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+    </div>
+    <ul class="brands" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign link = b.link
+          if link == blank
+            assign link = b.name | url_for_vendor
+          endif
+        -%}
+        <li {{ block.shopify_attributes }}>
+          <a class="brand" href="{{ link }}">
+            {%- if b.logo != blank -%}
+              {{ b.logo | image_url: width: 400 | image_tag: loading: 'lazy', widths: '200, 400', sizes: '180px', alt: b.name, class: 'brand__logo' }}
+            {%- else -%}
+              <span class="brand__name">{{ b.name }}</span>
+            {%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by brand",
+  "class": "section-brand-strip",
+  "max_blocks": 24,
+  "settings": [
+    { "type": "paragraph", "content": "Each brand links to all products with that Vendor, unless you set a custom link. Logos are shown in one tone so the strip stays calm." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "The houses" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by brand" },
+    { "type": "text", "id": "view_all_label", "label": "'View all' label", "default": "All brands" },
+    { "type": "url", "id": "view_all_link", "label": "'View all' link" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ivory"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 64 }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Brand name", "default": "Brand", "info": "Must match the product Vendor exactly for the automatic link." },
+        { "type": "image_picker", "id": "logo", "label": "Logo (optional)", "info": "Transparent PNG or SVG. Without a logo the name is set in the theme's serif." },
+        { "type": "url", "id": "link", "label": "Custom link (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by brand",
+      "blocks": [
+        { "type": "brand", "settings": { "name": "Chanel" } },
+        { "type": "brand", "settings": { "name": "Dior" } },
+        { "type": "brand", "settings": { "name": "Tom Ford" } },
+        { "type": "brand", "settings": { "name": "Valentino" } },
+        { "type": "brand", "settings": { "name": "Yves Saint Laurent" } },
+        { "type": "brand", "settings": { "name": "Jo Malone" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
