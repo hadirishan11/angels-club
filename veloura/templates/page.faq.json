@@ -100,7 +100,7 @@
           "type": "question",
           "settings": {
             "question": "Do you offer free shipping?",
-            "answer": "<p>Yes, on orders over €75. The progress bar in your bag shows how close you are.</p>",
+            "answer": "<p>Yes, on orders over $40. The progress bar in your bag shows how close you are.</p>",
             "open": false
           }
         },

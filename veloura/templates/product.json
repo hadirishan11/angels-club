@@ -21,7 +21,7 @@
           "settings": {
             "perk_1": "Authentic. Decanted from the original bottle.",
             "perk_2": "10 ml glass atomiser, about 100 sprays.",
-            "perk_3": "Complimentary shipping over €75.",
+            "perk_3": "Complimentary shipping over $40.",
             "perk_4": "Gift-ready packaging, always."
           }
         },
@@ -37,7 +37,7 @@
           "type": "collapsible",
           "settings": {
             "heading": "Shipping & returns",
-            "content": "<p>Orders ship within one working day. Complimentary shipping over €75. Unopened decants can be returned within 14 days.</p>"
+            "content": "<p>Orders ship within one working day. Complimentary shipping over $40. Unopened decants can be returned within 14 days.</p>"
           }
         }
       },
@@ -77,7 +77,7 @@
       "blocks": {
         "t1": { "type": "item", "settings": { "icon": "seal", "title": "100% authentic", "text": "Decanted from original bottles" } },
         "t2": { "type": "item", "settings": { "icon": "atomizer", "title": "Glass atomisers", "text": "10 ml, fine mist, travel-ready" } },
-        "t3": { "type": "item", "settings": { "icon": "truck", "title": "Ships in 24 h", "text": "Free over €75" } },
+        "t3": { "type": "item", "settings": { "icon": "truck", "title": "Ships in 24 h", "text": "Free over $40" } },
         "t4": { "type": "item", "settings": { "icon": "return", "title": "Easy returns", "text": "14 days on unopened decants" } }
       },
       "block_order": ["t1", "t2", "t3", "t4"],

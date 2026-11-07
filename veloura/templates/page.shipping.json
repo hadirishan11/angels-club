@@ -26,7 +26,7 @@
           "type": "question",
           "settings": {
             "question": "How much does shipping cost?",
-            "answer": "<p>Shipping is calculated at checkout. Orders over €75 ship free.</p>",
+            "answer": "<p>Shipping is calculated at checkout. Orders over $40 ship free.</p>",
             "open": false
           }
         },
@@ -99,7 +99,7 @@
           "settings": {
             "icon": "truck",
             "title": "Ships in 24 h",
-            "text": "Free over €75"
+            "text": "Free over $40"
           }
         },
         "t4": {

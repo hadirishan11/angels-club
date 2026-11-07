@@ -5,7 +5,7 @@
     "announcement": {
       "type": "announcement-bar",
       "blocks": {
-        "msg-1": { "type": "message", "settings": { "text": "Complimentary shipping over €75", "link": "" } },
+        "msg-1": { "type": "message", "settings": { "text": "Complimentary shipping over $40", "link": "" } },
         "msg-2": { "type": "message", "settings": { "text": "Decanted by hand from original bottles", "link": "" } },
         "msg-3": { "type": "message", "settings": { "text": "Join the Private List for early access", "link": "" } }
       },

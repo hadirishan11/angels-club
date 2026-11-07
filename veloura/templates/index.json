@@ -23,7 +23,7 @@
       "blocks": {
         "t1": { "type": "item", "settings": { "icon": "seal", "title": "100% authentic", "text": "Decanted from original bottles" } },
         "t2": { "type": "item", "settings": { "icon": "atomizer", "title": "Glass atomisers", "text": "10 ml, fine mist, travel-ready" } },
-        "t3": { "type": "item", "settings": { "icon": "truck", "title": "Ships in 24 h", "text": "Free over €75" } },
+        "t3": { "type": "item", "settings": { "icon": "truck", "title": "Ships in 24 h", "text": "Free over $40" } },
         "t4": { "type": "item", "settings": { "icon": "lock", "title": "Secure checkout", "text": "All major cards & wallets" } }
       },
       "block_order": ["t1", "t2", "t3", "t4"],

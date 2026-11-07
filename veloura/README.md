@@ -117,7 +117,7 @@ Reviews: install a review app that writes Shopify's standard `reviews.rating` / 
 5. **Pages:** create pages and assign the template under *Theme template*:
    - About (`page.about`), FAQ (`page.faq`), Shipping & Returns (`page.shipping`), Contact (`page.contact`)
 6. **Policies:** Settings → Policies (refund, privacy, terms, shipping). The product page links to the shipping policy automatically.
-7. **Shipping:** set a free-shipping rate for orders ≥ €75 so it matches the cart progress bar (*Theme settings → Cart*).
+7. **Shipping:** set a free-shipping rate for orders ≥ $40 so it matches the cart progress bar (*Theme settings → Cart*).
 8. **Customer emails:** Private List signups become customers tagged `newsletter, private-list`. Create a segment in *Customers* and send drop announcements with Shopify Email. Notify-me requests arrive as contact-form emails tagged `notify-me` and the product handle.
 9. **Markets / currency:** the free-shipping threshold is in your store's base currency.
 10. **Customer accounts:** the theme uses Shopify's new customer accounts (Settings → Customer accounts). No legacy account templates are needed.
