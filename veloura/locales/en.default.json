@@ -205,7 +205,7 @@
     "free_shipping_progress": "Progress towards complimentary shipping",
     "bundle": {
       "remaining_html": "Add <strong>{{ remaining }} more</strong> to get <strong>{{ free }} {{ unit }} free</strong>.",
-      "unlocked_more_html": "<strong>{{ free }} free {{ unit }}</strong> unlocked. Add {{ remaining }} more for {{ next_free }}.",
+      "unlocked_more_html": "<strong>{{ free }} free {{ unit }}</strong> unlocked. Add {{ remaining }} more to get {{ next_free }} free.",
       "unlocked_html": "<strong>{{ free }} free {{ unit }}</strong> unlocked. They will be added to your order.",
       "progress": "Progress towards free minis"
     }
