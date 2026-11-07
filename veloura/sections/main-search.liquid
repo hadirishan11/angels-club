@@ -1,0 +1,76 @@
+{%- liquid
+  assign s = section.settings
+  assign sort_by = search.sort_by | default: search.default_sort_by
+-%}
+<section class="section" style="--pt: var(--space-5); --pt-d: var(--space-6); --pb: var(--space-6);">
+  <div class="page-width" data-facets-root data-section-id="{{ section.id }}">
+    <header class="text-center" style="margin-bottom: var(--space-4);">
+      <h1 class="h2">{{ 'general.search.title' | t }}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form center-block" style="max-width: 36rem;">
+        <label class="visually-hidden" for="MainSearch">{{ 'general.search.placeholder' | t }}</label>
+        <input id="MainSearch" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" class="icon-btn" aria-label="{{ 'general.search.submit' | t }}">{% render 'icon', name: 'search' %}</button>
+      </form>
+    </header>
+
+    {%- if search.performed -%}
+      {%- paginate search.results by s.per_page -%}
+        <div class="toolbar">
+          <button type="button" class="toolbar__btn" data-drawer-open="FacetsDrawer" aria-controls="FacetsDrawer" aria-expanded="false">
+            {% render 'icon', name: 'filter' %} {{ 'collections.filter.title' | t }}
+          </button>
+          <span class="toolbar__count" data-facets-replace="count" role="status">{{ 'general.search.results_count' | t: count: search.results_count, terms: search.terms }}</span>
+          <div class="select">
+            <label class="visually-hidden" for="SortBy">{{ 'collections.sorting.title' | t }}</label>
+            <select id="SortBy" class="select__select" name="sort_by" data-sort-select>
+              {%- for option in search.sort_options -%}
+                <option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name }}</option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'chevron-down' %}
+          </div>
+        </div>
+        <div class="collection-grid" data-facets-replace="grid">
+          {%- if search.results_count > 0 -%}
+            <ul class="grid" role="list" data-product-grid style="--cols-m: 2; --cols-t: 3; --cols-d: 4;">
+              {%- for item in search.results -%}
+                <li>
+                  {%- case item.object_type -%}
+                    {%- when 'product' -%}
+                      {% render 'product-card', product: item, index: forloop.index0, heading_tag: 'h2' %}
+                    {%- when 'article' -%}
+                      {% render 'article-card', article: item, heading_tag: 'h2' %}
+                    {%- when 'page' -%}
+                      <article class="card"><div class="card__body"><span class="card__house">{{ 'general.search.page' | t }}</span><h2 class="card__title"><a href="{{ item.url }}">{{ item.title }}</a></h2></div></article>
+                  {%- endcase -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <div class="empty-state">
+              <p class="h3">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+              <a class="link" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+            </div>
+          {%- endif -%}
+        </div>
+        <div data-facets-replace="pagination">
+          {%- if paginate.next -%}
+            <div class="load-more"><a class="btn btn--outline" href="{{ paginate.next.url }}" data-load-more>{{ 'collections.general.load_more' | t }}</a></div>
+          {%- endif -%}
+        </div>
+      {%- endpaginate -%}
+      {% render 'facets', results: search, section_id: section.id, sort_by: sort_by, terms: search.terms %}
+    {%- endif -%}
+  </div>
+</section>
+<script src="{{ 'facets.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Results per page", "min": 8, "max": 48, "step": 4, "default": 24 }
+  ]
+}
+{% endschema %}

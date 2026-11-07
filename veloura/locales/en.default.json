@@ -1,0 +1,141 @@
+{
+  "general": {
+    "accessibility": { "close": "Close" },
+    "breadcrumbs": { "home": "Home", "collections": "Collections" },
+    "errors": { "generic": "Something went wrong. Please try again." },
+    "pagination": { "label": "Pagination", "next": "Next page", "previous": "Previous page", "page": "Page {{ number }}" },
+    "search": {
+      "title": "Search",
+      "placeholder": "Search a scent, a note, a house",
+      "submit": "Submit search",
+      "popular": "Popular",
+      "suggestions": "Suggestions",
+      "products": "Scents",
+      "collections": "Collections",
+      "articles": "Journal",
+      "page": "Page",
+      "view_all": "View all results for “{{ terms }}”",
+      "no_results": "Nothing found for “{{ terms }}”. Try a note, like vanilla or iris.",
+      "results_count": { "one": "{{ count }} result for “{{ terms }}”", "other": "{{ count }} results for “{{ terms }}”" }
+    }
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "breadcrumbs": "Breadcrumbs"
+  },
+  "sections": {
+    "announcement": { "label": "Announcements" },
+    "header": {
+      "menu": "Menu",
+      "primary_nav": "Primary",
+      "account": "Account",
+      "cart_label": "Bag, {{ count }} items",
+      "view_all": "All {{ title }}"
+    },
+    "footer": { "payment_methods": "Payment methods accepted" }
+  },
+  "newsletter": {
+    "label": "Your email",
+    "button": "Join",
+    "success": "You are on the Private List. Watch your inbox."
+  },
+  "localization": { "country_label": "Country / currency", "update": "Update" },
+  "password": { "enter": "Enter with password", "label": "Password", "submit": "Enter" },
+  "blogs": { "back": "Back to {{ title }}" },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "order": "Order number (optional)",
+    "message": "Message",
+    "send": "Send"
+  },
+  "collections": {
+    "general": {
+      "items_count": { "one": "{{ count }} scent", "other": "{{ count }} scents" },
+      "no_matches": "No scents match these filters.",
+      "load_more": "Show more",
+      "showing": "Showing {{ shown }} of {{ total }}",
+      "browse_by": "Browse by mood and family"
+    },
+    "sorting": { "title": "Sort" },
+    "filter": {
+      "title": "Filter",
+      "active": "Active filters",
+      "remove": "Remove filter",
+      "clear_all": "Clear all",
+      "apply": "Apply",
+      "from": "From",
+      "to": "To",
+      "none_configured": "Add filters in the Shopify Search & Discovery app.",
+      "show_results": { "one": "Show {{ count }} scent", "other": "Show {{ count }} scents" }
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to bag",
+      "adding": "Adding",
+      "added": "Added to your bag",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quick_add": "Add",
+      "quick_add_label": "Add {{ title }} to bag",
+      "view_details": "View details",
+      "notify_me": "Notify me",
+      "price_from_html": "From {{ price }}",
+      "sale_price": "Sale price",
+      "regular_price": "Regular price",
+      "volume": "{{ volume }} ml decant",
+      "tax_included": "Taxes included.",
+      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link-underline\">Shipping</a> calculated at checkout.",
+      "low_stock": { "one": "Only {{ count }} left in this batch.", "other": "Only {{ count }} left in this batch." },
+      "quantity": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity",
+      "gallery": "Product images",
+      "rating_label": "Rated {{ rating }} out of {{ max }}",
+      "review_count": { "one": "{{ count }} review", "other": "{{ count }} reviews" }
+    },
+    "notify": {
+      "title": "This batch has gone.",
+      "text": "Leave your email and we will write the moment it returns. Private List members hear first.",
+      "button": "Notify me",
+      "success": "Thank you. We will write when it returns."
+    },
+    "profile": {
+      "top": "Top",
+      "top_hint": "First minutes",
+      "heart": "Heart",
+      "heart_hint": "The first hours",
+      "base": "Base",
+      "base_hint": "What stays",
+      "season": "Best season",
+      "occasion": "Occasion",
+      "family": "Family",
+      "concentration": "Concentration",
+      "perfumer": "Perfumer",
+      "year": "Year",
+      "see_profile": "Full profile",
+      "sample_note": "Sample profile shown in the editor. Fill in the product's metafields to replace it."
+    }
+  },
+  "cart": {
+    "title": "Your bag",
+    "empty": "Your bag is empty.",
+    "empty_text": "Begin with a single decant, or the discovery set.",
+    "continue": "Explore the scents",
+    "subtotal": "Subtotal",
+    "taxes_shipping": "Taxes and shipping calculated at checkout.",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity of {{ title }}",
+    "increase": "Increase quantity of {{ title }}",
+    "note_label": "Add a gift note",
+    "note_placeholder": "Your message, written by hand on a card",
+    "add_short": "Add",
+    "updated": "Bag updated",
+    "free_shipping_remaining_html": "You are <strong>{{ amount }}</strong> away from complimentary shipping.",
+    "free_shipping_unlocked": "Complimentary shipping unlocked.",
+    "free_shipping_progress": "Progress towards complimentary shipping"
+  }
+}

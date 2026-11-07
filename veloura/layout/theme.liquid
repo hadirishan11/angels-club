@@ -16,7 +16,8 @@
     {%- liquid
       assign page_suffix = ''
       if current_page != 1
-        assign page_suffix = ' – ' | append: 'general.pagination.page' | t: number: current_page
+        assign page_label = 'general.pagination.page' | t: number: current_page
+        assign page_suffix = ' – ' | append: page_label
       endif
       assign title_suffix = ''
       unless page_title contains shop.name
@@ -61,10 +62,10 @@
     {% render 'meta-tags' %}
 
     {%- unless settings.type_heading_font.system? -%}
-      <link rel="preload" as="font" href="{{ settings.type_heading_font | font_url }}" type="font/woff2" crossorigin>
+      {{ settings.type_heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     {%- endunless -%}
     {%- unless settings.type_body_font.system? -%}
-      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+      {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     {%- endunless -%}
 
     {% render 'css-variables' %}
@@ -89,7 +90,8 @@
           unavailable: {{ 'products.product.unavailable' | t | json }},
           adding: {{ 'products.product.adding' | t | json }},
           added: {{ 'products.product.added' | t | json }},
-          error: {{ 'general.errors.generic' | t | json }}
+          error: {{ 'general.errors.generic' | t | json }},
+          cartUpdated: {{ 'cart.updated' | t | json }}
         }
       };
     </script>

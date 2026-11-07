@@ -61,11 +61,11 @@
     drawer.setAttribute('aria-hidden', 'false');
     const ov = overlay();
     if (ov) { ov.hidden = false; requestAnimationFrame(() => ov.classList.add('is-visible')); }
-    requestAnimationFrame(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       drawer.classList.add('is-open');
       const focusTarget = $('[data-autofocus]', drawer) || $(FOCUSABLE, drawer);
       if (focusTarget) setTimeout(() => focusTarget.focus({ preventScroll: true }), 60);
-    });
+    }));
     document.body.classList.add('is-locked');
     $$(`[aria-controls="${id}"]`).forEach((b) => b.setAttribute('aria-expanded', 'true'));
     drawer.dispatchEvent(new CustomEvent('drawer:open', { bubbles: true }));

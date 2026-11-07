@@ -16,10 +16,10 @@
     <span class="badge badge--soldout">{{ settings.label_sold_out }}</span>
     {%- assign shown = shown | plus: 1 -%}
   {%- else -%}
-    {%- if product.metafields.veloura.limited_batch.value == true and shown < limit -%}
+    {%- if product.metafields.veloura.limited_batch.value == true or product.tags contains 'limited' -%}{%- if shown < limit -%}
       <span class="badge badge--limited">{{ settings.label_limited }}</span>
       {%- assign shown = shown | plus: 1 -%}
-    {%- endif -%}
+    {%- endif -%}{%- endif -%}
     {%- if is_low and shown < limit -%}
       <span class="badge badge--low">{{ settings.label_low_stock }}</span>
       {%- assign shown = shown | plus: 1 -%}

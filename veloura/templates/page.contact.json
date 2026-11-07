@@ -1,0 +1,116 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "",
+        "show_title": true,
+        "center_title": false,
+        "color_scheme": "ivory",
+        "padding_top": 48,
+        "padding_bottom": 0
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "blocks": {
+        "d1": {
+          "type": "detail",
+          "settings": {
+            "label": "Email",
+            "value": "hello@example.com",
+            "link": "mailto:hello@example.com"
+          }
+        },
+        "d2": {
+          "type": "detail",
+          "settings": {
+            "label": "Hours",
+            "value": "Monday to Friday, 9:00–18:00",
+            "link": ""
+          }
+        },
+        "d3": {
+          "type": "detail",
+          "settings": {
+            "label": "Instagram",
+            "value": "@veloura",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "d1",
+        "d2",
+        "d3"
+      ],
+      "settings": {
+        "eyebrow": "The atelier",
+        "heading": "Write to us",
+        "text": "<p>A question about a scent, an order or a gift. We reply within one working day.</p>",
+        "success": "Thank you. We will reply within one working day.",
+        "color_scheme": "ivory",
+        "padding_top": 24,
+        "padding_bottom": 96
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "group",
+          "settings": {
+            "title": "Decants"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "What is a decant?",
+            "answer": "<p>A decant is a smaller amount of perfume transferred from the original bottle into a new, clean vessel. It lets you wear a fragrance for weeks before buying a full bottle.</p>",
+            "open": false
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "How long does a 10 ml decant last?",
+            "answer": "<p>Around 100 sprays. Worn daily with two or three sprays, that is roughly one to two months.</p>",
+            "open": false
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Why glass atomisers?",
+            "answer": "<p>Perfume can react with cheap plastics. Glass keeps the fragrance exactly as the perfumer intended, with a fine, even mist.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Before you write",
+        "heading_tag": "h2",
+        "contact_text": "Still wondering?",
+        "contact_link_label": "Write to us",
+        "contact_link": "shopify://pages/contact",
+        "schema": false,
+        "color_scheme": "ivory",
+        "padding_top": 0,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": [
+    "main",
+    "form",
+    "faq"
+  ]
+}

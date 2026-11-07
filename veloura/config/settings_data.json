@@ -1,0 +1,17 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_ink": "#0E0E0E",
+      "color_ivory": "#F4EFE6",
+      "color_stone": "#DCD5CA",
+      "color_stone_dark": "#6B655D",
+      "color_gold": "#B8A07E",
+      "type_heading_font": "cormorant_n4",
+      "type_body_font": "jost_n4",
+      "cart_type": "drawer",
+      "free_shipping_threshold": 75,
+      "low_stock_threshold": 8
+    }
+  }
+}

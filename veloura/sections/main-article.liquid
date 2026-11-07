@@ -1,0 +1,48 @@
+<div class="page-width">{% render 'breadcrumbs' %}</div>
+<article class="section" style="--pt: var(--space-4); --pt-d: var(--space-5);">
+  <div class="page-width page-width--text">
+    <header class="article__header">
+      <p class="eyebrow"><time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %-d, %Y' }}</time>{% if section.settings.show_author %} · {{ article.author }}{% endif %}</p>
+      <h1>{{ article.title }}</h1>
+    </header>
+  </div>
+  {%- if article.image -%}
+    <div class="page-width page-width--narrow article__hero">
+      <div class="media">{% render 'image', image: article.image, sizes: '(min-width: 990px) 52rem, 100vw', priority: true %}</div>
+    </div>
+  {%- endif -%}
+  <div class="page-width page-width--text">
+    <div class="rte article__body">{{ article.content }}</div>
+    {%- if article.tags.size > 0 -%}
+      <ul class="search-suggest" role="list" style="margin-top: var(--space-5);">
+        {%- for tag in article.tags -%}<li><a class="chip" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a></li>{%- endfor -%}
+      </ul>
+    {%- endif -%}
+    <hr style="margin: var(--space-5) 0;">
+    <p><a class="link" href="{{ blog.url }}">← {{ 'blogs.back' | t: title: blog.title }}</a></p>
+  </div>
+</article>
+
+{%- if section.settings.collection != blank -%}
+  <section class="section scheme-ivory" style="--pt: 0px; --pt-d: 0px;">
+    <div class="page-width">
+      <div class="section-header"><h2 class="h3">{{ section.settings.products_heading }}</h2></div>
+      <ul class="scroller scroller--desktop-grid" role="list" style="--cols-d: 4;">
+        {%- for product in section.settings.collection.products limit: 4 -%}
+          <li>{% render 'product-card', product: product, index: forloop.index0 %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    { "type": "checkbox", "id": "show_author", "label": "Show author", "default": true },
+    { "type": "collection", "id": "collection", "label": "Shop the story (collection)" },
+    { "type": "text", "id": "products_heading", "label": "Products heading", "default": "Scents in this story" }
+  ]
+}
+{% endschema %}

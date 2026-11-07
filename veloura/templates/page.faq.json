@@ -1,0 +1,207 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "Help",
+        "show_title": true,
+        "center_title": false,
+        "color_scheme": "ivory",
+        "padding_top": 48,
+        "padding_bottom": 0
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "group",
+          "settings": {
+            "title": "Authenticity"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Are your fragrances authentic?",
+            "answer": "<p>Always. Every decant is drawn from a full, original bottle bought from an authorised retailer or directly from the house. We never sell copies, dupes or diluted perfume.</p>",
+            "open": false
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Can I see proof of purchase?",
+            "answer": "<p>Yes. We keep batch codes and receipts on file for every bottle we decant. Write to us with your order number and we will share them.</p>",
+            "open": false
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Are you affiliated with the fragrance houses?",
+            "answer": "<p>No. Veloura is an independent decant service. All trademarks belong to their respective owners.</p>",
+            "open": false
+          }
+        },
+        "q5": {
+          "type": "group",
+          "settings": {
+            "title": "Decants"
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "What is a decant?",
+            "answer": "<p>A decant is a smaller amount of perfume transferred from the original bottle into a new, clean vessel. It lets you wear a fragrance for weeks before buying a full bottle.</p>",
+            "open": false
+          }
+        },
+        "q7": {
+          "type": "question",
+          "settings": {
+            "question": "How long does a 10 ml decant last?",
+            "answer": "<p>Around 100 sprays. Worn daily with two or three sprays, that is roughly one to two months.</p>",
+            "open": false
+          }
+        },
+        "q8": {
+          "type": "question",
+          "settings": {
+            "question": "Why glass atomisers?",
+            "answer": "<p>Perfume can react with cheap plastics. Glass keeps the fragrance exactly as the perfumer intended, with a fine, even mist.</p>",
+            "open": false
+          }
+        },
+        "q9": {
+          "type": "question",
+          "settings": {
+            "question": "How should I store my decant?",
+            "answer": "<p>Away from light and heat, upright, with the cap on. A drawer or a cupboard is ideal. Avoid the bathroom.</p>",
+            "open": false
+          }
+        },
+        "q10": {
+          "type": "group",
+          "settings": {
+            "title": "Ordering & shipping"
+          }
+        },
+        "q11": {
+          "type": "question",
+          "settings": {
+            "question": "When will my order ship?",
+            "answer": "<p>Within one working day. You will receive a tracking link by email as soon as it leaves the atelier.</p>",
+            "open": false
+          }
+        },
+        "q12": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer free shipping?",
+            "answer": "<p>Yes, on orders over €75. The progress bar in your bag shows how close you are.</p>",
+            "open": false
+          }
+        },
+        "q13": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return a decant?",
+            "answer": "<p>Unopened decants can be returned within 14 days. For hygiene reasons, opened decants cannot be returned.</p>",
+            "open": false
+          }
+        },
+        "q14": {
+          "type": "question",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>We ship to selected countries. Shipping options and costs are shown at checkout.</p>",
+            "open": false
+          }
+        },
+        "q15": {
+          "type": "group",
+          "settings": {
+            "title": "Choosing a scent"
+          }
+        },
+        "q16": {
+          "type": "question",
+          "settings": {
+            "question": "I don't know where to start. Any advice?",
+            "answer": "<p>Begin with the Discovery Set: six scents across both moods, Noir and Rosé. Wear one per day and notice which ones you miss.</p>",
+            "open": false
+          }
+        },
+        "q17": {
+          "type": "question",
+          "settings": {
+            "question": "Are your scents for men or women?",
+            "answer": "<p>Neither, and both. We organise by mood, not gender. Noir is dark, woody, amber and smoky. Rosé is bright, floral, fresh and musky.</p>",
+            "open": false
+          }
+        },
+        "q18": {
+          "type": "question",
+          "settings": {
+            "question": "What do longevity and sillage mean?",
+            "answer": "<p>Longevity is how long a fragrance lasts on skin. Sillage is how far it projects, the trail it leaves. Each product shows both on a five-step scale.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8",
+        "q9",
+        "q10",
+        "q11",
+        "q12",
+        "q13",
+        "q14",
+        "q15",
+        "q16",
+        "q17",
+        "q18"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "heading_tag": "h2",
+        "contact_text": "Still wondering?",
+        "contact_link_label": "Write to us",
+        "contact_link": "shopify://pages/contact",
+        "schema": true,
+        "color_scheme": "ivory",
+        "padding_top": 24,
+        "padding_bottom": 96
+      }
+    },
+    "private": {
+      "type": "private-list",
+      "settings": {
+        "eyebrow": "By invitation",
+        "heading": "The Private List",
+        "text": "<p>New drops reach the list 48 hours before anyone else.</p>",
+        "button_label": "Join",
+        "success": "You are on the list. Watch your inbox.",
+        "fine_print": "A few letters a month. Unsubscribe in one click.",
+        "color_scheme": "ink",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": [
+    "main",
+    "faq",
+    "private"
+  ]
+}

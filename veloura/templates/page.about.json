@@ -1,0 +1,176 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "Our story",
+        "show_title": true,
+        "center_title": true,
+        "color_scheme": "ivory",
+        "padding_top": 48,
+        "padding_bottom": 24
+      }
+    },
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Veloura began with a simple frustration: a beautiful perfume, a full bottle, and no way of knowing whether it would still feel right in a month. So we started opening the bottles ourselves.</p>",
+            "large": true
+          }
+        },
+        "d": {
+          "type": "divider",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "t",
+        "d"
+      ],
+      "settings": {
+        "center": true,
+        "color_scheme": "ivory",
+        "padding_top": 0,
+        "padding_bottom": 96
+      }
+    },
+    "authenticity": {
+      "type": "image-with-text",
+      "settings": {
+        "ratio": "4 / 5",
+        "image_right": false,
+        "eyebrow": "Authenticity",
+        "heading": "Only the original. Never a copy.",
+        "heading_tag": "h2",
+        "text": "<p>Every decant is drawn from a full bottle purchased from an authorised retailer or directly from the house. We never buy grey-market stock, never dilute, never blend. Batch codes and receipts are kept on file, and we share them on request.</p>",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "ivory",
+        "padding_top": 48,
+        "padding_bottom": 96
+      }
+    },
+    "process": {
+      "type": "how-we-decant",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Sourced",
+            "text": "<p>Full bottles from authorised retailers and the houses themselves.</p>"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Decanted",
+            "text": "<p>Sterile pipettes, clean glass, one fragrance at a time.</p>"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Sealed",
+            "text": "<p>Glass atomisers, labelled by hand with house, name and batch.</p>"
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "title": "Sent",
+            "text": "<p>Wrapped and shipped within one working day.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "eyebrow": "The atelier",
+        "heading": "How we decant",
+        "text": "<p>Small batches, by hand, in a clean and quiet room.</p>",
+        "center": false,
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "ink",
+        "padding_top": 120,
+        "padding_bottom": 120
+      }
+    },
+    "glass": {
+      "type": "image-with-text",
+      "settings": {
+        "ratio": "4 / 5",
+        "image_right": true,
+        "eyebrow": "The vessel",
+        "heading": "Glass, not plastic.",
+        "heading_tag": "h2",
+        "text": "<p>Perfume reacts with cheap plastics. Our 10 ml atomisers are glass with a fine-mist pump, so the fragrance you receive is the fragrance the perfumer intended. Around a hundred sprays: enough to know it well.</p>",
+        "button_label": "Explore the scents",
+        "button_link": "shopify://collections/all",
+        "color_scheme": "ivory",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "disclaimer": {
+      "type": "rich-text",
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "Independent, by design.",
+            "tag": "h2",
+            "size": "h3"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Veloura is an independent decant service and is not affiliated with the brands it carries. All trademarks belong to their respective owners. We are simply devoted customers who share.</p>",
+            "large": false
+          }
+        }
+      },
+      "block_order": [
+        "h",
+        "t"
+      ],
+      "settings": {
+        "center": true,
+        "color_scheme": "stone",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "private": {
+      "type": "private-list",
+      "settings": {
+        "eyebrow": "By invitation",
+        "heading": "The Private List",
+        "text": "<p>New drops reach the list 48 hours before anyone else.</p>",
+        "button_label": "Join",
+        "success": "You are on the list. Watch your inbox.",
+        "fine_print": "A few letters a month. Unsubscribe in one click.",
+        "color_scheme": "ink",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": [
+    "main",
+    "intro",
+    "authenticity",
+    "process",
+    "glass",
+    "disclaimer",
+    "private"
+  ]
+}

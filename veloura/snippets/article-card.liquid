@@ -1,0 +1,14 @@
+{%- comment -%} Params: article, heading_tag (default h3), index {%- endcomment -%}
+{%- assign heading_tag = heading_tag | default: 'h3' -%}
+<article class="card article-card reveal" style="--delay: {{ index | default: 0 | modulo: 3 | times: 100 }}ms;">
+  <a href="{{ article.url }}" tabindex="-1" aria-hidden="true">
+    <div class="media media--zoom">
+      {% render 'image', image: article.image, sizes: '(min-width: 990px) 33vw, 100vw', placeholder: 'lifestyle-1', decorative: true %}
+    </div>
+  </a>
+  <div class="card__body">
+    <p class="article-card__meta mb-0"><time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %-d, %Y' }}</time></p>
+    <{{ heading_tag }} class="article-card__title card__title"><a href="{{ article.url }}">{{ article.title }}</a></{{ heading_tag }}>
+    <p class="article-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+  </div>
+</article>

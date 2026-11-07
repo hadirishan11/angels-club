@@ -1,0 +1,38 @@
+{%- assign s = section.settings -%}
+<div class="page-width">{% render 'breadcrumbs' %}</div>
+<section class="section scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}">
+  <div class="page-width page-width--text">
+    {%- if s.show_title -%}
+      <header class="{% if s.center_title %}text-center{% endif %}" style="margin-bottom: var(--space-5);">
+        {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold">{{ s.eyebrow }}</p>{%- endif -%}
+        <h1>{{ page.title }}</h1>
+      </header>
+    {%- endif -%}
+    <div class="rte{% if s.center_title %} center-block{% endif %}">{{ page.content }}</div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page content",
+  "class": "section-main-page",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label" },
+    { "type": "checkbox", "id": "show_title", "label": "Show page title", "default": true, "info": "Keep on unless another section provides the H1." },
+    { "type": "checkbox", "id": "center_title", "label": "Center", "default": false },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ivory"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ]
+}
+{% endschema %}

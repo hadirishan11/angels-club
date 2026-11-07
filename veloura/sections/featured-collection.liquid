@@ -16,11 +16,7 @@
       {%- endif -%}
     </div>
 
-    {%- if s.layout == 'scroller' -%}
-      <ul class="scroller scroller--desktop-grid" role="list" style="--cols-d: {{ s.columns_desktop }};">
-    {%- else -%}
-      <ul class="grid" role="list" style="--cols-m: 2; --cols-t: 3; --cols-d: {{ s.columns_desktop }};">
-    {%- endif -%}
+    <ul class="{% if s.layout == 'scroller' %}scroller scroller--desktop-grid{% else %}grid{% endif %}" role="list" style="--cols-m: 2; --cols-t: 3; --cols-d: {{ s.columns_desktop }};">
       {%- if coll != blank and coll.products_count > 0 -%}
         {%- for product in coll.products limit: products_to_show -%}
           <li>{% render 'product-card', product: product, index: forloop.index0 %}</li>
