@@ -1,20 +1,8 @@
 {
   "sections": {
-    "story": {
-      "type": "veloura-story",
-      "settings": {
-        "tagline": "Maison of miniature luxury",
-        "noir_heading": "The art of <em>presence</em>",
-        "noir_subtitle": "Woods, smoke and spice from the houses that defined them — in ten perfect millilitres.",
-        "rose_heading": "A little luxury, a lot of <em>love</em>",
-        "rose_subtitle": "Florals, gourmands and luminous musks, made to be carried, layered and adored.",
-        "ch2_heading": "Lift. Spray. <em>Discover.</em>",
-        "ch2_text": "Every atomiser carries the complete composition — top, heart and base — decanted by hand from the original bottle.",
-        "ch3_heading": "The same signature. <em>A fraction</em> of the size.",
-        "ch3_text": "Wear a fragrance for days, not seconds on a paper strip. Carry it everywhere. Change it with your mood.",
-        "ch4_heading": "Compose your <em>own</em> set",
-        "ch4_text": "Choose three or five miniatures and receive them together in a signature Veloura case — a wardrobe of scent."
-      }
+    "boutique": {
+      "type": "maison-boutique",
+      "settings": {}
     },
     "houses_ribbon": {
       "type": "maison-marquee",
@@ -29,11 +17,36 @@
     "manifesto": {
       "type": "maison-manifesto",
       "blocks": {
-        "f1": { "type": "figure", "settings": { "value": 10, "suffix": " ml", "label": "Of the original eau de parfum" } },
-        "f2": { "type": "figure", "settings": { "value": 100, "suffix": "+", "label": "Sprays in every atomiser" } },
-        "f3": { "type": "figure", "settings": { "value": 100, "suffix": "%", "label": "Authentic designer fragrance" } }
+        "f1": {
+          "type": "figure",
+          "settings": {
+            "value": 10,
+            "suffix": " ml",
+            "label": "Of the original eau de parfum"
+          }
+        },
+        "f2": {
+          "type": "figure",
+          "settings": {
+            "value": 100,
+            "suffix": "+",
+            "label": "Sprays in every atomiser"
+          }
+        },
+        "f3": {
+          "type": "figure",
+          "settings": {
+            "value": 100,
+            "suffix": "%",
+            "label": "Authentic designer fragrance"
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3"],
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
       "settings": {
         "eyebrow": "The Veloura philosophy",
         "statement": "A great fragrance should be *lived in,* not judged on a paper strip. So we decant the world's most iconic scents into *miniature* atomisers — the full composition, the same signature, made to be worn, carried and *fallen for.*",
@@ -80,11 +93,36 @@
     "gifting": {
       "type": "gifting",
       "blocks": {
-        "f1": { "type": "feature", "settings": { "icon": "gift", "title": "Signature packaging", "text": "Every order arrives in a Veloura box — champagne gold for Noir, rosé for Rosé." } },
-        "f2": { "type": "feature", "settings": { "icon": "sparkle", "title": "A handwritten note", "text": "Add a personal message in your bag before checkout." } },
-        "f3": { "type": "feature", "settings": { "icon": "truck", "title": "Shipped across Canada", "text": "Packed by hand and sent with care, coast to coast." } }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "gift",
+            "title": "Signature packaging",
+            "text": "Every order arrives in a Veloura box — champagne gold for Noir, rosé for Rosé."
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "sparkle",
+            "title": "A handwritten note",
+            "text": "Add a personal message in your bag before checkout."
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "truck",
+            "title": "Shipped across Canada",
+            "text": "Packed by hand and sent with care, coast to coast."
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3"],
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
       "settings": {
         "eyebrow": "The gifting experience",
         "heading": "Unboxing, <em>perfected</em>",
@@ -106,7 +144,7 @@
     }
   },
   "order": [
-    "story",
+    "boutique",
     "houses_ribbon",
     "manifesto",
     "showcase",

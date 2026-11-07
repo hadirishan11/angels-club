@@ -153,3 +153,20 @@ Don't
 | < 750px | single column, marquee 50%, houses list shows inline thumbnails, no cursor effects |
 
 Touch targets ≥ 44×44px. No horizontal overflow at 360px. Cursor effects only under `(hover: hover)`.
+
+## 10. The Boutique (first-person homepage opener)
+
+`sections/maison-boutique.liquid` + `assets/veloura-boutique.{css,js}` — a CSS 3D store (no WebGL, so
+product photography stays sharp).
+
+- **Entrance:** letterboxed night shopfront → doors swing open → camera glides through (a warm light flash
+  masks the threshold) → bars retract, HUD fades in. Returning visitors skip straight inside.
+- **Room:** left wall = Noir, ahead = all products, right wall = Rosé (each a collection setting). Bottles stand
+  in lit porcelain alcoves with brass plaques; uses the `veloura.cutout` metafield image when present.
+- **Navigation:** drag / swipe to look (±34°), quick flick or far look turns to the next wall, ←/→ keys,
+  wall buttons. Pointer parallax on desktop.
+- **Pick up:** FLIP flight from the shelf into the hand; notes parsed from the product description
+  (Top/Heart/Base list items); "Try a spritz" mist + a sentence built from the notes; Add to bag flies the
+  bottle into the bag HUD (real cart add); Put it back returns it to the shelf. Esc / backdrop click closes.
+- **A11y:** every bottle is a real `<button>` with a label; dialog traps focus and restores it; reduced motion
+  removes the dolly, mist and sway; without 3D support or JS the shelves render as a normal grid.
