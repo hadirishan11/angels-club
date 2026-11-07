@@ -1,0 +1,13 @@
+{%- comment -%} Params: label, value (1–5), words (comma list of 5 labels) {%- endcomment -%}
+{%- assign v = value | plus: 0 | at_least: 0 | at_most: 5 -%}
+{%- assign word_list = words | split: ',' -%}
+{%- assign word_idx = v | minus: 1 | at_least: 0 -%}
+<div class="meter">
+  <div class="meter__head">
+    <span>{{ label }}</span>
+    <span class="meter__value">{{ word_list[word_idx] | strip }}</span>
+  </div>
+  <div class="meter__track" role="meter" aria-valuemin="0" aria-valuemax="5" aria-valuenow="{{ v }}" aria-valuetext="{{ word_list[word_idx] | strip }}" aria-label="{{ label }}">
+    {%- for i in (1..5) -%}<span class="meter__seg{% if i <= v %} is-on{% endif %}"></span>{%- endfor -%}
+  </div>
+</div>

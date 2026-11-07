@@ -1,0 +1,42 @@
+{
+  "sections": {
+    "banner": {
+      "type": "collection-banner",
+      "settings": {
+        "eyebrow": "",
+        "show_description": true,
+        "show_image": false,
+        "image_height": 50,
+        "color_scheme": "ivory",
+        "padding_top": 40,
+        "padding_bottom": 32
+      }
+    },
+    "grid": {
+      "type": "main-collection",
+      "settings": {
+        "products_per_page": 24,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "enable_filters": true,
+        "enable_sorting": true,
+        "load_more": true
+      }
+    },
+    "private": {
+      "type": "private-list",
+      "settings": {
+        "eyebrow": "By invitation",
+        "heading": "The Private List",
+        "text": "<p>New drops reach the list 48 hours before anyone else.</p>",
+        "button_label": "Join",
+        "success": "You are on the list. Watch your inbox.",
+        "fine_print": "A few letters a month. Unsubscribe in one click.",
+        "color_scheme": "ink",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": ["banner", "grid", "private"]
+}

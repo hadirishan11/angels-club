@@ -1,0 +1,104 @@
+{%- comment -%}
+  "Pairs well with": uses the product's veloura.pairs_with metafield (list of products) first,
+  then falls back to Shopify's recommendations (loaded asynchronously so it never blocks rendering).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign pairs = product.metafields.veloura.pairs_with.value
+-%}
+<section class="section scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}" aria-labelledby="RecHeading-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-header reveal">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+      <h2 id="RecHeading-{{ section.id }}">{{ s.heading }}</h2>
+    </div>
+    {%- if pairs != blank -%}
+      <ul class="scroller scroller--desktop-grid" role="list" style="--cols-d: {{ s.columns_desktop }};">
+        {%- for p in pairs limit: s.limit -%}
+          <li>{% render 'product-card', product: p, index: forloop.index0 %}</li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <div
+        data-recommendations
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ s.limit }}&intent={{ s.intent }}"
+      >
+        {%- if recommendations.performed and recommendations.products_count > 0 -%}
+          <ul class="scroller scroller--desktop-grid" role="list" style="--cols-d: {{ s.columns_desktop }};">
+            {%- for p in recommendations.products -%}
+              <li>{% render 'product-card', product: p, index: forloop.index0 %}</li>
+            {%- endfor -%}
+          </ul>
+        {%- elsif request.design_mode -%}
+          <ul class="scroller scroller--desktop-grid" role="list" style="--cols-d: {{ s.columns_desktop }};">
+            {%- for i in (1..s.limit) -%}<li>{% render 'product-card', product: blank, index: forloop.index0 %}</li>{%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+      <script>
+        (() => {
+          const el = document.currentScript.previousElementSibling;
+          if (!el || el.children.length) return;
+          const load = () => fetch(el.dataset.url)
+            .then((r) => r.text())
+            .then((html) => {
+              const doc = new DOMParser().parseFromString(html, 'text/html');
+              const fresh = doc.querySelector('[data-recommendations]');
+              if (fresh && fresh.innerHTML.trim()) {
+                el.innerHTML = fresh.innerHTML;
+                window.Veloura && window.Veloura.initReveal && window.Veloura.initReveal(el);
+              } else {
+                el.closest('section').hidden = true;
+              }
+            })
+            .catch(() => {});
+          if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+              if (entries[0].isIntersecting) { io.disconnect(); load(); }
+            }, { rootMargin: '400px 0px' });
+            io.observe(el);
+          } else load();
+        })();
+      </script>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pairs well with",
+  "class": "section-recommendations",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Pick hand-curated pairings in the product's 'Pairs well with' metafield. Otherwise Shopify recommendations are shown." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Layer or alternate" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pairs well with" },
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Fallback recommendations",
+      "options": [
+        { "value": "related", "label": "Related (similar scents)" },
+        { "value": "complementary", "label": "Complementary (set in Search & Discovery)" }
+      ],
+      "default": "related"
+    },
+    { "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_desktop", "label": "Columns (desktop)", "min": 2, "max": 5, "step": 1, "default": 4 },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ivory"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "presets": [ { "name": "Pairs well with" } ]
+}
+{% endschema %}

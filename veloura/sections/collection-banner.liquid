@@ -1,0 +1,71 @@
+{%- liquid
+  assign s = section.settings
+  assign img = collection.metafields.veloura.banner_image.value | default: collection.image
+  assign show_image = false
+  if s.show_image and img != blank
+    assign show_image = true
+  endif
+-%}
+{%- if show_image -%}
+  <section class="collection-hero collection-hero--image" style="min-height: {{ s.image_height }}svh;">
+    <div class="media">
+      {% render 'image', image: img, sizes: '100vw', priority: true, alt: collection.title %}
+    </div>
+    <div class="page-width">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold">{{ s.eyebrow }}</p>{%- endif -%}
+      <h1 class="h-display">{{ collection.title }}</h1>
+      {%- if s.show_description and collection.description != blank -%}
+        <div class="collection-hero__desc rte">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+  </section>
+  <div class="page-width">{% render 'breadcrumbs' %}</div>
+{%- else -%}
+  <div class="page-width">{% render 'breadcrumbs' %}</div>
+  <section class="section collection-hero scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}">
+    <div class="page-width">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold reveal">{{ s.eyebrow }}</p>{%- endif -%}
+      <h1 class="h-display reveal">{{ collection.title }}</h1>
+      {%- if s.show_description and collection.description != blank -%}
+        <div class="collection-hero__desc rte reveal" style="--delay: 120ms;">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{%- if s.mood_menu != blank -%}
+  <nav class="page-width" aria-label="{{ 'collections.general.browse_by' | t }}" style="margin-top: var(--space-3); margin-bottom: var(--space-3);">
+    <ul class="mood-links" role="list" style="justify-content: {% if show_image %}flex-start{% else %}center{% endif %};">
+      {%- for link in s.mood_menu.links -%}
+        <li><a class="chip" href="{{ link.url }}"{% if link.current or link.url == collection.url %} aria-current="page" aria-pressed="true"{% endif %}>{{ link.title }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection banner",
+  "class": "section-collection-banner",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label" },
+    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
+    { "type": "checkbox", "id": "show_image", "label": "Show collection image", "default": false, "info": "Uses the 'banner image' metafield or the collection image." },
+    { "type": "range", "id": "image_height", "label": "Image height", "min": 30, "max": 80, "step": 5, "unit": "vh", "default": 50 },
+    { "type": "link_list", "id": "mood_menu", "label": "Quick links menu", "info": "e.g. Noir, Rosé, Woody, Amber, Fresh, Floral, Gourmand, Citrus" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ivory"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 40 }
+  ]
+}
+{% endschema %}

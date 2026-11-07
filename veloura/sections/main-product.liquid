@@ -1,0 +1,334 @@
+{%- liquid
+  assign s = section.settings
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'ProductForm-' | append: section.id
+  assign volume = product.metafields.veloura.volume_ml.value | default: settings.default_volume_ml
+  assign is_low = false
+  if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny' and variant.inventory_quantity > 0 and variant.inventory_quantity <= settings.low_stock_threshold
+    assign is_low = true
+  endif
+-%}
+<div class="page-width">{% render 'breadcrumbs' %}</div>
+
+<section class="page-width" data-product-root data-section-id="{{ section.id }}" data-product-url="{{ product.url }}" style="padding-bottom: var(--space-6);">
+  <div class="product">
+    {%- comment -%} Gallery {%- endcomment -%}
+    <div class="gallery" data-scroller>
+      <ul class="gallery__list" role="list" data-scroller-list data-gallery aria-label="{{ 'products.product.gallery' | t }}">
+        {%- if product.media.size > 0 -%}
+          {%- for media in product.media -%}
+            <li class="gallery__item" data-media-id="{{ media.id }}">
+              <div class="media" style="--ratio: {{ s.media_ratio }};">
+                {%- case media.media_type -%}
+                  {%- when 'video' -%}
+                    {{ media | video_tag: controls: true, playsinline: true, muted: true, preload: 'none', image_size: '1200x' }}
+                  {%- when 'external_video' -%}
+                    {{ media | external_video_tag: loading: 'lazy' }}
+                  {%- else -%}
+                    {%- liquid
+                      assign media_alt = media.alt | default: product.title
+                      if forloop.first
+                        assign media_priority = true
+                      else
+                        assign media_priority = false
+                      endif
+                    -%}
+                    {%- if forloop.first -%}
+                      {% render 'image', image: media.preview_image, sizes: '(min-width: 990px) 55vw, 100vw', priority: media_priority, alt: media_alt %}
+                    {%- else -%}
+                      {% render 'image', image: media.preview_image, sizes: '(min-width: 990px) 28vw, 100vw', alt: media_alt %}
+                    {%- endif -%}
+                {%- endcase -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          <li class="gallery__item"><div class="media" style="--ratio: {{ s.media_ratio }};">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div></li>
+          <li class="gallery__item"><div class="media" style="--ratio: {{ s.media_ratio }};">{{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}</div></li>
+        {%- endif -%}
+      </ul>
+      {%- if product.media.size > 1 -%}
+        <div class="gallery__dots" aria-hidden="true">
+          {%- for media in product.media -%}
+            <button type="button" class="gallery__dot" data-scroller-dot tabindex="-1" aria-current="{% if forloop.first %}true{% else %}false{% endif %}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Info {%- endcomment -%}
+    <div class="product__info">
+      <div class="product__info-inner">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'title' -%}
+              <div class="product__block" {{ block.shopify_attributes }}>
+                {%- if product.vendor != blank -%}
+                  <p class="product__house">{{ product.vendor | link_to_vendor }}</p>
+                {%- endif -%}
+                <h1 class="product__title">{{ product.title }}</h1>
+                {%- assign tagline = product.metafields.veloura.tagline.value -%}
+                {%- if tagline != blank -%}<p class="product__tagline">{{ tagline }}</p>{%- endif -%}
+                {%- if block.settings.show_rating -%}<div class="mt-2">{% render 'rating', product: product, show_count: true %}</div>{%- endif -%}
+              </div>
+
+            {%- when 'price' -%}
+              <div class="product__block product__price-row" {{ block.shopify_attributes }}>
+                <div>
+                  {% render 'price', product: product, variant: variant, show_unit: block.settings.show_unit %}
+                  {%- if block.settings.show_volume -%}
+                    <span class="text-sm text-muted">{{ 'products.product.volume' | t: volume: volume }}</span>
+                  {%- endif -%}
+                </div>
+                {% render 'product-badges', product: product, variant: variant, limit: 2 %}
+              </div>
+              {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                <p class="text-sm text-muted" style="margin-top: 0.5rem;">
+                  {%- if cart.taxes_included -%}{{ 'products.product.tax_included' | t }}{%- endif -%}
+                  {%- if shop.shipping_policy.body != blank %} {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}{%- endif -%}
+                </p>
+              {%- endif -%}
+
+            {%- when 'notes_summary' -%}
+              {%- liquid
+                assign nt = product.metafields.veloura.notes_top.value
+                assign nh = product.metafields.veloura.notes_heart.value
+                assign nb = product.metafields.veloura.notes_base.value
+              -%}
+              {%- if nt != blank or nh != blank or nb != blank -%}
+                <div class="product__block" {{ block.shopify_attributes }}>
+                  <p class="product__notes-summary mb-0">
+                    {%- if nt != blank -%}{{ nt | slice: 0, 2 | join: ', ' }}{%- endif -%}
+                    {%- if nh != blank %} · {{ nh | slice: 0, 2 | join: ', ' }}{%- endif -%}
+                    {%- if nb != blank %} · {{ nb | slice: 0, 2 | join: ', ' }}{%- endif -%}
+                    {%- if block.settings.link_to_profile %} <a href="#FragranceProfile" class="link-underline">{{ 'products.profile.see_profile' | t }}</a>{%- endif -%}
+                  </p>
+                </div>
+              {%- endif -%}
+
+            {%- when 'text' -%}
+              <div class="product__block rte text-sm" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                <div class="product__block variant-picker" {{ block.shopify_attributes }} data-variant-picker>
+                  {%- for option in product.options_with_values -%}
+                    <fieldset>
+                      <legend>{{ option.name }}<span data-option-value="{{ forloop.index0 }}">{{ option.selected_value }}</span></legend>
+                      <div class="pills">
+                        {%- assign option_index = forloop.index0 -%}
+                        {%- for value in option.values -%}
+                          <div class="pill">
+                            <input
+                              type="radio"
+                              id="{{ section.id }}-{{ option_index }}-{{ forloop.index0 }}"
+                              name="{{ option.name | escape }}"
+                              value="{{ value | escape }}"
+                              data-option-index="{{ option_index }}"
+                              {% if option.selected_value == value %}checked{% endif %}
+                              {% unless value.available %}class="is-unavailable"{% endunless %}
+                            >
+                            <label for="{{ section.id }}-{{ option_index }}-{{ forloop.index0 }}">
+                              {{ value }}{% unless value.available %}<span class="visually-hidden"> – {{ 'products.product.sold_out' | t }}</span>{% endunless %}
+                            </label>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                    </fieldset>
+                  {%- endfor -%}
+                  <script type="application/json" data-variants-json>
+                    [{%- for v in product.variants -%}{"id":{{ v.id }},"options":{{ v.options | json }},"available":{{ v.available | json }},"media":{{ v.featured_media.id | default: 0 }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]
+                  </script>
+                </div>
+              {%- endunless -%}
+
+            {%- when 'buy_buttons' -%}
+              <div class="product__block" {{ block.shopify_attributes }}>
+                <div data-variant-update="buy">
+                  {%- form 'product', product, id: form_id, class: 'buy', data-product-form: '', novalidate: 'novalidate' -%}
+                    <input type="hidden" name="id" value="{{ variant.id }}" data-variant-id>
+                    {%- if variant.available -%}
+                      {%- if block.settings.show_quantity -%}
+                        <div class="qty">
+                          <button type="button" data-qty-step="-1" aria-label="{{ 'products.product.decrease' | t }}">−</button>
+                          <label class="visually-hidden" for="Qty-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+                          <input id="Qty-{{ section.id }}" type="number" name="quantity" value="1" min="1" inputmode="numeric"{% if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny' %} max="{{ variant.inventory_quantity }}"{% endif %}>
+                          <button type="button" data-qty-step="1" aria-label="{{ 'products.product.increase' | t }}">+</button>
+                        </div>
+                      {%- endif -%}
+                      <button type="submit" name="add" class="btn{% unless block.settings.show_quantity %} btn--full{% endunless %}" data-atc{% unless block.settings.show_quantity %} style="grid-column: 1 / -1;"{% endunless %}>
+                        {{ 'products.product.add_to_cart' | t }} · {{ variant.price | money }}
+                      </button>
+                      {%- if block.settings.show_dynamic_checkout -%}
+                        <div class="buy__dynamic">{{ form | payment_button }}</div>
+                      {%- endif -%}
+                    {%- else -%}
+                      <button type="button" class="btn btn--full" aria-disabled="true" style="grid-column: 1 / -1;" data-atc>{{ settings.label_sold_out }}</button>
+                    {%- endif -%}
+                    <p class="form-message form-message--error" data-form-error role="alert" hidden style="grid-column: 1 / -1;"></p>
+
+                    {%- if block.settings.show_stock_note -%}
+                      <p class="buy__note mb-0">
+                        {%- if variant.available -%}
+                          {%- if is_low -%}
+                            <span class="dot dot--low" aria-hidden="true"></span>
+                            {{ 'products.product.low_stock' | t: count: variant.inventory_quantity }}
+                          {%- else -%}
+                            <span class="dot" aria-hidden="true"></span>
+                            {{ block.settings.in_stock_text }}
+                          {%- endif -%}
+                        {%- endif -%}
+                      </p>
+                    {%- endif -%}
+                  {%- endform -%}
+                  {%- unless variant.available -%}
+                    <div class="mt-3">{% render 'notify-form', product: product, variant: variant, form_id: 'Notify-main' %}</div>
+                  {%- endunless -%}
+                </div>
+              </div>
+
+            {%- when 'perks' -%}
+              <ul class="product__block perks" role="list" {{ block.shopify_attributes }}>
+                {%- if block.settings.perk_1 != blank -%}<li>{% render 'icon', name: 'seal' %}<span>{{ block.settings.perk_1 }}</span></li>{%- endif -%}
+                {%- if block.settings.perk_2 != blank -%}<li>{% render 'icon', name: 'atomizer' %}<span>{{ block.settings.perk_2 }}</span></li>{%- endif -%}
+                {%- if block.settings.perk_3 != blank -%}<li>{% render 'icon', name: 'truck' %}<span>{{ block.settings.perk_3 }}</span></li>{%- endif -%}
+                {%- if block.settings.perk_4 != blank -%}<li>{% render 'icon', name: 'gift' %}<span>{{ block.settings.perk_4 }}</span></li>{%- endif -%}
+              </ul>
+
+            {%- when 'description' -%}
+              {%- if product.description != blank -%}
+                <div class="product__block accordion" {{ block.shopify_attributes }}>
+                  <details{% if block.settings.open %} open{% endif %}>
+                    <summary>{{ block.settings.heading }} {% render 'icon', name: 'plus' %}</summary>
+                    <div class="accordion__content rte">{{ product.description }}</div>
+                  </details>
+                </div>
+              {%- endif -%}
+
+            {%- when 'collapsible' -%}
+              <div class="product__block accordion" style="border-top: 0;" {{ block.shopify_attributes }}>
+                <details>
+                  <summary>{{ block.settings.heading }} {% render 'icon', name: 'plus' %}</summary>
+                  <div class="accordion__content rte">
+                    {{ block.settings.content }}
+                    {%- if block.settings.page != blank -%}{{ block.settings.page.content }}{%- endif -%}
+                  </div>
+                </details>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if s.sticky_atc -%}
+    <div class="sticky-atc" data-sticky-atc aria-hidden="true">
+      {%- if product.featured_media -%}
+        <div class="sticky-atc__thumb media">{{ product.featured_media.preview_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', widths: '60, 120', sizes: '44px' }}</div>
+      {%- endif -%}
+      <div class="sticky-atc__info">
+        <p class="sticky-atc__title mb-0">{{ product.title }}</p>
+        <p class="sticky-atc__price mb-0" data-variant-update="sticky-price">{{ variant.price | money }}{% unless product.has_only_default_variant %} · {{ variant.title }}{% endunless %}</p>
+      </div>
+      <div data-variant-update="sticky-btn">
+        {%- if variant.available -%}
+          <button type="submit" form="{{ form_id }}" class="btn" tabindex="-1">{{ 'products.product.add_to_cart' | t }}</button>
+        {%- else -%}
+          <a href="#Notify-main" class="btn btn--outline" tabindex="-1">{{ 'products.notify.button' | t }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<script src="{{ 'product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Product information",
+  "class": "section-main-product",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "2 / 3", "label": "Tall" }
+      ],
+      "default": "4 / 5"
+    },
+    { "type": "checkbox", "id": "sticky_atc", "label": "Sticky add-to-bag bar on scroll", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "name": "House & title",
+      "limit": 1,
+      "settings": [ { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true } ]
+    },
+    {
+      "type": "price",
+      "name": "Price & badges",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_unit", "label": "Show price per ml", "default": true },
+        { "type": "checkbox", "id": "show_volume", "label": "Show volume", "default": true }
+      ]
+    },
+    {
+      "type": "notes_summary",
+      "name": "Notes summary",
+      "limit": 1,
+      "settings": [ { "type": "checkbox", "id": "link_to_profile", "label": "Link to full profile", "default": true } ]
+    },
+    { "type": "variant_picker", "name": "Variant picker", "limit": 1, "settings": [] },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_quantity", "label": "Show quantity selector", "default": false },
+        { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout (Shop Pay, Apple Pay…)", "default": true },
+        { "type": "checkbox", "id": "show_stock_note", "label": "Show stock note", "default": true },
+        { "type": "text", "id": "in_stock_text", "label": "In-stock note", "default": "In stock. Decanted and shipped within 24 hours." }
+      ]
+    },
+    {
+      "type": "perks",
+      "name": "Reassurance list",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "perk_1", "label": "Authenticity line", "default": "Authentic. Decanted from the original bottle." },
+        { "type": "text", "id": "perk_2", "label": "Atomiser line", "default": "10 ml glass atomiser, about 100 sprays." },
+        { "type": "text", "id": "perk_3", "label": "Shipping line", "default": "Complimentary shipping over €75." },
+        { "type": "text", "id": "perk_4", "label": "Gift line", "default": "Gift-ready packaging, always." }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "The scent" },
+        { "type": "checkbox", "id": "open", "label": "Open by default", "default": true }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "Collapsible tab",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shipping & returns" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Orders ship within one working day. Unopened decants can be returned within 14 days.</p>" },
+        { "type": "page", "id": "page", "label": "Or content from a page" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [ { "type": "richtext", "id": "text", "label": "Text" } ]
+    }
+  ]
+}
+{% endschema %}

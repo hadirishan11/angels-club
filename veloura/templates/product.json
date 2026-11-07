@@ -1,0 +1,88 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": { "type": "title", "settings": { "show_rating": true } },
+        "price": { "type": "price", "settings": { "show_unit": true, "show_volume": true } },
+        "notes": { "type": "notes_summary", "settings": { "link_to_profile": true } },
+        "picker": { "type": "variant_picker", "settings": {} },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": false,
+            "show_dynamic_checkout": true,
+            "show_stock_note": true,
+            "in_stock_text": "In stock. Decanted and shipped within 24 hours."
+          }
+        },
+        "perks": {
+          "type": "perks",
+          "settings": {
+            "perk_1": "Authentic. Decanted from the original bottle.",
+            "perk_2": "10 ml glass atomiser, about 100 sprays.",
+            "perk_3": "Complimentary shipping over €75.",
+            "perk_4": "Gift-ready packaging, always."
+          }
+        },
+        "description": { "type": "description", "settings": { "heading": "The scent", "open": true } },
+        "authenticity": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Authenticity",
+            "content": "<p>Every decant is drawn from a full, original bottle bought from an authorised source. We keep batch codes on file and will share them on request.</p>"
+          }
+        },
+        "shipping": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Orders ship within one working day. Complimentary shipping over €75. Unopened decants can be returned within 14 days.</p>"
+          }
+        }
+      },
+      "block_order": ["title", "price", "notes", "picker", "buy", "perks", "description", "authenticity", "shipping"],
+      "settings": { "media_ratio": "4 / 5", "sticky_atc": true }
+    },
+    "profile": {
+      "type": "fragrance-profile",
+      "settings": {
+        "eyebrow": "The composition",
+        "heading": "Scent profile",
+        "longevity_label": "Longevity",
+        "longevity_words": "Fleeting, Soft, Moderate, Long-lasting, Enduring",
+        "sillage_label": "Sillage",
+        "sillage_words": "Skin scent, Intimate, Moderate, Noticeable, Room-filling",
+        "color_scheme": "ink",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "pairs": {
+      "type": "product-recommendations",
+      "settings": {
+        "eyebrow": "Layer or alternate",
+        "heading": "Pairs well with",
+        "intent": "related",
+        "limit": 4,
+        "columns_desktop": 4,
+        "color_scheme": "ivory",
+        "padding_top": 96,
+        "padding_bottom": 48
+      }
+    },
+    "apps": { "type": "apps", "settings": {} },
+    "trust": {
+      "type": "trust-bar",
+      "blocks": {
+        "t1": { "type": "item", "settings": { "icon": "seal", "title": "100% authentic", "text": "Decanted from original bottles" } },
+        "t2": { "type": "item", "settings": { "icon": "atomizer", "title": "Glass atomisers", "text": "10 ml, fine mist, travel-ready" } },
+        "t3": { "type": "item", "settings": { "icon": "truck", "title": "Ships in 24 h", "text": "Free over €75" } },
+        "t4": { "type": "item", "settings": { "icon": "return", "title": "Easy returns", "text": "14 days on unopened decants" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
+      "settings": { "heading": "Why Veloura", "border": true, "color_scheme": "ivory", "padding_top": 48, "padding_bottom": 48 }
+    }
+  },
+  "order": ["main", "profile", "pairs", "apps", "trust"]
+}

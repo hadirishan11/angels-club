@@ -1,0 +1,89 @@
+{%- comment -%}
+  Filter drawer for collection and search results (Shopify Search & Discovery filters).
+  Params:
+  - results: collection or search object
+  - section_id
+  - sort_by: current sort value
+  - terms: search terms (search only)
+{%- endcomment -%}
+{%- assign results_total = results.products_count | default: results.results_count | default: 0 -%}
+<div id="FacetsDrawer" class="drawer scheme-ivory" role="dialog" aria-modal="true" aria-labelledby="FacetsTitle" aria-hidden="true" hidden>
+  <div class="drawer__header">
+    <h2 id="FacetsTitle" class="drawer__title">{{ 'collections.filter.title' | t }}</h2>
+    <button type="button" class="icon-btn" data-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+  <form id="FacetsForm" class="drawer__body" action="{{ request.path }}" method="get" data-facets-form data-section-id="{{ section_id }}">
+    {%- if terms -%}
+      <input type="hidden" name="q" value="{{ terms | escape }}">
+      <input type="hidden" name="options[prefix]" value="last">
+    {%- endif -%}
+    <div data-facets-replace="filters">
+      {%- for filter in results.filters -%}
+        {%- liquid
+          assign open = false
+          if forloop.index <= 3 or filter.active_values.size > 0
+            assign open = true
+          endif
+          if filter.type == 'price_range'
+            if filter.min_value.value != blank or filter.max_value.value != blank
+              assign open = true
+            endif
+          endif
+        -%}
+        <details class="facets__group"{% if open %} open{% endif %}>
+          <summary>
+            <span>{{ filter.label }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</span>
+            {% render 'icon', name: 'plus' %}
+          </summary>
+          {%- case filter.type -%}
+            {%- when 'list', 'boolean' -%}
+              <fieldset style="border: 0; margin: 0; padding: 0;">
+                <legend class="visually-hidden">{{ filter.label }}</legend>
+                <ul class="facets__list" role="list">
+                  {%- for value in filter.values -%}
+                    <li>
+                      <label class="checkbox{% if value.count == 0 and value.active == false %} is-disabled{% endif %}" for="Filter-{{ filter.param_name | handle }}-{{ forloop.index }}">
+                        <input
+                          type="checkbox"
+                          id="Filter-{{ filter.param_name | handle }}-{{ forloop.index }}"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                        >
+                        <span>{{ value.label }}</span>
+                        <span>{{ value.count }}</span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </fieldset>
+            {%- when 'price_range' -%}
+              {%- assign max_price = filter.range_max | money_without_currency | remove: ',' -%}
+              <div class="facets__price">
+                <div class="field">
+                  <label class="field__label" for="Filter-price-min">{{ 'collections.filter.from' | t }} ({{ cart.currency.symbol }})</label>
+                  <input class="field__input" id="Filter-price-min" type="number" inputmode="decimal" min="0" max="{{ max_price }}" name="{{ filter.min_value.param_name }}" value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | remove: ',' }}{% endif %}" placeholder="0">
+                </div>
+                <div class="field">
+                  <label class="field__label" for="Filter-price-max">{{ 'collections.filter.to' | t }} ({{ cart.currency.symbol }})</label>
+                  <input class="field__input" id="Filter-price-max" type="number" inputmode="decimal" min="0" max="{{ max_price }}" name="{{ filter.max_value.param_name }}" value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | remove: ',' }}{% endif %}" placeholder="{{ max_price }}">
+                </div>
+              </div>
+          {%- endcase -%}
+        </details>
+      {%- endfor -%}
+      {%- if results.filters.size == 0 -%}
+        <p class="text-sm text-muted">{{ 'collections.filter.none_configured' | t }}</p>
+      {%- endif -%}
+    </div>
+    <input type="hidden" name="sort_by" value="{{ sort_by }}" data-sort-mirror>
+    <noscript><button type="submit" class="btn btn--full mt-3">{{ 'collections.filter.apply' | t }}</button></noscript>
+  </form>
+  <div class="drawer__footer facets__footer">
+    <a href="{{ request.path }}{% if terms %}?q={{ terms | url_encode }}{% endif %}" class="btn btn--outline" data-facets-clear>{{ 'collections.filter.clear_all' | t }}</a>
+    <button type="button" class="btn" data-drawer-close>
+      <span data-facets-replace="count-button">{{ 'collections.filter.show_results' | t: count: results_total }}</span>
+    </button>
+  </div>
+</div>

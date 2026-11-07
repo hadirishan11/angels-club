@@ -1,0 +1,14 @@
+<div class="page-width section" style="--pt: var(--space-4); --pb: var(--space-4); --pt-d: var(--space-5); --pb-d: var(--space-5);">
+  {%- for block in section.blocks -%}
+    {% render block %}
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "Apps",
+  "class": "section-apps",
+  "blocks": [ { "type": "@app" } ],
+  "presets": [ { "name": "Apps" } ]
+}
+{% endschema %}

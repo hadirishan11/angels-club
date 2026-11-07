@@ -1,0 +1,26 @@
+{%- comment -%}
+  Back-in-stock request. Uses Shopify's contact form, so requests arrive in your inbox
+  (Settings > Notifications > Contact form). The email is also tagged on the message body.
+  Params: product, variant, form_id
+{%- endcomment -%}
+<div class="notify" data-notify{% if variant.available %} hidden{% endif %}>
+  <p class="notify__title">{{ 'products.notify.title' | t }}</p>
+  <p>{{ 'products.notify.text' | t }}</p>
+  {%- form 'contact', id: form_id, class: 'notify__form' -%}
+    {%- if form.posted_successfully? -%}
+      <p class="form-message form-message--success" role="status" data-form-status>{{ 'products.notify.success' | t }}</p>
+    {%- else -%}
+      <input type="hidden" name="contact[tags]" value="notify-me,{{ product.handle }}">
+      <input type="hidden" name="contact[name]" value="Notify me: {{ product.vendor | escape }} {{ product.title | escape }}">
+      <input type="hidden" name="contact[body]" value="Back-in-stock request for {{ product.vendor | escape }} – {{ product.title | escape }} ({{ variant.title | escape }}) – {{ request.origin }}{{ product.url }}" data-notify-body>
+      <div class="form-inline">
+        <label class="visually-hidden" for="{{ form_id }}-email">{{ 'newsletter.label' | t }}</label>
+        <input id="{{ form_id }}-email" class="field__input" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'newsletter.label' | t }}">
+        <button type="submit" class="btn">{{ 'products.notify.button' | t }}</button>
+      </div>
+      {%- if form.errors -%}
+        <p class="form-message form-message--error" data-form-status>{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endform -%}
+</div>
