@@ -23,6 +23,9 @@
           for p in collections.all.products limit: 100
             if p.vendor == vendor
               assign count = count | plus: 1
+              if img == nil and p.metafields.veloura.cutout.value
+                assign img = p.metafields.veloura.cutout.value
+              endif
               if img == nil and p.featured_media
                 assign img = p.featured_media
               endif

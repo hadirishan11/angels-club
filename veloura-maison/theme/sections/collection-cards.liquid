@@ -1,0 +1,65 @@
+<section class="section collection-cards">
+  <div class="container">
+    <div class="section-header text-center">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow eyebrow--lines" data-reveal>{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1" data-split>{{ section.settings.heading }}</h2>
+    </div>
+    <div class="grid grid--2 grid--stack-mobile collection-cards__grid" data-reveal-group>
+      {%- for w in (1..2) -%}
+        {%- liquid
+          if w == 1
+            assign world = 'noir'
+            assign c = settings.noir_collection
+            assign title = section.settings.noir_title
+            assign text = section.settings.noir_text
+            assign img = section.settings.noir_image
+          else
+            assign world = 'rose'
+            assign c = settings.rose_collection
+            assign title = section.settings.rose_title
+            assign text = section.settings.rose_text
+            assign img = section.settings.rose_image
+          endif
+          assign url = c.url | default: routes.all_products_collection_url
+        -%}
+        <a class="world-card world-card--{{ world }}{% if img == blank %} world-card--vitrine{% endif %}" href="{{ url }}" data-reveal data-world-link="{{ world }}">
+          <span class="world-card__bg" aria-hidden="true"></span>
+          <span class="world-card__art" aria-hidden="true">
+            {%- if img != blank -%}
+              {{ img | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '400, 700, 1100', sizes: '(min-width: 750px) 45vw, 92vw', alt: '' }}
+            {%- else -%}
+              {% render 'maison-vitrine', collection: c, limit: 3, world: world %}
+            {%- endif -%}
+          </span>
+          <span class="world-card__content">
+            {%- if world == 'rose' -%}{%- assign card_tone = 'light' -%}{%- else -%}{%- assign card_tone = 'noir' -%}{%- endif -%}
+            {% render 'logo', variant: 'wordmark', tone: card_tone, class: 'world-card__logo' %}
+            <span class="world-card__title">{{ title }}</span>
+            <span class="world-card__text">{{ text }}</span>
+            <span class="world-card__cta">{{ 'general.explore' | t }} {% render 'icon', name: 'arrow' %}</span>
+          </span>
+          {%- if c.products_count > 0 -%}<span class="world-card__count">{{ 'collections.general.products_count' | t: count: c.products_count }}</span>{%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by collection",
+  "class": "section-collection-cards",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two worlds" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by collection" },
+    { "type": "paragraph", "content": "Collections are set in Theme settings › Brand & worlds. Without an image, each card shows the collection's real bottles in lit alcoves." },
+    { "type": "text", "id": "noir_title", "label": "Noir title", "default": "Noir" },
+    { "type": "text", "id": "noir_text", "label": "Noir text", "default": "The masculine collection — woods, spice, leather and smoke." },
+    { "type": "image_picker", "id": "noir_image", "label": "Noir image (optional)", "info": "Replaces the bottle alcoves." },
+    { "type": "text", "id": "rose_title", "label": "Rosé title", "default": "Rosé" },
+    { "type": "text", "id": "rose_text", "label": "Rosé text", "default": "The feminine collection — florals, gourmands and luminous musks." },
+    { "type": "image_picker", "id": "rose_image", "label": "Rosé image (optional)", "info": "Replaces the bottle alcoves." }
+  ],
+  "presets": [{ "name": "Shop by collection" }]
+}
+{% endschema %}

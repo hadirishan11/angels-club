@@ -1,0 +1,39 @@
+{%- comment -%}
+  Maison vitrine — the real bottles from a collection, each lit inside an arched porcelain alcove,
+  like a boutique display wall. Replaces the CGI bottle renders.
+  Params:
+    collection  – collection to draw products from (falls back to all products)
+    limit       – max alcoves (default 3)
+    world       – 'noir' | 'rose' (styling)
+    layout      – 'wall' (default) | 'case' (a long lacquered case, used by discovery sets)
+{%- endcomment -%}
+{%- liquid
+  assign vc = collection
+  if vc == blank or vc.products_count == 0
+    assign vc = collections.all
+  endif
+  assign vlimit = limit | default: 3
+  assign vcount = vc.products_count | at_most: vlimit
+  assign vlayout = layout | default: 'wall'
+-%}
+<span class="m-vitrine m-vitrine--{{ world | default: 'noir' }} m-vitrine--{{ vlayout }} m-vitrine--n{{ vcount }}" aria-hidden="true">
+  <span class="m-vitrine__wall">
+    {%- for vp in vc.products limit: vlimit -%}
+      {%- assign vimg = vp.metafields.veloura.cutout.value | default: vp.featured_media -%}
+      {%- if vimg -%}
+        <span class="m-niche{% if vp.metafields.veloura.cutout.value %} m-niche--cut{% endif %}" style="--i: {{ forloop.index0 }}">
+          <span class="m-niche__arch">
+            <span class="m-niche__light"></span>
+            {{ vimg | image_url: width: 600 | image_tag: loading: 'lazy', widths: '240, 360, 480, 600', sizes: '(min-width: 990px) 16vw, 30vw', class: 'm-niche__img', alt: '' }}
+            <span class="m-niche__shadow"></span>
+          </span>
+          <span class="m-niche__plaque">
+            {%- if vp.vendor != blank and vp.vendor != 'My Store' -%}<em>{{ vp.vendor }}</em>{%- endif -%}
+            <span>{{ vp.title }}</span>
+          </span>
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+  </span>
+  <span class="m-vitrine__shelf"></span>
+</span>
