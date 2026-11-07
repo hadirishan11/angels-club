@@ -1,0 +1,99 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Veloura",
+    "theme_version": "1.0.0",
+    "theme_author": "Veloura",
+    "theme_documentation_url": "https://shopify.dev/docs/storefronts/themes",
+    "theme_support_url": "https://help.shopify.com"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "header", "content": "Palette" },
+      { "type": "color", "id": "color_ink", "label": "Ink (off-black)", "default": "#0E0E0E" },
+      { "type": "color", "id": "color_ivory", "label": "Ivory", "default": "#F4EFE6" },
+      { "type": "color", "id": "color_stone", "label": "Stone", "default": "#DCD5CA" },
+      { "type": "color", "id": "color_stone_dark", "label": "Stone (dark, for muted text)", "default": "#6B655D" },
+      { "type": "color", "id": "color_gold", "label": "Champagne accent", "default": "#B8A07E", "info": "Used sparingly: hairlines, small labels, focus rings." },
+      { "type": "color", "id": "color_error", "label": "Error", "default": "#8A2E2E" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "type_heading_font", "label": "Heading font", "default": "cormorant_n4", "info": "A high-contrast serif is recommended." },
+      { "type": "font_picker", "id": "type_body_font", "label": "Body font", "default": "jost_n4" },
+      { "type": "range", "id": "heading_scale", "label": "Heading scale", "min": 80, "max": 130, "step": 5, "unit": "%", "default": 100 },
+      { "type": "range", "id": "body_scale", "label": "Body scale", "min": 90, "max": 120, "step": 5, "unit": "%", "default": 100 }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      { "type": "range", "id": "page_width", "label": "Max page width", "min": 1000, "max": 1800, "step": 20, "unit": "px", "default": 1440 },
+      { "type": "checkbox", "id": "animations_reveal", "label": "Gentle fade-in on scroll", "default": true }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      { "type": "checkbox", "id": "card_show_second_image", "label": "Show second image on hover", "default": true },
+      { "type": "checkbox", "id": "card_show_quick_add", "label": "Show quick add", "default": true },
+      { "type": "checkbox", "id": "card_show_rating", "label": "Show rating", "default": true, "info": "Needs a reviews app that writes the standard product rating metafield." },
+      { "type": "checkbox", "id": "card_show_price_per_ml", "label": "Show price per ml", "default": false }
+    ]
+  },
+  {
+    "name": "Scarcity labels",
+    "settings": [
+      { "type": "paragraph", "content": "Badges are driven by inventory and the 'Limited batch' product metafield. No timers, no shouting." },
+      { "type": "range", "id": "low_stock_threshold", "label": "Show 'Few remaining' at or below", "min": 1, "max": 30, "step": 1, "default": 8 },
+      { "type": "text", "id": "label_limited", "label": "Limited batch label", "default": "Limited batch" },
+      { "type": "text", "id": "label_low_stock", "label": "Low stock label", "default": "Few remaining" },
+      { "type": "text", "id": "label_sold_out", "label": "Sold out label", "default": "Sold out" },
+      { "type": "text", "id": "label_new", "label": "New label", "default": "New arrival", "info": "Shown when a product has the tag 'new'." }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      { "type": "select", "id": "cart_type", "label": "Cart type", "options": [ { "value": "drawer", "label": "Slide-out drawer" }, { "value": "page", "label": "Cart page" } ], "default": "drawer" },
+      { "type": "number", "id": "free_shipping_threshold", "label": "Free shipping threshold (store currency)", "default": 75, "info": "Set 0 to hide the progress bar. Match this to your shipping rates in Settings > Shipping." },
+      { "type": "product", "id": "cart_upsell_product", "label": "Upsell product (e.g. Discovery set)" },
+      { "type": "text", "id": "cart_upsell_heading", "label": "Upsell heading", "default": "Not sure yet? Begin with the discovery set." },
+      { "type": "checkbox", "id": "cart_show_note", "label": "Allow gift note", "default": true },
+      { "type": "text", "id": "cart_trust_text", "label": "Reassurance line", "default": "Authentic. Decanted by hand from original bottles." }
+    ]
+  },
+  {
+    "name": "Product defaults",
+    "settings": [
+      { "type": "number", "id": "default_volume_ml", "label": "Default decant volume (ml)", "default": 10, "info": "Used for 'price per ml' when a product has no volume metafield." }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_instagram", "label": "Instagram URL" },
+      { "type": "text", "id": "social_tiktok", "label": "TikTok URL" },
+      { "type": "text", "id": "social_pinterest", "label": "Pinterest URL" },
+      { "type": "text", "id": "social_youtube", "label": "YouTube URL" }
+    ]
+  },
+  {
+    "name": "Search & SEO",
+    "settings": [
+      { "type": "image_picker", "id": "share_image", "label": "Default social sharing image", "info": "Used when a page has no image. 1200 × 630 px recommended." },
+      { "type": "image_picker", "id": "seo_logo", "label": "Logo for search engines", "info": "Square or wide logo used in Organization structured data." },
+      { "type": "text", "id": "seo_org_name", "label": "Organization name", "default": "Veloura" },
+      { "type": "checkbox", "id": "predictive_search", "label": "Enable predictive search", "default": true }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "32 × 32 px" }
+    ]
+  }
+]

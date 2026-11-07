@@ -1,0 +1,47 @@
+{%- comment -%} Params: item (line item), line (1-based index) {%- endcomment -%}
+<div class="cart-item" data-cart-line="{{ line }}">
+  <a href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+    <div class="media">
+      {%- if item.image -%}
+        {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 240', sizes: '110px', alt: '' }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+  </a>
+  <div>
+    <div class="cart-item__top">
+      <div>
+        {%- if item.product.vendor != blank -%}<span class="cart-item__house">{{ item.product.vendor }}</span>{%- endif -%}
+        <p class="cart-item__title mb-0"><a href="{{ item.url }}">{{ item.product.title }}</a></p>
+        {%- unless item.product.has_only_default_variant -%}
+          <p class="cart-item__variant mb-0">{{ item.variant.title }}</p>
+        {%- endunless -%}
+        {%- for prop in item.properties -%}
+          {%- unless prop.last == blank or prop.first contains '_' -%}
+            <p class="cart-item__variant mb-0">{{ prop.first }}: {{ prop.last }}</p>
+          {%- endunless -%}
+        {%- endfor -%}
+        {%- if item.selling_plan_allocation -%}<p class="cart-item__variant mb-0">{{ item.selling_plan_allocation.selling_plan.name }}</p>{%- endif -%}
+      </div>
+      <div class="text-sm" style="text-align: right;">
+        {%- if item.original_line_price != item.final_line_price -%}
+          <s class="price__compare">{{ item.original_line_price | money }}</s><br>
+        {%- endif -%}
+        {{ item.final_line_price | money }}
+      </div>
+    </div>
+    {%- for discount in item.line_level_discount_allocations -%}
+      <p class="cart-item__variant mb-0">{{ discount.discount_application.title }} (−{{ discount.amount | money }})</p>
+    {%- endfor -%}
+    <div class="cart-item__bottom">
+      <div class="qty qty--sm">
+        <button type="button" data-qty-step="-1" aria-label="{{ 'cart.decrease' | t: title: item.product.title }}">−</button>
+        <label class="visually-hidden" for="CartQty-{{ line }}">{{ 'cart.quantity' | t }}</label>
+        <input id="CartQty-{{ line }}" type="number" min="0" value="{{ item.quantity }}" inputmode="numeric" data-cart-qty="{{ line }}"{% if item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'deny' %} max="{{ item.variant.inventory_quantity }}"{% endif %}>
+        <button type="button" data-qty-step="1" aria-label="{{ 'cart.increase' | t: title: item.product.title }}">+</button>
+      </div>
+      <a href="{{ item.url_to_remove }}" class="cart-item__remove link-underline" data-cart-remove="{{ line }}">{{ 'cart.remove' | t }}<span class="visually-hidden"> {{ item.product.title }}</span></a>
+    </div>
+  </div>
+</div>

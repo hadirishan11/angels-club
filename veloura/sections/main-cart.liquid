@@ -1,0 +1,58 @@
+<section class="section" style="--pt: var(--space-5); --pt-d: var(--space-6);">
+  <div class="page-width" data-cart-section="{{ section.id }}">
+    <span data-cart-count-source="{{ cart.item_count }}" hidden></span>
+    <h1 class="h2">{{ 'cart.title' | t }}</h1>
+    {%- if cart.item_count > 0 -%}
+      <div class="cart-page">
+        <div>
+          <p class="form-message form-message--error" data-cart-error role="alert" hidden></p>
+          <div class="cart-items" style="border-top: var(--hairline); padding-top: var(--space-2);">
+            {%- for item in cart.items -%}
+              {% render 'cart-line', item: item, line: forloop.index %}
+            {%- endfor -%}
+          </div>
+        </div>
+        <div class="cart-page__summary">
+          {% render 'free-shipping' %}
+          <form action="{{ routes.cart_url }}" method="post" id="CartPageForm">
+            {%- if settings.cart_show_note -%}
+              <div class="field">
+                <label class="field__label" for="CartPageNote">{{ 'cart.note_label' | t }}</label>
+                <textarea id="CartPageNote" class="field__input" name="note" data-cart-note placeholder="{{ 'cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <div class="cart-discounts" style="display: flex; justify-content: space-between;"><span>{{ discount.title }}</span><span>−{{ discount.total_allocated_amount | money }}</span></div>
+            {%- endfor -%}
+            <div class="cart-totals">
+              <span class="cart-totals__label">{{ 'cart.subtotal' | t }}</span>
+              <span>{{ cart.total_price | money_with_currency }}</span>
+            </div>
+            <p class="cart-tax">{{ 'cart.taxes_shipping' | t }}</p>
+            <button type="submit" name="checkout" class="btn btn--full">{% render 'icon', name: 'lock' %} {{ 'cart.checkout' | t }}</button>
+            {%- if additional_checkout_buttons and section.settings.show_express -%}
+              <div class="mt-2">{{ content_for_additional_checkout_buttons }}</div>
+            {%- endif -%}
+          </form>
+          <p class="cart-trust">{{ settings.cart_trust_text }}</p>
+          {% render 'cart-upsell' %}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="cart-empty">
+        <p class="h3">{{ 'cart.empty' | t }}</p>
+        <p class="text-muted">{{ 'cart.empty_text' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn mt-3">{{ 'cart.continue' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    { "type": "checkbox", "id": "show_express", "label": "Show express checkout buttons", "default": true }
+  ]
+}
+{% endschema %}

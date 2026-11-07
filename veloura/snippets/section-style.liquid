@@ -1,0 +1,7 @@
+{%- comment -%}
+  Outputs padding custom properties for a section. Mobile = 60% of desktop.
+  Usage: style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}"
+{%- endcomment -%}
+{%- assign pt = pt | default: 0 -%}
+{%- assign pb = pb | default: 0 -%}
+--pt: {{ pt | times: 0.6 | round }}px; --pt-d: {{ pt }}px; --pb: {{ pb | times: 0.6 | round }}px; --pb-d: {{ pb }}px;

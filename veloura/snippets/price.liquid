@@ -1,0 +1,43 @@
+{%- comment -%}
+  Params: product, variant (optional), show_from (bool), show_unit (bool)
+{%- endcomment -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign price = target.price
+  assign compare = target.compare_at_price
+  if show_from and product.price_varies
+    assign price = product.price_min
+    assign compare = nil
+  endif
+  assign volume = product.metafields.veloura.volume_ml.value | default: settings.default_volume_ml | default: 10
+  if target.unit_price_measurement
+    assign unit_price = target.unit_price | money
+    assign unit_ref = target.unit_price_measurement.reference_unit
+    if target.unit_price_measurement.reference_value != 1
+      assign unit_ref = target.unit_price_measurement.reference_value | append: ' ' | append: unit_ref
+    endif
+  else
+    assign unit_price = price | divided_by: volume | money
+    assign unit_ref = 'ml'
+  endif
+-%}
+<div class="price" data-variant-update="price">
+  {%- if compare > price -%}
+    <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+    <span class="price__current">{{ price | money }}</span>
+    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+    <s class="price__compare">{{ compare | money }}</s>
+  {%- else -%}
+    <span class="price__current">
+      {%- if show_from and product.price_varies -%}
+        {%- assign price_money = price | money -%}
+        {{- 'products.product.price_from_html' | t: price: price_money -}}
+      {%- else -%}
+        {{- price | money -}}
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+  {%- if show_unit -%}
+    <span class="price__unit">{{ unit_price }} / {{ unit_ref }}</span>
+  {%- endif -%}
+</div>

@@ -1,0 +1,83 @@
+<div id="CartDrawer" class="drawer scheme-{{ section.settings.color_scheme }}" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle" aria-hidden="true" hidden>
+  <div class="drawer__header">
+    <h2 id="CartDrawerTitle" class="drawer__title">{{ 'cart.title' | t }}</h2>
+    <button type="button" class="icon-btn" data-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+
+  <div data-cart-section="{{ section.id }}" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+    <span data-cart-count-source="{{ cart.item_count }}" hidden></span>
+    {%- if cart.item_count > 0 -%}
+      <div class="drawer__body">
+        {% render 'free-shipping' %}
+        <p class="form-message form-message--error" data-cart-error role="alert" hidden></p>
+        <div class="cart-items">
+          {%- for item in cart.items -%}
+            {% render 'cart-line', item: item, line: forloop.index %}
+          {%- endfor -%}
+        </div>
+        {% render 'cart-upsell' %}
+      </div>
+      <div class="drawer__footer">
+        {%- if settings.cart_show_note -%}
+          <details class="cart-note">
+            <summary>{{ 'cart.note_label' | t }} +</summary>
+            <label class="visually-hidden" for="CartDrawerNote">{{ 'cart.note_label' | t }}</label>
+            <textarea id="CartDrawerNote" class="field__input" name="note" data-cart-note placeholder="{{ 'cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+          </details>
+        {%- endif -%}
+        {%- if cart.cart_level_discount_applications.size > 0 -%}
+          <div class="cart-discounts">
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <div style="display: flex; justify-content: space-between;"><span>{{ discount.title }}</span><span>−{{ discount.total_allocated_amount | money }}</span></div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        <div class="cart-totals">
+          <span class="cart-totals__label">{{ 'cart.subtotal' | t }}</span>
+          <span>{{ cart.total_price | money_with_currency }}</span>
+        </div>
+        <p class="cart-tax">{{ 'cart.taxes_shipping' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post">
+          <button type="submit" name="checkout" class="btn btn--full">
+            {% render 'icon', name: 'lock' %} {{ 'cart.checkout' | t }}
+          </button>
+        </form>
+        <p class="cart-trust">{{ settings.cart_trust_text }}</p>
+      </div>
+    {%- else -%}
+      <div class="drawer__body">
+        <div class="cart-empty">
+          <p class="h3">{{ 'cart.empty' | t }}</p>
+          <p class="text-muted">{{ 'cart.empty_text' | t }}</p>
+          <a href="{{ section.settings.empty_link | default: routes.all_products_collection_url }}" class="btn mt-3">{{ 'cart.continue' | t }}</a>
+        </div>
+        {% render 'cart-upsell' %}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "class": "section-cart-drawer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Free-shipping threshold, upsell product and reassurance line live in Theme settings > Cart."
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ivory"
+    },
+    { "type": "url", "id": "empty_link", "label": "Empty cart button link" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "brand": {
+          "type": "brand",
+          "settings": {
+            "heading": "The Private List",
+            "text": "<p>First access to new drops and limited batches. A few letters a month, never more.</p>",
+            "show_signup": true
+          }
+        },
+        "shop": { "type": "links", "settings": { "heading": "Shop", "menu": "main-menu" } },
+        "help": { "type": "links", "settings": { "heading": "Help", "menu": "footer" } },
+        "atelier": {
+          "type": "text",
+          "settings": {
+            "heading": "Atelier",
+            "text": "<p>Questions about a scent? Write to us. We reply within one day.</p>"
+          }
+        }
+      },
+      "block_order": ["brand", "shop", "help", "atelier"],
+      "settings": {
+        "color_scheme": "ink",
+        "disclaimer": "Veloura is an independent decant service and is not affiliated with the brands it carries. All trademarks belong to their respective owners.",
+        "show_payment_icons": true,
+        "show_localization": true
+      }
+    }
+  },
+  "order": ["footer"]
+}

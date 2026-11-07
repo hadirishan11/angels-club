@@ -1,0 +1,65 @@
+{%- assign s = section.settings -%}
+<section class="section private-list scheme-{{ s.color_scheme }}" id="PrivateList" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}">
+  <div class="page-width page-width--narrow reveal">
+    {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold">{{ s.eyebrow }}</p>{%- endif -%}
+    <h2>{{ s.heading }}</h2>
+    {%- if s.text != blank -%}<div class="text-muted center-block" style="max-width: 32rem;">{{ s.text }}</div>{%- endif -%}
+
+    {%- form 'customer', id: 'PrivateListForm', class: 'private-list__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter,private-list">
+      {%- if form.posted_successfully? -%}
+        <p class="h4 mb-0" data-form-status role="status">{{ s.success }}</p>
+      {%- else -%}
+        <div class="form-inline">
+          <label class="visually-hidden" for="PrivateListEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+          <input
+            id="PrivateListEmail-{{ section.id }}"
+            class="field__input"
+            type="email"
+            name="contact[email]"
+            autocomplete="email"
+            autocapitalize="off"
+            required
+            placeholder="{{ 'newsletter.label' | t }}"
+            {% if form.errors %}aria-invalid="true" aria-describedby="PrivateListError-{{ section.id }}"{% endif %}
+          >
+          <button type="submit" class="btn">{{ s.button_label }}</button>
+        </div>
+        {%- if form.errors -%}
+          <p id="PrivateListError-{{ section.id }}" class="form-message form-message--error" data-form-status>{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+        {%- endif -%}
+        {%- if s.fine_print != blank -%}<p class="private-list__fine">{{ s.fine_print }}</p>{%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Private List signup",
+  "class": "section-private-list",
+  "settings": [
+    { "type": "paragraph", "content": "Signups become customers tagged 'newsletter' and 'private-list' (Customers > Segments)." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "By invitation" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Private List" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>New drops reach the list 48 hours before anyone else. Limited batches often go no further.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Join" },
+    { "type": "text", "id": "success", "label": "Success message", "default": "You are on the list. Watch your inbox." },
+    { "type": "text", "id": "fine_print", "label": "Fine print", "default": "A few letters a month. Unsubscribe in one click." },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ink"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 120 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 120 }
+  ],
+  "presets": [ { "name": "Private List signup" } ]
+}
+{% endschema %}

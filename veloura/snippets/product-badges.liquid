@@ -1,0 +1,31 @@
+{%- comment -%}
+  Exclusivity badges driven by inventory + metafields.
+  Params: product, variant (optional), limit (max badges, default 2)
+{%- endcomment -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign limit = limit | default: 2
+  assign shown = 0
+  assign is_low = false
+  if target.inventory_management == 'shopify' and target.inventory_policy == 'deny' and target.inventory_quantity > 0 and target.inventory_quantity <= settings.low_stock_threshold
+    assign is_low = true
+  endif
+-%}
+<div class="badges" data-variant-update="badges">
+  {%- if product.available == false -%}
+    <span class="badge badge--soldout">{{ settings.label_sold_out }}</span>
+    {%- assign shown = shown | plus: 1 -%}
+  {%- else -%}
+    {%- if product.metafields.veloura.limited_batch.value == true and shown < limit -%}
+      <span class="badge badge--limited">{{ settings.label_limited }}</span>
+      {%- assign shown = shown | plus: 1 -%}
+    {%- endif -%}
+    {%- if is_low and shown < limit -%}
+      <span class="badge badge--low">{{ settings.label_low_stock }}</span>
+      {%- assign shown = shown | plus: 1 -%}
+    {%- endif -%}
+    {%- if product.tags contains 'new' and shown < limit -%}
+      <span class="badge">{{ settings.label_new }}</span>
+    {%- endif -%}
+  {%- endif -%}
+</div>

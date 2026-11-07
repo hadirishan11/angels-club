@@ -1,0 +1,155 @@
+{%- liquid
+  assign link_cols = 0
+  for block in section.blocks
+    if block.type == 'links'
+      assign link_cols = link_cols | plus: 1
+    endif
+  endfor
+-%}
+<footer class="footer scheme-{{ section.settings.color_scheme }}" role="contentinfo">
+  <div class="page-width">
+    <div class="footer__grid" style="--link-cols: {{ link_cols | at_least: 1 }};">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'brand' -%}
+            <div class="footer__brand" {{ block.shopify_attributes }}>
+              <p class="footer__brand-title">{{ block.settings.heading }}</p>
+              {%- if block.settings.text != blank -%}<div>{{ block.settings.text }}</div>{%- endif -%}
+              {%- if block.settings.show_signup -%}
+                {%- form 'customer', id: 'FooterPrivateList', class: 'footer__signup' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter,private-list">
+                  {%- if form.posted_successfully? -%}
+                    <p class="form-message form-message--success" data-form-status role="status">{{ 'newsletter.success' | t }}</p>
+                  {%- else -%}
+                    <div class="form-inline">
+                      <label class="visually-hidden" for="FooterEmail">{{ 'newsletter.label' | t }}</label>
+                      <input id="FooterEmail" class="field__input" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'newsletter.label' | t }}"{% if form.errors %} aria-invalid="true" aria-describedby="FooterEmailError"{% endif %}>
+                      <button type="submit" class="btn link" aria-label="{{ 'newsletter.button' | t }}">{{ 'newsletter.button' | t }}</button>
+                    </div>
+                    {%- if form.errors -%}
+                      <p id="FooterEmailError" class="form-message form-message--error" data-form-status>{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endform -%}
+              {%- endif -%}
+              {%- liquid
+                assign has_social = false
+                if settings.social_instagram != blank or settings.social_tiktok != blank or settings.social_pinterest != blank or settings.social_youtube != blank
+                  assign has_social = true
+                endif
+              -%}
+              {%- if has_social -%}
+                <ul class="footer__social" role="list">
+                  {%- if settings.social_instagram != blank -%}<li><a class="icon-btn" href="{{ settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">{% render 'icon', name: 'instagram' %}</a></li>{%- endif -%}
+                  {%- if settings.social_tiktok != blank -%}<li><a class="icon-btn" href="{{ settings.social_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">{% render 'icon', name: 'tiktok' %}</a></li>{%- endif -%}
+                  {%- if settings.social_pinterest != blank -%}<li><a class="icon-btn" href="{{ settings.social_pinterest }}" target="_blank" rel="noopener" aria-label="Pinterest">{% render 'icon', name: 'pinterest' %}</a></li>{%- endif -%}
+                  {%- if settings.social_youtube != blank -%}<li><a class="icon-btn" href="{{ settings.social_youtube }}" target="_blank" rel="noopener" aria-label="YouTube">{% render 'icon', name: 'youtube' %}</a></li>{%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- when 'links' -%}
+            <nav {{ block.shopify_attributes }} aria-label="{{ block.settings.heading | default: block.settings.menu.title | escape }}">
+              <h2 class="footer__heading">{{ block.settings.heading | default: block.settings.menu.title }}</h2>
+              <ul class="footer__links" role="list">
+                {%- for link in block.settings.menu.links -%}
+                  <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </nav>
+          {%- when 'text' -%}
+            <div {{ block.shopify_attributes }}>
+              <h2 class="footer__heading">{{ block.settings.heading }}</h2>
+              <div class="text-muted">{{ block.settings.text }}</div>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__disclaimer mb-0">{{ section.settings.disclaimer }}</p>
+      <div class="footer__meta">
+        {%- if section.settings.show_localization and localization.available_countries.size > 1 -%}
+          <div class="localization">
+            {%- form 'localization', id: 'FooterLocalization' -%}
+              <label class="visually-hidden" for="FooterCountry">{{ 'localization.country_label' | t }}</label>
+              <select id="FooterCountry" name="country_code" onchange="this.form.submit()">
+                {%- for country in localization.available_countries -%}
+                  <option value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} selected{% endif %}>{{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})</option>
+                {%- endfor -%}
+              </select>
+              <noscript><button type="submit" class="btn btn--sm">{{ 'localization.update' | t }}</button></noscript>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_payment_icons -%}
+          <ul class="payment-icons" role="list" aria-label="{{ 'sections.footer.payment_methods' | t }}">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>{{ type | payment_type_svg_tag }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ink", "label": "Ink" },
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "ink"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "Veloura is an independent decant service and is not affiliated with the brands it carries. All trademarks belong to their respective owners."
+    },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "checkbox", "id": "show_localization", "label": "Show country / currency selector", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand & Private List",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "The Private List" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>First access to new drops and limited batches. A few letters a month, never more.</p>" },
+        { "type": "checkbox", "id": "show_signup", "label": "Show email signup", "default": true }
+      ]
+    },
+    {
+      "type": "links",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Atelier" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Questions about a scent? Write to us. We reply within one day.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Footer", "blocks": [ { "type": "brand" }, { "type": "links" } ] }
+  ]
+}
+{% endschema %}

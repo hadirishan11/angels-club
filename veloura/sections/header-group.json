@@ -1,0 +1,28 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg-1": { "type": "message", "settings": { "text": "Complimentary shipping over €75", "link": "" } },
+        "msg-2": { "type": "message", "settings": { "text": "Decanted by hand from original bottles", "link": "" } },
+        "msg-3": { "type": "message", "settings": { "text": "Join the Private List for early access", "link": "" } }
+      },
+      "block_order": ["msg-1", "msg-2", "msg-3"],
+      "settings": { "color_scheme": "ink", "speed": 5 }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_width": 140,
+        "menu": "main-menu",
+        "color_scheme": "ivory",
+        "transparent_home": true,
+        "show_account": true,
+        "search_suggestions": "Oud, Vanilla, Rose, Iris, Discovery set"
+      }
+    }
+  },
+  "order": ["announcement", "header"]
+}

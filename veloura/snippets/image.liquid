@@ -1,0 +1,41 @@
+{%- comment -%}
+  Responsive, lazy-loaded image with srcset.
+  Params:
+  - image: image object (required, may be blank → placeholder)
+  - sizes: sizes attribute (default 100vw)
+  - widths: comma list of widths
+  - alt: override alt text
+  - priority: true for above-the-fold / LCP images (eager + fetchpriority high)
+  - class: extra classes
+  - decorative: true for purely decorative images (empty alt)
+  - placeholder: placeholder_svg_tag name when image is blank
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '100vw'
+  assign widths = widths | default: '360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048'
+  if priority
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+  else
+    assign loading = 'lazy'
+    assign fetchpriority = 'auto'
+  endif
+-%}
+{%- if image != blank -%}
+  {%- assign alt_text = alt | default: image.alt | escape -%}
+  {%- if decorative -%}{%- assign alt_text = '' -%}{%- endif -%}
+  {{
+    image
+    | image_url: width: 2048
+    | image_tag:
+      widths: widths,
+      sizes: sizes,
+      loading: loading,
+      fetchpriority: fetchpriority,
+      decoding: 'async',
+      alt: alt_text,
+      class: class
+  }}
+{%- else -%}
+  {{ placeholder | default: 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+{%- endif -%}

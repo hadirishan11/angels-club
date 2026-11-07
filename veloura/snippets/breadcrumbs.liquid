@@ -1,0 +1,61 @@
+{%- comment -%}
+  Visible breadcrumbs + BreadcrumbList JSON-LD.
+  On product pages, the parent collection is the referring collection if any,
+  otherwise the product's first collection.
+{%- endcomment -%}
+{%- liquid
+  assign crumb_collection = collection
+  if template.name == 'product' and crumb_collection == blank
+    assign crumb_collection = product.collections.first
+  endif
+-%}
+<nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+  <ol role="list">
+    <li><a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+    {%- case template.name -%}
+      {%- when 'product' -%}
+        {%- if crumb_collection -%}
+          <li><a href="{{ crumb_collection.url }}">{{ crumb_collection.title }}</a></li>
+        {%- endif -%}
+        <li><span aria-current="page">{{ product.title }}</span></li>
+      {%- when 'collection' -%}
+        <li><a href="{{ routes.collections_url }}">{{ 'general.breadcrumbs.collections' | t }}</a></li>
+        <li><span aria-current="page">{{ collection.title }}</span></li>
+      {%- when 'article' -%}
+        <li><a href="{{ blog.url }}">{{ blog.title }}</a></li>
+        <li><span aria-current="page">{{ article.title }}</span></li>
+      {%- when 'blog' -%}
+        <li><span aria-current="page">{{ blog.title }}</span></li>
+      {%- when 'page' -%}
+        <li><span aria-current="page">{{ page.title }}</span></li>
+    {%- endcase -%}
+  </ol>
+</nav>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": {{ 'general.breadcrumbs.home' | t | json }}, "item": {{ request.origin | append: routes.root_url | json }} }
+      {%- case template.name -%}
+        {%- when 'product' -%}
+          {%- if crumb_collection -%}
+          ,{ "@type": "ListItem", "position": 2, "name": {{ crumb_collection.title | json }}, "item": {{ request.origin | append: crumb_collection.url | json }} }
+          ,{ "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ request.origin | append: product.url | json }} }
+          {%- else -%}
+          ,{ "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ request.origin | append: product.url | json }} }
+          {%- endif -%}
+        {%- when 'collection' -%}
+          ,{ "@type": "ListItem", "position": 2, "name": {{ 'general.breadcrumbs.collections' | t | json }}, "item": {{ request.origin | append: routes.collections_url | json }} }
+          ,{ "@type": "ListItem", "position": 3, "name": {{ collection.title | json }}, "item": {{ request.origin | append: collection.url | json }} }
+        {%- when 'article' -%}
+          ,{ "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ request.origin | append: blog.url | json }} }
+          ,{ "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": {{ request.origin | append: article.url | json }} }
+        {%- when 'blog' -%}
+          ,{ "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ request.origin | append: blog.url | json }} }
+        {%- when 'page' -%}
+          ,{ "@type": "ListItem", "position": 2, "name": {{ page.title | json }}, "item": {{ request.origin | append: page.url | json }} }
+      {%- endcase -%}
+    ]
+  }
+</script>

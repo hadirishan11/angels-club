@@ -1,0 +1,179 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "overlay": 15,
+        "height": 100,
+        "height_mobile": 85,
+        "alignment": "bottom",
+        "eyebrow": "Decants · 10 ml",
+        "heading": "Rare scents, by the drop.",
+        "heading_tag": "h1",
+        "text": "<p>Authentic designer and niche perfumes, decanted by hand from the original bottle. Wear it for weeks before you commit to a bottle.</p>",
+        "button_label": "Explore the scents",
+        "button_link": "shopify://collections/all",
+        "button_label_2": "Discovery set",
+        "button_link_2": "",
+        "show_scroll_cue": true
+      }
+    },
+    "trust": {
+      "type": "trust-bar",
+      "blocks": {
+        "t1": { "type": "item", "settings": { "icon": "seal", "title": "100% authentic", "text": "Decanted from original bottles" } },
+        "t2": { "type": "item", "settings": { "icon": "atomizer", "title": "Glass atomisers", "text": "10 ml, fine mist, travel-ready" } },
+        "t3": { "type": "item", "settings": { "icon": "truck", "title": "Ships in 24 h", "text": "Free over €75" } },
+        "t4": { "type": "item", "settings": { "icon": "lock", "title": "Secure checkout", "text": "All major cards & wallets" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
+      "settings": { "heading": "Why Veloura", "border": true, "color_scheme": "ivory", "padding_top": 40, "padding_bottom": 40 }
+    },
+    "moods": {
+      "type": "mood-split",
+      "blocks": {
+        "noir": {
+          "type": "mood",
+          "settings": {
+            "eyebrow": "Woody · Amber · Smoke",
+            "title": "Noir",
+            "text": "Resin, leather and dusk. Scents that linger close and stay late.",
+            "button_label": "Discover Noir",
+            "light_text": true
+          }
+        },
+        "rose": {
+          "type": "mood",
+          "settings": {
+            "eyebrow": "Floral · Fresh · Musk",
+            "title": "Rosé",
+            "text": "Petals, light and skin. Bright scents that open like a window.",
+            "button_label": "Discover Rosé",
+            "light_text": false
+          }
+        }
+      },
+      "block_order": ["noir", "rose"],
+      "settings": { "eyebrow": "Two moods", "heading": "Choose by feeling, not by gender.", "height": 85 }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "This season",
+        "heading": "Featured scents",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "layout": "scroller",
+        "show_view_all": true,
+        "view_all_label": "View all",
+        "color_scheme": "ivory",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "Perfume decants" } },
+        "h": { "type": "heading", "settings": { "heading": "Wear it first. Then decide.", "tag": "h2", "size": "h2" } },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>A full bottle is a commitment. A 10 ml decant is a conversation: around a hundred sprays of the real fragrance, enough to wear through the seasons and learn how it lives on your skin. Designer icons and rare niche houses, all from the original bottle.</p>",
+            "large": true
+          }
+        }
+      },
+      "block_order": ["e", "h", "t"],
+      "settings": { "center": true, "color_scheme": "ivory", "padding_top": 48, "padding_bottom": 96 }
+    },
+    "families": {
+      "type": "collection-list",
+      "blocks": {
+        "f1": { "type": "collection", "settings": { "title": "Woody", "text": "Cedar, sandalwood, vetiver" } },
+        "f2": { "type": "collection", "settings": { "title": "Amber", "text": "Resin, vanilla, labdanum" } },
+        "f3": { "type": "collection", "settings": { "title": "Fresh", "text": "Air, water, green" } },
+        "f4": { "type": "collection", "settings": { "title": "Floral", "text": "Rose, iris, jasmine" } },
+        "f5": { "type": "collection", "settings": { "title": "Gourmand", "text": "Tonka, praline, coffee" } },
+        "f6": { "type": "collection", "settings": { "title": "Citrus", "text": "Bergamot, neroli, yuzu" } }
+      },
+      "block_order": ["f1", "f2", "f3", "f4", "f5", "f6"],
+      "settings": {
+        "eyebrow": "Browse by family",
+        "heading": "Find your accord",
+        "columns_desktop": 6,
+        "ratio": "2 / 3",
+        "color_scheme": "ivory",
+        "padding_top": 0,
+        "padding_bottom": 96
+      }
+    },
+    "decant": {
+      "type": "how-we-decant",
+      "blocks": {
+        "s1": { "type": "step", "settings": { "title": "Sourced", "text": "<p>Full bottles from authorised retailers and the houses themselves. Batch codes kept on file.</p>" } },
+        "s2": { "type": "step", "settings": { "title": "Decanted", "text": "<p>Drawn from the original bottle with a sterile pipette. Never diluted, never mixed.</p>" } },
+        "s3": { "type": "step", "settings": { "title": "Sealed in glass", "text": "<p>10 ml glass atomisers with a fine mist. Labelled by hand with house, name and batch.</p>" } },
+        "s4": { "type": "step", "settings": { "title": "Sent with care", "text": "<p>Wrapped, padded and shipped within one working day. Discreet packaging.</p>" } }
+      },
+      "block_order": ["s1", "s2", "s3", "s4"],
+      "settings": {
+        "eyebrow": "The atelier",
+        "heading": "How we decant",
+        "text": "<p>Every drop comes from a bottle we bought ourselves. Nothing diluted, nothing reformulated.</p>",
+        "center": false,
+        "button_label": "Our authenticity promise",
+        "button_link": "",
+        "color_scheme": "ink",
+        "padding_top": 120,
+        "padding_bottom": 120
+      }
+    },
+    "discovery": {
+      "type": "discovery-promo",
+      "blocks": {
+        "p1": { "type": "point", "settings": { "text": "Six 2 ml glass vials" } },
+        "p2": { "type": "point", "settings": { "text": "Three Noir, three Rosé" } },
+        "p3": { "type": "point", "settings": { "text": "Scent cards with notes and wear guide" } }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {
+        "ratio": "4 / 5",
+        "image_right": false,
+        "eyebrow": "Begin here",
+        "heading": "The Discovery Set",
+        "text": "<p>Six scents, 2 ml each, chosen to span both moods. Wear each for a day. Keep the one that stays with you.</p>",
+        "button_label": "Add the set to bag",
+        "footnote": "Arrives in a gift-ready box with handwritten labels.",
+        "color_scheme": "stone",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "reviews": {
+      "type": "reviews",
+      "blocks": {
+        "r1": { "type": "review", "settings": { "quote": "Replace this with a real customer review. Short, specific, sensory.", "author": "Customer name", "product_name": "Fragrance name", "stars": 5 } },
+        "r2": { "type": "review", "settings": { "quote": "Replace this with a real customer review. Mention packaging or longevity.", "author": "Customer name", "product_name": "Fragrance name", "stars": 5 } },
+        "r3": { "type": "review", "settings": { "quote": "Replace this with a real customer review. Mention the discovery set.", "author": "Customer name", "product_name": "Discovery Set", "stars": 5 } }
+      },
+      "block_order": ["r1", "r2", "r3"],
+      "settings": { "eyebrow": "In their words", "heading": "Worn, then kept.", "rating": "", "rating_text": "from verified orders", "color_scheme": "ivory", "padding_top": 96, "padding_bottom": 96 }
+    },
+    "private": {
+      "type": "private-list",
+      "settings": {
+        "eyebrow": "By invitation",
+        "heading": "The Private List",
+        "text": "<p>New drops reach the list 48 hours before anyone else. Limited batches often go no further.</p>",
+        "button_label": "Join",
+        "success": "You are on the list. Watch your inbox.",
+        "fine_print": "A few letters a month. Unsubscribe in one click.",
+        "color_scheme": "ink",
+        "padding_top": 120,
+        "padding_bottom": 120
+      }
+    }
+  },
+  "order": ["hero", "trust", "moods", "featured", "intro", "families", "decant", "discovery", "reviews", "private"]
+}

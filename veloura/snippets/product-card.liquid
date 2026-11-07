@@ -1,0 +1,107 @@
+{%- comment -%}
+  Product card.
+  Params:
+  - product: product object (blank renders a placeholder card)
+  - index: position (used for placeholder content + reveal delay)
+  - sizes: image sizes attribute
+  - heading_tag: h2/h3 (default h3)
+  - priority: eager-load image
+{%- endcomment -%}
+{%- liquid
+  assign heading_tag = heading_tag | default: 'h3'
+  assign sizes = sizes | default: '(min-width: 1200px) 25vw, (min-width: 750px) 33vw, 50vw'
+  assign idx = index | default: 0
+  assign delay = idx | modulo: 4 | times: 90
+-%}
+{%- if product != blank -%}
+  {%- liquid
+    assign variant = product.selected_or_first_available_variant
+    assign img = product.featured_media.preview_image
+    assign img2 = product.media[1].preview_image
+    assign img_alt = img.alt | default: product.title
+    assign notes = product.metafields.veloura.notes_top.value
+    assign notes_heart = product.metafields.veloura.notes_heart.value
+    assign notes_list = ''
+    if notes != blank
+      assign notes_list = notes | slice: 0, 2 | join: ', '
+    endif
+    if notes_heart != blank
+      if notes_list != blank
+        assign notes_list = notes_list | append: ', '
+      endif
+      assign notes_list = notes_list | append: notes_heart.first
+    endif
+    assign single_variant = false
+    if product.variants.size == 1
+      assign single_variant = true
+    endif
+  -%}
+  <article class="card reveal" style="--delay: {{ delay }}ms;">
+    <div class="card__media-link">
+      <div class="card__badges">{% render 'product-badges', product: product, limit: 1 %}</div>
+      <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+        <div class="media media--zoom">
+          {%- if img -%}
+            {% render 'image', image: img, sizes: sizes, priority: priority, alt: img_alt %}
+            {%- if img2 and settings.card_show_second_image -%}
+              {% render 'image', image: img2, sizes: sizes, class: 'card__img-secondary', decorative: true %}
+            {%- endif -%}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </a>
+      {%- if settings.card_show_quick_add and product.available and single_variant -%}
+        <div class="card__quick-overlay">
+          {%- form 'product', product, data-product-form: '', class: 'card__quick', novalidate: 'novalidate' -%}
+            <input type="hidden" name="id" value="{{ variant.id }}">
+            <button type="submit" class="btn btn--sm">
+              {{ 'products.product.quick_add' | t }} · {{ variant.price | money }}
+              <span class="visually-hidden">: {{ product.title }}</span>
+            </button>
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="card__body">
+      {%- if product.vendor != blank -%}<span class="card__house">{{ product.vendor }}</span>{%- endif -%}
+      <{{ heading_tag }} class="card__title"><a href="{{ product.url }}">{{ product.title }}</a></{{ heading_tag }}>
+      {%- if notes_list != blank -%}<p class="card__notes">{{ notes_list }}</p>{%- endif -%}
+      {%- if settings.card_show_rating -%}{% render 'rating', product: product %}{%- endif -%}
+      <div class="card__footer">
+        {% render 'price', product: product, show_from: true, show_unit: settings.card_show_price_per_ml %}
+        {%- if settings.card_show_quick_add -%}
+          <div class="card__quick--mobile">
+            {%- if product.available and single_variant -%}
+              {%- form 'product', product, data-product-form: '', class: 'card__quick', novalidate: 'novalidate' -%}
+                <input type="hidden" name="id" value="{{ variant.id }}">
+                <button type="submit" class="icon-btn" aria-label="{{ 'products.product.quick_add_label' | t: title: product.title }}">
+                  {% render 'icon', name: 'plus' %}
+                </button>
+              {%- endform -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </article>
+{%- else -%}
+  {%- liquid
+    assign names = 'Ambre Nocturne,Iris Lumière,Bois Fumé,Néroli Blanc,Cuir Velours,Rose Poudrée,Vétiver Gris,Figue Solaire' | split: ','
+    assign houses = 'Maison Exemple,Atelier Sample,Maison Exemple,Atelier Sample' | split: ','
+    assign notes = 'Amber, labdanum, smoked vanilla|Orris, violet, white musk|Cedar, birch tar, incense|Neroli, bergamot, clean musk|Suede, saffron, oud|Damask rose, powder, heliotrope|Vetiver, pepper, mineral|Fig leaf, coconut milk, sun' | split: '|'
+    assign n = idx | modulo: 8
+    assign h = idx | modulo: 4
+  -%}
+  <article class="card reveal" style="--delay: {{ delay }}ms;">
+    <div class="card__media-link">
+      <div class="media">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+    </div>
+    <div class="card__body">
+      <span class="card__house">{{ houses[h] }}</span>
+      <{{ heading_tag }} class="card__title">{{ names[n] }}</{{ heading_tag }}>
+      <p class="card__notes">{{ notes[n] }}</p>
+      <div class="card__footer"><div class="price">{{ 2400 | money }}</div></div>
+    </div>
+  </article>
+{%- endif -%}

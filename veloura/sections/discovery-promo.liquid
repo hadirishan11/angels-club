@@ -1,0 +1,106 @@
+{%- liquid
+  assign s = section.settings
+  assign p = s.product
+  assign v = p.selected_or_first_available_variant
+-%}
+<section class="section scheme-{{ s.color_scheme }}" style="{% render 'section-style', pt: section.settings.padding_top, pb: section.settings.padding_bottom %}">
+  <div class="page-width">
+    <div class="split split--wide-media{% if s.image_right %} split--reverse{% endif %}">
+      <div class="split__media reveal">
+        <div class="media" style="--ratio: {{ s.ratio }};">
+          {%- assign img = s.image | default: p.featured_image -%}
+          {% render 'image', image: img, sizes: '(min-width: 990px) 55vw, 100vw', placeholder: 'lifestyle-1' %}
+        </div>
+      </div>
+      <div class="split__content reveal" style="--delay: 150ms;">
+        {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold">{{ s.eyebrow }}</p>{%- endif -%}
+        <h2>{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<div class="text-muted">{{ s.text }}</div>{%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <ul class="promo-list" role="list">
+            {%- for block in section.blocks -%}
+              <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if p != blank -%}
+          {% render 'price', product: p %}
+          {%- if p.available -%}
+            {%- form 'product', p, data-product-form: '' -%}
+              <input type="hidden" name="id" value="{{ v.id }}">
+              <p class="form-message form-message--error" data-form-error role="alert" hidden></p>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center;">
+                <button type="submit" class="btn">{{ s.button_label }}</button>
+                <a class="link" href="{{ p.url }}">{{ 'products.product.view_details' | t }}</a>
+              </div>
+            {%- endform -%}
+          {%- else -%}
+            <a class="btn btn--outline" href="{{ p.url }}">{{ 'products.product.notify_me' | t }}</a>
+          {%- endif -%}
+        {%- else -%}
+          <div class="price">{{ 4500 | money }}</div>
+          <div class="mt-3"><a class="btn" href="{{ routes.all_products_collection_url }}">{{ s.button_label }}</a></div>
+        {%- endif -%}
+        {%- if s.footnote != blank -%}<p class="text-sm text-muted mt-3">{{ s.footnote }}</p>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Discovery set promo",
+  "class": "section-discovery",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Discovery set product" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Falls back to the product image." },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "3 / 2", "label": "Landscape" }
+      ],
+      "default": "4 / 5"
+    },
+    { "type": "checkbox", "id": "image_right", "label": "Image on the right", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Begin here" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Discovery Set" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Six scents, 2 ml each, chosen to span both moods. Wear each for a day. Keep the one that stays with you.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add the set to bag" },
+    { "type": "text", "id": "footnote", "label": "Footnote", "default": "Arrives in a gift-ready box with handwritten labels." },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "ivory", "label": "Ivory" },
+        { "value": "ink", "label": "Ink" },
+        { "value": "stone", "label": "Stone" }
+      ],
+      "default": "stone"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Bullet point",
+      "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Six 2 ml glass vials" } ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Discovery set promo",
+      "blocks": [
+        { "type": "point" },
+        { "type": "point", "settings": { "text": "Three Noir, three Rosé" } },
+        { "type": "point", "settings": { "text": "Scent cards with notes and wear guide" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_ink }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- liquid
+      assign page_suffix = ''
+      if current_page != 1
+        assign page_suffix = ' – ' | append: 'general.pagination.page' | t: number: current_page
+      endif
+      assign title_suffix = ''
+      unless page_title contains shop.name
+        assign title_suffix = ' | ' | append: shop.name
+      endunless
+    -%}
+    <title>{{ page_title }}{% if current_tags %} – {{ current_tags | join: ', ' }}{% endif %}{{ page_suffix }}{{ title_suffix }}</title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- liquid
+      comment
+        Filtered or tagged collection URLs are thin duplicates of the main collection:
+        keep them out of the index but let crawlers follow product links.
+      endcomment
+      assign noindex = false
+      if template.name == 'search' or template.name == 'cart' or template contains 'customers'
+        assign noindex = true
+      endif
+      if template.name == 'collection'
+        if current_tags
+          assign noindex = true
+        endif
+        for filter in collection.filters
+          if filter.active_values.size > 0
+            assign noindex = true
+          endif
+          if filter.type == 'price_range'
+            if filter.min_value.value != blank or filter.max_value.value != blank
+              assign noindex = true
+            endif
+          endif
+        endfor
+      endif
+    -%}
+    {%- if noindex -%}
+      <meta name="robots" content="noindex, follow">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+
+    {%- unless settings.type_heading_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_heading_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+    {%- unless settings.type_body_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+
+    {% render 'css-variables' %}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    <script src="{{ 'global.js' | asset_url }}" defer></script>
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      window.Veloura = {
+        routes: {
+          root: {{ routes.root_url | json }},
+          cart: {{ routes.cart_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          cartUpdate: {{ routes.cart_update_url | json }},
+          predictiveSearch: {{ routes.predictive_search_url | json }}
+        },
+        cartType: {{ settings.cart_type | json }},
+        strings: {
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          unavailable: {{ 'products.product.unavailable' | t | json }},
+          adding: {{ 'products.product.adding' | t | json }},
+          added: {{ 'products.product.added' | t | json }},
+          error: {{ 'general.errors.generic' | t | json }}
+        }
+      };
+    </script>
+
+    {{ content_for_header }}
+
+    {% render 'structured-data' %}
+  </head>
+
+  <body class="template-{{ template.name | handle }}{% if settings.animations_reveal %} has-reveal{% endif %}">
+    <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="main" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'cart-drawer' %}
+    {%- endif -%}
+
+    <div class="overlay" data-overlay hidden></div>
+    <div class="visually-hidden" aria-live="polite" role="status" data-live-region></div>
+  </body>
+</html>

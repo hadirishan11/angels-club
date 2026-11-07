@@ -1,0 +1,34 @@
+{%- liquid
+  assign upsell = settings.cart_upsell_product
+  assign in_cart = false
+  if upsell != blank
+    for item in cart.items
+      if item.product_id == upsell.id
+        assign in_cart = true
+      endif
+    endfor
+  endif
+-%}
+{%- if upsell != blank and upsell.available and in_cart == false -%}
+  {%- assign uv = upsell.selected_or_first_available_variant -%}
+  <div class="cart-upsell">
+    <p class="cart-upsell__title">{{ settings.cart_upsell_heading }}</p>
+    <div class="cart-upsell__item">
+      <a href="{{ upsell.url }}" class="media" tabindex="-1" aria-hidden="true">
+        {%- if upsell.featured_media -%}
+          {{ upsell.featured_media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '64px', alt: '' }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </a>
+      <div>
+        <a class="cart-upsell__name" href="{{ upsell.url }}">{{ upsell.title }}</a>
+        <div class="text-sm text-muted">{{ uv.price | money }}</div>
+      </div>
+      {%- form 'product', upsell, data-product-form: '' -%}
+        <input type="hidden" name="id" value="{{ uv.id }}">
+        <button type="submit" class="btn btn--sm btn--outline">{{ 'cart.add_short' | t }}<span class="visually-hidden"> {{ upsell.title }}</span></button>
+      {%- endform -%}
+    </div>
+  </div>
+{%- endif -%}

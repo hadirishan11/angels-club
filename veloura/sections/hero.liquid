@@ -1,0 +1,93 @@
+{%- liquid
+  assign s = section.settings
+  assign tag = s.heading_tag
+  assign first = false
+  if section.index == 1
+    assign first = true
+  endif
+-%}
+<section
+  class="hero hero--{{ s.alignment }}"
+  style="--hero-h: {{ s.height }}svh; --hero-h-m: {{ s.height_mobile }}svh; --overlay: {{ s.overlay | divided_by: 100.0 }}; --overlay-bottom: {{ s.overlay | plus: 30 | at_most: 90 | divided_by: 100.0 }};"
+  aria-label="{{ s.heading | strip_html | escape }}"
+>
+  <div class="hero__media">
+    {%- if s.video != blank -%}
+      {{ s.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1920x' }}
+    {%- elsif s.image != blank -%}
+      {%- assign alt = s.image.alt | default: '' -%}
+      <picture>
+        {%- if s.image_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ s.image_mobile | image_url: width: 540 }} 540w, {{ s.image_mobile | image_url: width: 750 }} 750w, {{ s.image_mobile | image_url: width: 1080 }} 1080w, {{ s.image_mobile | image_url: width: 1290 }} 1290w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {%- if first -%}
+          {{ s.image | image_url: width: 2400 | image_tag: widths: '750, 1080, 1440, 1920, 2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: alt }}
+        {%- else -%}
+          {{ s.image | image_url: width: 2400 | image_tag: widths: '750, 1080, 1440, 1920, 2400', sizes: '100vw', loading: 'lazy', alt: alt }}
+        {%- endif -%}
+      </picture>
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+
+  <div class="hero__content page-width">
+    {%- if s.eyebrow != blank -%}<p class="eyebrow eyebrow--gold reveal">{{ s.eyebrow }}</p>{%- endif -%}
+    <{{ tag }} class="hero__heading h-display reveal" style="--delay: 120ms;">{{ s.heading }}</{{ tag }}>
+    {%- if s.text != blank -%}<div class="hero__text reveal" style="--delay: 240ms;">{{ s.text }}</div>{%- endif -%}
+    {%- if s.button_label != blank or s.button_label_2 != blank -%}
+      <div class="hero__actions reveal" style="--delay: 360ms;">
+        {%- if s.button_label != blank -%}<a class="btn" href="{{ s.button_link | default: routes.all_products_collection_url }}">{{ s.button_label }}</a>{%- endif -%}
+        {%- if s.button_label_2 != blank -%}<a class="btn btn--outline" href="{{ s.button_link_2 | default: routes.collections_url }}">{{ s.button_label_2 }}</a>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+  {%- if s.show_scroll_cue -%}<span class="hero__scroll" aria-hidden="true"></span>{%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "class": "section-hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "2400 × 1600 px or larger. Dark, quiet imagery works best." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (optional)", "info": "Portrait, 1290 × 2000 px." },
+    { "type": "video", "id": "video", "label": "Background video (optional)", "info": "Shopify-hosted. Keep it short (under 10 s) and silent." },
+    { "type": "range", "id": "overlay", "label": "Image darkening", "min": 0, "max": 70, "step": 5, "unit": "%", "default": 15 },
+    { "type": "range", "id": "height", "label": "Height (desktop)", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 100 },
+    { "type": "range", "id": "height_mobile", "label": "Height (mobile)", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 85 },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content position",
+      "options": [
+        { "value": "bottom", "label": "Bottom left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "bottom"
+    },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Decants · 10 ml" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Rare scents, by the drop." },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag (SEO)",
+      "info": "Use H1 for the first hero on the home page only.",
+      "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ],
+      "default": "h1"
+    },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Authentic designer and niche perfumes, decanted by hand from the original bottle. Wear it for weeks before you commit to a bottle.</p>" },
+    { "type": "text", "id": "button_label", "label": "Primary button", "default": "Explore the scents" },
+    { "type": "url", "id": "button_link", "label": "Primary link" },
+    { "type": "text", "id": "button_label_2", "label": "Secondary button", "default": "Discovery set" },
+    { "type": "url", "id": "button_link_2", "label": "Secondary link" },
+    { "type": "checkbox", "id": "show_scroll_cue", "label": "Show scroll cue", "default": true }
+  ],
+  "presets": [ { "name": "Hero" } ]
+}
+{% endschema %}
