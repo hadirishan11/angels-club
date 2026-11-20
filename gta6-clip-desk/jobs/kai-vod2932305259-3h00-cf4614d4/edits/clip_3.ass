@@ -1,0 +1,82 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Arial Black,92,&H00FFFFFF,&H0000E5FF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,7,3,5,60,60,0,1
+Style: Hook,Arial Black,68,&H00000000,&H00000000,&H00FFFFFF,&H00FFFFFF,-1,0,0,0,100,100,0,0,3,18,0,8,70,70,170,1
+Style: TitleBox,Arial Black,66,&H00000000,&H00000000,&H00FFFFFF,&H00FFFFFF,-1,0,0,0,100,100,0,0,1,0,0,5,40,40,0,1
+Style: TitleOut,Arial Black,80,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,9,2,8,50,50,0,1
+Style: Bubble,Arial,58,&H00000000,&H00000000,&H00FFFFFF,&H00FFFFFF,-1,0,0,0,100,100,0,0,3,16,0,5,60,60,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.30,0:00:00.62,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}THOUGH{\c&H00FFFFFF&} F***
+Dialogue: 0,0:00:00.62,0:00:01.62,Cap,,0,0,0,,{\pos(540,1560)}THOUGH {\c&H0000E5FF&}F***{\c&H00FFFFFF&}
+Dialogue: 0,0:00:03.06,0:00:04.26,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}I{\c&H00FFFFFF&}
+Dialogue: 0,0:00:08.64,0:00:09.04,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}CAN{\c&H00FFFFFF&} APPRECIATE IT.
+Dialogue: 0,0:00:09.04,0:00:09.36,Cap,,0,0,0,,{\pos(540,1560)}CAN {\c&H0000E5FF&}APPRECIATE{\c&H00FFFFFF&} IT.
+Dialogue: 0,0:00:09.36,0:00:09.62,Cap,,0,0,0,,{\pos(540,1560)}CAN APPRECIATE {\c&H0000E5FF&}IT.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:09.62,0:00:10.40,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}OH{\c&H00FFFFFF&} RICH OF
+Dialogue: 0,0:00:10.40,0:00:10.80,Cap,,0,0,0,,{\pos(540,1560)}OH {\c&H0000E5FF&}RICH{\c&H00FFFFFF&} OF
+Dialogue: 0,0:00:10.80,0:00:11.00,Cap,,0,0,0,,{\pos(540,1560)}OH RICH {\c&H0000E5FF&}OF{\c&H00FFFFFF&}
+Dialogue: 0,0:00:11.00,0:00:11.20,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}US{\c&H00FFFFFF&} RICH OF
+Dialogue: 0,0:00:11.20,0:00:11.54,Cap,,0,0,0,,{\pos(540,1560)}US {\c&H0000E5FF&}RICH{\c&H00FFFFFF&} OF
+Dialogue: 0,0:00:11.54,0:00:11.66,Cap,,0,0,0,,{\pos(540,1560)}US RICH {\c&H0000E5FF&}OF{\c&H00FFFFFF&}
+Dialogue: 0,0:00:11.66,0:00:11.82,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}US.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:11.82,0:00:11.90,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}THANK{\c&H00FFFFFF&} YOU SO
+Dialogue: 0,0:00:11.90,0:00:11.98,Cap,,0,0,0,,{\pos(540,1560)}THANK {\c&H0000E5FF&}YOU{\c&H00FFFFFF&} SO
+Dialogue: 0,0:00:11.98,0:00:12.06,Cap,,0,0,0,,{\pos(540,1560)}THANK YOU {\c&H0000E5FF&}SO{\c&H00FFFFFF&}
+Dialogue: 0,0:00:12.06,0:00:12.30,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}MUCH{\c&H00FFFFFF&} ALL RIGHT
+Dialogue: 0,0:00:12.30,0:00:13.06,Cap,,0,0,0,,{\pos(540,1560)}MUCH {\c&H0000E5FF&}ALL{\c&H00FFFFFF&} RIGHT
+Dialogue: 0,0:00:13.06,0:00:13.82,Cap,,0,0,0,,{\pos(540,1560)}MUCH ALL {\c&H0000E5FF&}RIGHT{\c&H00FFFFFF&}
+Dialogue: 0,0:00:13.82,0:00:14.14,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}NOW.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:14.14,0:00:14.42,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}I{\c&H00FFFFFF&} THINK I
+Dialogue: 0,0:00:14.42,0:00:14.60,Cap,,0,0,0,,{\pos(540,1560)}I {\c&H0000E5FF&}THINK{\c&H00FFFFFF&} I
+Dialogue: 0,0:00:14.60,0:00:14.70,Cap,,0,0,0,,{\pos(540,1560)}I THINK {\c&H0000E5FF&}I{\c&H00FFFFFF&}
+Dialogue: 0,0:00:14.70,0:00:14.86,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}HAVE{\c&H00FFFFFF&} TO REALLY
+Dialogue: 0,0:00:14.86,0:00:15.00,Cap,,0,0,0,,{\pos(540,1560)}HAVE {\c&H0000E5FF&}TO{\c&H00FFFFFF&} REALLY
+Dialogue: 0,0:00:15.00,0:00:15.22,Cap,,0,0,0,,{\pos(540,1560)}HAVE TO {\c&H0000E5FF&}REALLY{\c&H00FFFFFF&}
+Dialogue: 0,0:00:15.22,0:00:15.62,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}GO{\c&H00FFFFFF&} TO
+Dialogue: 0,0:00:15.62,0:00:16.82,Cap,,0,0,0,,{\pos(540,1560)}GO {\c&H0000E5FF&}TO{\c&H00FFFFFF&}
+Dialogue: 0,0:00:18.16,0:00:18.64,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}WHAT{\c&H00FFFFFF&} IS THIS
+Dialogue: 0,0:00:18.64,0:00:19.02,Cap,,0,0,0,,{\pos(540,1560)}WHAT {\c&H0000E5FF&}IS{\c&H00FFFFFF&} THIS
+Dialogue: 0,0:00:19.02,0:00:19.24,Cap,,0,0,0,,{\pos(540,1560)}WHAT IS {\c&H0000E5FF&}THIS{\c&H00FFFFFF&}
+Dialogue: 0,0:00:19.24,0:00:19.68,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}THOUGH?{\c&H00FFFFFF&}
+Dialogue: 0,0:00:19.68,0:00:19.94,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}LIKE{\c&H00FFFFFF&} WHAT ARE
+Dialogue: 0,0:00:19.94,0:00:20.08,Cap,,0,0,0,,{\pos(540,1560)}LIKE {\c&H0000E5FF&}WHAT{\c&H00FFFFFF&} ARE
+Dialogue: 0,0:00:20.08,0:00:20.20,Cap,,0,0,0,,{\pos(540,1560)}LIKE WHAT {\c&H0000E5FF&}ARE{\c&H00FFFFFF&}
+Dialogue: 0,0:00:20.20,0:00:20.52,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}WHAT{\c&H00FFFFFF&} ARE THESE
+Dialogue: 0,0:00:20.52,0:00:20.58,Cap,,0,0,0,,{\pos(540,1560)}WHAT {\c&H0000E5FF&}ARE{\c&H00FFFFFF&} THESE
+Dialogue: 0,0:00:20.58,0:00:20.70,Cap,,0,0,0,,{\pos(540,1560)}WHAT ARE {\c&H0000E5FF&}THESE{\c&H00FFFFFF&}
+Dialogue: 0,0:00:20.70,0:00:21.02,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}WHITE{\c&H00FFFFFF&} THINGS?
+Dialogue: 0,0:00:21.02,0:00:22.24,Cap,,0,0,0,,{\pos(540,1560)}WHITE {\c&H0000E5FF&}THINGS?{\c&H00FFFFFF&}
+Dialogue: 0,0:00:23.16,0:00:23.64,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}I{\c&H00FFFFFF&} THINK I
+Dialogue: 0,0:00:23.64,0:00:23.76,Cap,,0,0,0,,{\pos(540,1560)}I {\c&H0000E5FF&}THINK{\c&H00FFFFFF&} I
+Dialogue: 0,0:00:23.76,0:00:23.84,Cap,,0,0,0,,{\pos(540,1560)}I THINK {\c&H0000E5FF&}I{\c&H00FFFFFF&}
+Dialogue: 0,0:00:23.84,0:00:23.90,Cap,,0,0,0,,{\pos(540,1560)}HAVE {\c&H0000E5FF&}TO{\c&H00FFFFFF&} GO
+Dialogue: 0,0:00:23.90,0:00:23.98,Cap,,0,0,0,,{\pos(540,1560)}HAVE TO {\c&H0000E5FF&}GO{\c&H00FFFFFF&}
+Dialogue: 0,0:00:23.98,0:00:24.12,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}TO{\c&H00FFFFFF&} OVER HERE
+Dialogue: 0,0:00:24.12,0:00:24.46,Cap,,0,0,0,,{\pos(540,1560)}TO {\c&H0000E5FF&}OVER{\c&H00FFFFFF&} HERE
+Dialogue: 0,0:00:24.46,0:00:25.36,Cap,,0,0,0,,{\pos(540,1560)}TO OVER {\c&H0000E5FF&}HERE{\c&H00FFFFFF&}
+Dialogue: 0,0:00:25.36,0:00:25.84,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}THEY{\c&H00FFFFFF&} DON'T HAVE
+Dialogue: 0,0:00:25.84,0:00:25.96,Cap,,0,0,0,,{\pos(540,1560)}THEY {\c&H0000E5FF&}DON'T{\c&H00FFFFFF&} HAVE
+Dialogue: 0,0:00:25.96,0:00:26.06,Cap,,0,0,0,,{\pos(540,1560)}THEY DON'T {\c&H0000E5FF&}HAVE{\c&H00FFFFFF&}
+Dialogue: 0,0:00:26.06,0:00:26.30,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}FIRST{\c&H00FFFFFF&} -PERSON YET
+Dialogue: 0,0:00:26.30,0:00:26.52,Cap,,0,0,0,,{\pos(540,1560)}FIRST {\c&H0000E5FF&}-PERSON{\c&H00FFFFFF&} YET
+Dialogue: 0,0:00:26.52,0:00:27.50,Cap,,0,0,0,,{\pos(540,1560)}FIRST -PERSON {\c&H0000E5FF&}YET{\c&H00FFFFFF&}
+Dialogue: 0,0:00:27.50,0:00:27.98,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}YEAH,{\c&H00FFFFFF&}
+Dialogue: 0,0:00:27.98,0:00:28.46,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}THAT'S{\c&H00FFFFFF&} I HAVE
+Dialogue: 0,0:00:28.46,0:00:28.54,Cap,,0,0,0,,{\pos(540,1560)}THAT'S {\c&H0000E5FF&}I{\c&H00FFFFFF&} HAVE
+Dialogue: 0,0:00:28.54,0:00:28.66,Cap,,0,0,0,,{\pos(540,1560)}THAT'S I {\c&H0000E5FF&}HAVE{\c&H00FFFFFF&}
+Dialogue: 0,0:00:28.66,0:00:29.00,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}TO{\c&H00FFFFFF&} DO THIS.
+Dialogue: 0,0:00:29.00,0:00:29.10,Cap,,0,0,0,,{\pos(540,1560)}TO {\c&H0000E5FF&}DO{\c&H00FFFFFF&} THIS.
+Dialogue: 0,0:00:29.10,0:00:29.68,Cap,,0,0,0,,{\pos(540,1560)}TO DO {\c&H0000E5FF&}THIS.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:29.68,0:00:30.16,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}I{\c&H00FFFFFF&} AIN'T A
+Dialogue: 0,0:00:30.16,0:00:30.26,Cap,,0,0,0,,{\pos(540,1560)}I {\c&H0000E5FF&}AIN'T{\c&H00FFFFFF&} A
+Dialogue: 0,0:00:30.26,0:00:30.34,Cap,,0,0,0,,{\pos(540,1560)}I AIN'T {\c&H0000E5FF&}A{\c&H00FFFFFF&}
+Dialogue: 0,0:00:30.34,0:00:30.96,Cap,,0,0,0,,{\pos(540,1560)}{\fscx112\fscy112\t(0,90,\fscx100\fscy100)}{\c&H0000E5FF&}LOT{\c&H00FFFFFF&}
+Dialogue: 2,0:00:00.00,0:00:31.16,TitleBox,,0,0,0,,{\pos(540,730)}Kai learned GTA 6 cops\NREMEMBER your OUTFIT
